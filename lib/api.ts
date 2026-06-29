@@ -26,5 +26,6 @@ export async function getProfile(): Promise<Profile | null> {
   });
   if (res.status === 404) return null;
   if (!res.ok) throw new Error(`profile fetch failed: ${res.status}`);
-  return res.json();
+  const json = await res.json();
+  return json.data as Profile;
 }

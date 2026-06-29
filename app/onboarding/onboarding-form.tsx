@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { COUNTRY_CODES } from "@/lib/countries";
+import { msg } from "@/lib/messages";
 
 // 회원가입 폼과 동일한 핸들 규칙
 const USERNAME_RE = /^[a-zA-Z0-9]+(-[a-zA-Z0-9]+)*$/;
@@ -54,9 +55,9 @@ export function OnboardingForm({
           `${API_URL}/me/username-available?username=${encodeURIComponent(username)}`,
           { headers: { Authorization: `Bearer ${session.access_token}` } },
         );
-        const json = await res.json();
+        const { data } = await res.json();
         setAvail(
-          json.available ? "available" : json.reason === "invalid" ? "invalid" : "taken",
+          data.available ? "available" : data.reason === "INVALID" ? "invalid" : "taken",
         );
       } catch {
         // 네트워크 오류는 제출 시 재확인
@@ -70,11 +71,11 @@ export function OnboardingForm({
     e.preventDefault();
     setError(null);
     if (!localValid) {
-      setError("username 형식을 확인하세요.");
+      setError(msg("INVALID_USERNAME"));
       return;
     }
     if (avail === "taken") {
-      setError("이미 사용 중인 username입니다.");
+      setError(msg("USERNAME_TAKEN"));
       return;
     }
 
@@ -101,12 +102,10 @@ export function OnboardingForm({
       router.refresh();
       return;
     }
-    if (res.status === 409) {
-      setAvail("taken");
-      setError("이미 사용 중인 username입니다.");
-      return;
-    }
-    setError("프로필 생성에 실패했습니다. 잠시 후 다시 시도해주세요.");
+    const json = await res.json().catch(() => null);
+    const code = json?.code as string | undefined;
+    if (code === "USERNAME_TAKEN") setAvail("taken");
+    setError(msg(code));
   };
 
   const hint = {
