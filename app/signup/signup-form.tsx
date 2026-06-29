@@ -1,176 +1,267 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
-import { OAuthButtons } from "@/components/auth/oauth-buttons";
-import { COUNTRY_CODES } from "@/lib/countries";
+import { Spinner } from "@/components/ui/spinner";
+import { BrandMark } from "@/components/ui/brand-mark";
+import { isEmail, passwordChecks, borderClass, type FieldStatus } from "@/lib/validation";
 
-// 고유 핸들: 영문/숫자, 하이픈은 중간에만
-const USERNAME_RE = /^[a-zA-Z0-9]+(-[a-zA-Z0-9]+)*$/;
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
-// 국가 코드 → 한글 표시명, 이름순 정렬 (1회 계산)
-const COUNTRIES = (() => {
-  const dn = new Intl.DisplayNames(["ko"], { type: "region" });
-  return COUNTRY_CODES.map((code) => ({ code, name: dn.of(code) ?? code })).sort(
-    (a, b) => a.name.localeCompare(b.name, "ko"),
+const inputBase =
+  "w-full rounded-lg border px-3 py-2.5 text-sm text-black outline-none focus:ring-1 focus:ring-zinc-300 dark:bg-zinc-900 dark:text-zinc-50";
+
+function Req({ ok, children }: { ok: boolean; children: React.ReactNode }) {
+  return (
+    <span className={ok ? "text-green-600 dark:text-green-400" : "text-zinc-400"}>
+      {ok ? "✓" : "·"} {children}
+    </span>
   );
-})();
+}
+
+type EmailState = "idle" | "checking" | "available" | "taken" | "invalid";
 
 export function SignupForm() {
+  const [step, setStep] = useState<"form" | "verify">("form");
   const [email, setEmail] = useState("");
+  const [emailState, setEmailState] = useState<EmailState>("idle");
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
-  const [username, setUsername] = useState("");
-  const [country, setCountry] = useState("KR");
-  const [sent, setSent] = useState(false);
+  const [agreedTerms, setAgreedTerms] = useState(false);
+  const [agreedPrivacy, setAgreedPrivacy] = useState(false);
+  const [code, setCode] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
+  const router = useRouter();
   const supabase = createClient();
 
-  const onSubmit = async (e: React.FormEvent) => {
+  const pw = passwordChecks(password);
+  const emailStatus: FieldStatus =
+    emailState === "available"
+      ? "valid"
+      : emailState === "taken" || emailState === "invalid"
+        ? "invalid"
+        : "idle";
+  const pwStatus: FieldStatus = password === "" ? "idle" : pw.all ? "valid" : "invalid";
+  const confirmStatus: FieldStatus =
+    confirm === "" ? "idle" : confirm === password ? "valid" : "invalid";
+  const agreed = agreedTerms && agreedPrivacy;
+  const canSubmit =
+    emailState === "available" && pw.all && confirm === password && agreed && !loading;
+
+  // 이메일 실시간 형식 + 중복 확인 (디바운스 400ms)
+  useEffect(() => {
+    if (email === "") {
+      setEmailState("idle");
+      return;
+    }
+    if (!isEmail(email)) {
+      setEmailState("invalid");
+      return;
+    }
+    setEmailState("checking");
+    const t = setTimeout(async () => {
+      try {
+        const res = await fetch(`${API_URL}/email-available?email=${encodeURIComponent(email)}`);
+        const { data } = await res.json();
+        setEmailState(
+          data.available ? "available" : data.reason === "INVALID" ? "invalid" : "taken",
+        );
+      } catch {
+        // Api 불가 시 막지 않음 — 형식은 통과했으니 낙관적 통과, 중복은 제출 시 재확인
+        setEmailState("available");
+      }
+    }, 400);
+    return () => clearTimeout(t);
+  }, [email]);
+
+  const onSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
-
-    if (password.length < 8) {
-      setError("비밀번호는 8자 이상이어야 합니다.");
-      return;
-    }
-    if (password !== confirm) {
-      setError("비밀번호가 일치하지 않습니다.");
-      return;
-    }
-    if (username.length < 2 || username.length > 30 || !USERNAME_RE.test(username)) {
-      setError("username은 영문/숫자/하이픈만 가능하며, 하이픈으로 시작·끝날 수 없습니다 (2–30자).");
-      return;
-    }
+    if (!canSubmit) return;
 
     setLoading(true);
-    const { error } = await supabase.auth.signUp({
+    const { data, error } = await supabase.auth.signUp({
       email,
       password,
-      options: {
-        emailRedirectTo: `${window.location.origin}/auth/callback`,
-        // username·country는 우선 user_metadata에 보관 → 서버(NON-16)가 users 테이블로 이전
-        data: { username, country },
-      },
+      options: { data: { terms_accepted: true } },
     });
     setLoading(false);
 
-    if (error) setError(error.message);
-    else setSent(true);
+    if (error) {
+      setError(error.message);
+      return;
+    }
+    // 제출 시 재확인: 이미 가입된 이메일이면 identities 가 빈 배열(열거 방지)
+    if (data.user && data.user.identities && data.user.identities.length === 0) {
+      setEmailState("taken");
+      return;
+    }
+    setStep("verify");
   };
 
-  if (sent) {
+  const onVerify = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError(null);
+    if (code.length !== 6) {
+      setError("6자리 코드를 입력하세요.");
+      return;
+    }
+    setLoading(true);
+    const { error } = await supabase.auth.verifyOtp({ email, token: code, type: "signup" });
+    setLoading(false);
+    if (error) {
+      setError("코드가 올바르지 않거나 만료되었습니다.");
+      return;
+    }
+    // 인증 완료 → 세션 생성됨 → 프로필 설정(온보딩)으로
+    router.push("/onboarding");
+    router.refresh();
+  };
+
+  if (step === "verify") {
     return (
-      <p className="text-center text-sm text-zinc-600 dark:text-zinc-400">
-        <span className="font-medium text-black dark:text-zinc-50">{email}</span>
-        로 인증 메일을 보냈습니다. 메일의 링크를 눌러 가입을 완료하세요.
-      </p>
+      <div className="flex flex-col gap-5">
+        <div className="flex flex-col items-center gap-3 text-center">
+          <BrandMark />
+          <h1 className="text-lg font-medium text-black dark:text-zinc-50">인증 메일을 보냈습니다</h1>
+          <p className="text-sm text-zinc-600 dark:text-zinc-400">
+            받은 편지함에서 6자리 코드를 입력하세요.
+          </p>
+        </div>
+
+        <form noValidate onSubmit={onVerify} className="flex flex-col gap-2">
+          <input
+            inputMode="numeric"
+            maxLength={6}
+            value={code}
+            onChange={(e) => setCode(e.target.value.replace(/\D/g, ""))}
+            placeholder="6자리 코드"
+            className={`${inputBase} border-zinc-300 text-center tracking-[0.4em] dark:border-zinc-700`}
+          />
+          <button
+            type="submit"
+            disabled={loading}
+            className="mt-1 flex h-10 w-full items-center justify-center rounded-lg bg-indigo-600 text-sm font-medium text-white hover:bg-indigo-500 disabled:opacity-60"
+          >
+            {loading ? <Spinner /> : "확인"}
+          </button>
+        </form>
+
+        {error && <p className="text-center text-sm text-red-600 dark:text-red-400">{error}</p>}
+
+        <p className="text-center text-xs text-zinc-500">메일이 안 보이면 스팸함을 확인하세요.</p>
+      </div>
     );
   }
 
   return (
     <div className="flex flex-col gap-5">
-      <h1 className="text-center text-lg font-semibold text-black dark:text-zinc-50">
-        회원가입
-      </h1>
-
-      <OAuthButtons />
-
-      <div className="flex items-center gap-3 text-xs text-zinc-400">
-        <span className="h-px flex-1 bg-zinc-200 dark:bg-zinc-800" />
-        또는
-        <span className="h-px flex-1 bg-zinc-200 dark:bg-zinc-800" />
+      <div className="flex flex-col items-center gap-3">
+        <BrandMark />
+        <h1 className="text-center text-lg font-medium text-black dark:text-zinc-50">
+          가입을 환영합니다
+        </h1>
       </div>
 
-      <form onSubmit={onSubmit} className="flex flex-col gap-3">
-        <input
-          type="email"
-          required
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="이메일"
-          className="w-full rounded-lg border border-zinc-300 px-3 py-2.5 text-sm text-black outline-none focus:border-zinc-500 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
-        />
+      <form noValidate onSubmit={onSignUp} className="flex flex-col gap-3">
+        <div className="flex flex-col gap-1">
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="이메일"
+            className={`${inputBase} ${borderClass(emailStatus)}`}
+          />
+          {emailState === "checking" && <p className="text-xs text-zinc-500">확인 중…</p>}
+          {emailState === "available" && (
+            <p className="text-xs text-green-600 dark:text-green-400">사용 가능</p>
+          )}
+          {emailState === "invalid" && (
+            <p className="text-xs text-red-600 dark:text-red-400">올바른 이메일 형식이 아닙니다.</p>
+          )}
+          {emailState === "taken" && (
+            <p className="text-xs text-red-600 dark:text-red-400">이미 가입된 이메일입니다.</p>
+          )}
+        </div>
 
         <div className="flex flex-col gap-1">
           <input
             type="password"
-            required
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="비밀번호"
-            className="w-full rounded-lg border border-zinc-300 px-3 py-2.5 text-sm text-black outline-none focus:border-zinc-500 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
+            className={`${inputBase} ${borderClass(pwStatus)}`}
           />
-          <p className="text-xs text-zinc-500">8자 이상</p>
+          <div className="flex flex-col gap-0.5 text-xs">
+            <Req ok={pw.length}>8자 이상</Req>
+            <Req ok={pw.upper && pw.lower}>대소문자 포함</Req>
+            <Req ok={pw.digit}>숫자 포함</Req>
+            <Req ok={pw.special}>특수문자 포함</Req>
+          </div>
         </div>
-
-        <input
-          type="password"
-          required
-          value={confirm}
-          onChange={(e) => setConfirm(e.target.value)}
-          placeholder="비밀번호 확인"
-          className="w-full rounded-lg border border-zinc-300 px-3 py-2.5 text-sm text-black outline-none focus:border-zinc-500 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
-        />
 
         <div className="flex flex-col gap-1">
           <input
-            type="text"
-            required
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            placeholder="username"
-            className="w-full rounded-lg border border-zinc-300 px-3 py-2.5 text-sm text-black outline-none focus:border-zinc-500 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
+            type="password"
+            value={confirm}
+            onChange={(e) => setConfirm(e.target.value)}
+            placeholder="비밀번호 확인"
+            className={`${inputBase} ${borderClass(confirmStatus)}`}
           />
-          <p className="text-xs text-zinc-500">
-            영문·숫자·하이픈만 가능. 하이픈으로 시작하거나 끝날 수 없습니다.
-          </p>
+          {confirmStatus === "invalid" && (
+            <p className="text-xs text-red-600 dark:text-red-400">비밀번호가 일치하지 않습니다.</p>
+          )}
         </div>
 
-        <div className="flex flex-col gap-1">
-          <select
-            required
-            value={country}
-            onChange={(e) => setCountry(e.target.value)}
-            className="w-full rounded-lg border border-zinc-300 px-3 py-2.5 text-sm text-black outline-none focus:border-zinc-500 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
-          >
-            {COUNTRIES.map(({ code, name }) => (
-              <option key={code} value={code}>
-                {name}
-              </option>
-            ))}
-          </select>
-          <p className="text-xs text-zinc-500">국가 (통계 목적으로 수집)</p>
+        <div className="flex flex-col gap-2 pt-1">
+          <label className="flex items-start gap-2 text-xs text-zinc-600 dark:text-zinc-400">
+            <input
+              type="checkbox"
+              checked={agreedTerms}
+              onChange={(e) => setAgreedTerms(e.target.checked)}
+              className="mt-0.5"
+            />
+            <span>
+              <Link href="#" className="underline">
+                이용약관
+              </Link>
+              에 동의합니다. <span className="text-red-500">*</span>
+            </span>
+          </label>
+          <label className="flex items-start gap-2 text-xs text-zinc-600 dark:text-zinc-400">
+            <input
+              type="checkbox"
+              checked={agreedPrivacy}
+              onChange={(e) => setAgreedPrivacy(e.target.checked)}
+              className="mt-0.5"
+            />
+            <span>
+              <Link href="#" className="underline">
+                개인정보 처리방침
+              </Link>
+              에 동의합니다. <span className="text-red-500">*</span>
+            </span>
+          </label>
         </div>
 
         <button
           type="submit"
-          disabled={loading}
-          className="w-full rounded-lg bg-zinc-900 px-4 py-2.5 text-sm font-medium text-white hover:bg-zinc-700 disabled:opacity-50 dark:bg-zinc-50 dark:text-black dark:hover:bg-zinc-200"
+          disabled={!canSubmit}
+          className="flex h-10 w-full items-center justify-center rounded-lg bg-indigo-600 text-sm font-medium text-white hover:bg-indigo-500 disabled:opacity-50"
         >
-          가입하기
+          {loading ? <Spinner /> : "가입하기"}
         </button>
       </form>
 
-      {error && (
-        <p className="text-center text-sm text-red-600 dark:text-red-400">
-          {error}
-        </p>
-      )}
-
-      <p className="text-xs text-zinc-500 dark:text-zinc-400">
-        가입 시 서비스 약관과 개인정보 처리방침에 동의하게 됩니다.
-      </p>
+      {error && <p className="text-center text-sm text-red-600 dark:text-red-400">{error}</p>}
 
       <p className="text-center text-sm text-zinc-600 dark:text-zinc-400">
         이미 계정이 있으신가요?{" "}
-        <Link
-          href="/login"
-          className="font-medium text-black underline dark:text-zinc-50"
-        >
+        <Link href="/login" className="font-medium text-black underline dark:text-zinc-50">
           로그인
         </Link>
       </p>

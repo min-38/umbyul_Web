@@ -15,17 +15,14 @@ export default async function OnboardingPage() {
   if (profile) redirect("/");
 
   // 이메일 가입은 user_metadata 에 username/country 가 있음 → 프리필 (OAuth 는 빈 값)
+  // 이메일 가입 유저는 회원가입에서 이미 동의(metadata) → 온보딩 동의 UI 불필요. OAuth 유저만 필요.
   const meta = (user.user_metadata ?? {}) as Record<string, unknown>;
-  const defaultUsername = typeof meta.username === "string" ? meta.username : "";
-  const defaultCountry = typeof meta.country === "string" ? meta.country : "KR";
+  const needsConsent = meta.terms_accepted !== true;
 
   return (
     <div className="flex flex-1 items-center justify-center bg-zinc-50 px-6 dark:bg-black">
       <div className="w-full max-w-sm rounded-2xl border border-zinc-200 bg-white p-8 dark:border-zinc-800 dark:bg-zinc-950">
-        <OnboardingForm
-          defaultUsername={defaultUsername}
-          defaultCountry={defaultCountry}
-        />
+        <OnboardingForm needsConsent={needsConsent} />
       </div>
     </div>
   );

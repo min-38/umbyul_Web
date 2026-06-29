@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
+import { Spinner } from "@/components/ui/spinner";
 
 type Provider = "google" | "discord";
 
@@ -36,22 +37,23 @@ function DiscordIcon() {
   );
 }
 
-export function OAuthButtons() {
+export function OAuthButtons({ disabled = false }: { disabled?: boolean } = {}) {
   const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [loadingProvider, setLoadingProvider] = useState<Provider | null>(null);
+  const loading = loadingProvider !== null;
 
   const supabase = createClient();
 
   const signIn = async (provider: Provider) => {
     setError(null);
-    setLoading(true);
+    setLoadingProvider(provider);
     const { error } = await supabase.auth.signInWithOAuth({
       provider,
       options: { redirectTo: `${window.location.origin}/auth/callback` },
     });
     if (error) {
       setError(error.message);
-      setLoading(false);
+      setLoadingProvider(null);
     }
     // 성공 시 provider로 리다이렉트되므로 별도 처리 없음.
   };
@@ -60,21 +62,33 @@ export function OAuthButtons() {
     <div className="flex flex-col gap-2">
       <button
         type="button"
-        disabled={loading}
+        disabled={loading || disabled}
         onClick={() => signIn("google")}
-        className="flex w-full items-center justify-center gap-2 rounded-lg border border-zinc-300 px-4 py-2.5 text-sm font-medium text-black hover:bg-zinc-50 disabled:opacity-50 dark:border-zinc-700 dark:text-zinc-50 dark:hover:bg-zinc-900"
+        className="flex h-11 w-full items-center justify-center gap-2 rounded-lg border border-zinc-300 text-sm font-medium text-black hover:bg-zinc-50 disabled:opacity-50 dark:border-zinc-700 dark:text-zinc-50 dark:hover:bg-zinc-900"
       >
-        <GoogleIcon />
-        Google로 계속하기
+        {loadingProvider === "google" ? (
+          <Spinner />
+        ) : (
+          <>
+            <GoogleIcon />
+            Google로 계속하기
+          </>
+        )}
       </button>
       <button
         type="button"
-        disabled={loading}
+        disabled={loading || disabled}
         onClick={() => signIn("discord")}
-        className="flex w-full items-center justify-center gap-2 rounded-lg bg-[#5865F2] px-4 py-2.5 text-sm font-medium text-white hover:brightness-95 disabled:opacity-50"
+        className="flex h-11 w-full items-center justify-center gap-2 rounded-lg border border-zinc-300 text-sm font-medium text-black hover:bg-zinc-50 disabled:opacity-50 dark:border-zinc-700 dark:text-zinc-50 dark:hover:bg-zinc-900"
       >
-        <DiscordIcon />
-        Discord로 계속하기
+        {loadingProvider === "discord" ? (
+          <Spinner />
+        ) : (
+          <>
+            <DiscordIcon />
+            Discord로 계속하기
+          </>
+        )}
       </button>
       {error && (
         <p className="text-center text-sm text-red-600 dark:text-red-400">
