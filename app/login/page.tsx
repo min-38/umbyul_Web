@@ -19,7 +19,7 @@ export default async function LoginPage() {
             <p className="font-medium text-black dark:text-zinc-50">
               {user.email ?? user.id}
             </p>
-            <form action={signOut}>
+            <form action={signOut.bind(null, "/")}>
               <button
                 type="submit"
                 className="w-full rounded-lg bg-zinc-900 px-4 py-2.5 text-sm font-medium text-white hover:bg-zinc-700 dark:bg-zinc-50 dark:text-black dark:hover:bg-zinc-200"
