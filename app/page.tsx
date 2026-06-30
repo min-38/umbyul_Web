@@ -4,12 +4,22 @@ import { createClient } from "@/lib/supabase/server";
 import { getProfile } from "@/lib/api";
 
 export default async function Home() {
-  // 로그인했지만 프로필(users row)이 없는 신규 유저는 온보딩으로
+  // 로그인했지만 프로필(users row)이 없는 신규 유저는 온보딩으로.
+  // Api 불가 시엔 게이트를 건너뛰고 홈을 렌더(페이지가 통째로 죽지 않게).
   const supabase = await createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  if (user && !(await getProfile())) redirect("/onboarding");
+  if (user) {
+    let profile = null;
+    let reachable = true;
+    try {
+      profile = await getProfile();
+    } catch {
+      reachable = false;
+    }
+    if (reachable && !profile) redirect("/onboarding");
+  }
 
   return (
     <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
