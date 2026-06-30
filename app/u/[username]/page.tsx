@@ -29,6 +29,7 @@ export default async function ProfilePage({ params }: { params: Promise<{ userna
             username={profile.username}
             isSelf={isSelf}
             loggedIn={loggedIn}
+            myUsername={me?.username ?? null}
             followerCount={profile.followerCount}
             followingCount={profile.followingCount}
             isFollowing={profile.isFollowing}

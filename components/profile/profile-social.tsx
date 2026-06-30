@@ -9,6 +9,7 @@ export function ProfileSocial({
   username,
   isSelf,
   loggedIn,
+  myUsername,
   followerCount,
   followingCount,
   isFollowing,
@@ -16,6 +17,7 @@ export function ProfileSocial({
   username: string;
   isSelf: boolean;
   loggedIn: boolean;
+  myUsername: string | null;
   followerCount: number;
   followingCount: number;
   isFollowing: boolean;
@@ -66,7 +68,15 @@ export function ProfileSocial({
         </button>
       )}
 
-      {modal && <FollowListModal username={username} kind={modal} loggedIn={loggedIn} onClose={() => setModal(null)} />}
+      {modal && (
+        <FollowListModal
+          username={username}
+          kind={modal}
+          loggedIn={loggedIn}
+          myUsername={myUsername}
+          onClose={() => setModal(null)}
+        />
+      )}
     </div>
   );
 }

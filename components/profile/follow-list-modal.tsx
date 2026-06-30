@@ -10,11 +10,13 @@ export function FollowListModal({
   username,
   kind,
   loggedIn,
+  myUsername,
   onClose,
 }: {
   username: string;
   kind: "followers" | "following";
   loggedIn: boolean;
+  myUsername: string | null;
   onClose: () => void;
 }) {
   const [users, setUsers] = useState<FollowUser[] | null>(null);
@@ -39,7 +41,7 @@ export function FollowListModal({
         ) : (
           <ul className="flex flex-col gap-1 overflow-y-auto">
             {users.map((u) => (
-              <FollowRow key={u.username} user={u} loggedIn={loggedIn} onNavigate={onClose} />
+              <FollowRow key={u.username} user={u} loggedIn={loggedIn} myUsername={myUsername} onNavigate={onClose} />
             ))}
           </ul>
         )}
@@ -48,10 +50,21 @@ export function FollowListModal({
   );
 }
 
-function FollowRow({ user, loggedIn, onNavigate }: { user: FollowUser; loggedIn: boolean; onNavigate: () => void }) {
+function FollowRow({
+  user,
+  loggedIn,
+  myUsername,
+  onNavigate,
+}: {
+  user: FollowUser;
+  loggedIn: boolean;
+  myUsername: string | null;
+  onNavigate: () => void;
+}) {
   const router = useRouter();
   const [following, setFollowing] = useState(user.isFollowing);
   const [busy, setBusy] = useState(false);
+  const isMe = myUsername !== null && user.username.toLowerCase() === myUsername.toLowerCase();
 
   const toggle = async () => {
     if (!loggedIn) {
@@ -77,18 +90,20 @@ function FollowRow({ user, loggedIn, onNavigate }: { user: FollowUser; loggedIn:
         </span>
         <span className="truncate text-sm text-zinc-800 dark:text-zinc-100">{user.username}</span>
       </Link>
-      <button
-        type="button"
-        onClick={toggle}
-        disabled={busy}
-        className={`shrink-0 rounded-lg px-3 py-1 text-xs font-medium disabled:opacity-50 ${
-          following
-            ? "border border-zinc-300 text-zinc-600 dark:border-zinc-700 dark:text-zinc-300"
-            : "bg-indigo-600 text-white hover:bg-indigo-500"
-        }`}
-      >
-        {following ? "팔로잉" : "팔로우"}
-      </button>
+      {!isMe && (
+        <button
+          type="button"
+          onClick={toggle}
+          disabled={busy}
+          className={`shrink-0 rounded-lg px-3 py-1 text-xs font-medium disabled:opacity-50 ${
+            following
+              ? "border border-zinc-300 text-zinc-600 dark:border-zinc-700 dark:text-zinc-300"
+              : "bg-indigo-600 text-white hover:bg-indigo-500"
+          }`}
+        >
+          {following ? "팔로잉" : "팔로우"}
+        </button>
+      )}
     </li>
   );
 }
