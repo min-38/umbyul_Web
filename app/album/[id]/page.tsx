@@ -46,6 +46,7 @@ export default async function AlbumPage({ params }: { params: Promise<{ id: stri
                 loggedIn={!!user}
                 targetType="album"
                 targetId={album.targetId}
+                spotifyId={album.spotifyId}
                 name={album.name}
                 myScore={mine?.score ?? 0}
                 myReview={mine?.body ?? ""}

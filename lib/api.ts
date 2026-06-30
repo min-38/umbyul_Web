@@ -146,3 +146,34 @@ export async function getAlbumDetail(id: string): Promise<AlbumDetail | null> {
   const json = await res.json();
   return json.data as AlbumDetail;
 }
+
+// ── 유저 프로필 (NON-24) ──
+export type ProfileReview = {
+  id: string;
+  targetType: "track" | "album";
+  spotifyId: string | null;
+  score: number;
+  body: string | null;
+  createdAt: string;
+  likeCount: number;
+  name: string | null;
+  artist: string | null;
+  imageUrl: string | null;
+};
+export type UserProfile = {
+  username: string;
+  avatarUrl: string | null;
+  joinedAt: string;
+  reviewCount: number;
+  totalLikes: number;
+  reviews: ProfileReview[];
+};
+
+/** 공개 유저 프로필 (비로그인 열람). 없으면 null(404). */
+export async function getUserProfile(username: string): Promise<UserProfile | null> {
+  const res = await fetch(`${API_URL}/users/${encodeURIComponent(username)}`, { cache: "no-store" });
+  if (res.status === 404) return null;
+  if (!res.ok) throw new Error(`profile fetch failed: ${res.status}`);
+  const json = await res.json();
+  return json.data as UserProfile;
+}

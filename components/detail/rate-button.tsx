@@ -9,6 +9,7 @@ export function RateButton({
   loggedIn,
   targetType,
   targetId,
+  spotifyId,
   name,
   myScore,
   myReview,
@@ -17,6 +18,7 @@ export function RateButton({
   loggedIn: boolean;
   targetType: "track" | "album";
   targetId: string;
+  spotifyId: string;
   name: string;
   myScore: number;
   myReview: string;
@@ -45,6 +47,7 @@ export function RateButton({
         <ReviewModal
           targetType={targetType}
           targetId={targetId}
+          spotifyId={spotifyId}
           name={name}
           initialScore={myScore}
           initialReview={myReview}

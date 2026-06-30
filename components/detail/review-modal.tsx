@@ -8,6 +8,7 @@ import { msg } from "@/lib/messages";
 export function ReviewModal({
   targetType,
   targetId,
+  spotifyId,
   name,
   initialScore,
   initialReview,
@@ -16,6 +17,7 @@ export function ReviewModal({
 }: {
   targetType: "track" | "album";
   targetId: string;
+  spotifyId: string;
   name: string;
   initialScore: number;
   initialReview: string;
@@ -35,7 +37,7 @@ export function ReviewModal({
     }
     setBusy(true);
     setError(null);
-    const r = await saveRating({ targetType, targetId, score, review: review.trim() || null, path });
+    const r = await saveRating({ targetType, targetId, spotifyId, score, review: review.trim() || null, path });
     setBusy(false);
     if (r.ok) onClose();
     else setError(msg(r.code));

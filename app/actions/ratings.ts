@@ -35,6 +35,7 @@ async function authedFetch(path: string, init: RequestInit): Promise<Result> {
 export async function saveRating(input: {
   targetType: "track" | "album";
   targetId: string;
+  spotifyId: string;
   score: number;
   review: string | null;
   path: string;
@@ -44,6 +45,7 @@ export async function saveRating(input: {
     body: JSON.stringify({
       targetType: input.targetType,
       targetId: input.targetId,
+      spotifyId: input.spotifyId,
       score: input.score,
       review: input.review,
     }),

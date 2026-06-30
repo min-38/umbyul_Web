@@ -57,6 +57,7 @@ export default async function TrackPage({ params }: { params: Promise<{ id: stri
                 loggedIn={!!user}
                 targetType="track"
                 targetId={track.targetId}
+                spotifyId={track.spotifyId}
                 name={track.name}
                 myScore={mine?.score ?? 0}
                 myReview={mine?.body ?? ""}

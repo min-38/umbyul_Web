@@ -7,8 +7,7 @@ import { signOut } from "@/app/auth/actions";
 import { useClickOutside } from "@/lib/use-click-outside";
 
 // 미구현 대상은 플레이스홀더(#) — 각 기능 이슈에서 연결
-const ITEMS = [
-  { label: "프로필", href: "#" },
+const STATIC_ITEMS = [
   { label: "포인트 내역", href: "#" },
   { label: "업적", href: "#" },
   { label: "설정", href: "#" },
@@ -19,6 +18,7 @@ export function UserMenu({ username, avatarUrl }: { username: string; avatarUrl:
   const pathname = usePathname();
   const ref = useRef<HTMLDivElement>(null);
   useClickOutside(ref, () => setOpen(false), open);
+  const items = [{ label: "프로필", href: `/u/${username}` }, ...STATIC_ITEMS];
 
   return (
     <div ref={ref} className="relative">
@@ -40,7 +40,7 @@ export function UserMenu({ username, avatarUrl }: { username: string; avatarUrl:
 
       {open && (
         <div className="absolute right-0 z-20 mt-1 w-44 overflow-hidden rounded-lg border border-zinc-200 bg-white py-1 shadow-lg dark:border-zinc-800 dark:bg-zinc-950">
-          {ITEMS.map((it) => (
+          {items.map((it) => (
             <Link
               key={it.label}
               href={it.href}
