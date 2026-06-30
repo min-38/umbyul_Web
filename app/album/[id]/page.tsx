@@ -63,7 +63,7 @@ export default async function AlbumPage({ params }: { params: Promise<{ id: stri
         <h2 className="mb-4 text-lg font-semibold text-zinc-900 dark:text-zinc-50">
           리뷰 <span className="text-zinc-400">({album.rating.count})</span>
         </h2>
-        <ReviewList reviews={album.reviews} />
+        <ReviewList reviews={album.reviews} currentUserId={user?.id ?? null} />
       </section>
     </div>
   );

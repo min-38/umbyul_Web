@@ -3,12 +3,20 @@
 import { useState } from "react";
 import type { ReviewItem } from "@/lib/api";
 import { Stars } from "./stars";
+import { ReactionBar } from "./reaction-bar";
+import { ReportControl } from "./report-control";
 import { formatRelativeTime } from "@/lib/format";
 
-// Popular 는 좋아요(Phase 2) 전이라 점수 내림차순으로 대체. Latest 는 최신순.
+// 인기순 = 순좋아요(좋아요-싫어요) 내림차순. 최신순 = 작성시간.
 type Sort = "latest" | "popular";
 
-export function ReviewList({ reviews }: { reviews: ReviewItem[] }) {
+export function ReviewList({
+  reviews,
+  currentUserId,
+}: {
+  reviews: ReviewItem[];
+  currentUserId: string | null;
+}) {
   const [sort, setSort] = useState<Sort>("latest");
 
   if (reviews.length === 0) {
@@ -22,7 +30,7 @@ export function ReviewList({ reviews }: { reviews: ReviewItem[] }) {
   const sorted = [...reviews].sort((a, b) =>
     sort === "latest"
       ? +new Date(b.createdAt) - +new Date(a.createdAt)
-      : b.score - a.score,
+      : b.likeCount - b.dislikeCount - (a.likeCount - a.dislikeCount),
   );
 
   return (
@@ -64,6 +72,14 @@ export function ReviewList({ reviews }: { reviews: ReviewItem[] }) {
               </span>
             </div>
             {r.body && <p className="whitespace-pre-wrap text-sm leading-relaxed text-zinc-600 dark:text-zinc-300">{r.body}</p>}
+            <div className="flex items-center gap-4 pt-0.5">
+              <ReactionBar
+                ratingId={r.id}
+                loggedIn={currentUserId !== null}
+                initial={{ likeCount: r.likeCount, dislikeCount: r.dislikeCount, myReaction: r.myReaction }}
+              />
+              {r.userId !== currentUserId && <ReportControl ratingId={r.id} loggedIn={currentUserId !== null} />}
+            </div>
           </li>
         ))}
       </ul>

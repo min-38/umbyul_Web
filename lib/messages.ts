@@ -15,6 +15,10 @@ const KO: Record<string, string> = {
   REVIEW_TOO_LONG: "리뷰가 너무 깁니다.",
   PROFILE_REQUIRED: "프로필 설정이 필요합니다.",
   RATING_NOT_FOUND: "평가를 찾을 수 없습니다.",
+  // 반응/신고 (NON-23)
+  INVALID_REACTION: "반응 값이 올바르지 않습니다.",
+  INVALID_REASON: "신고 사유를 선택해주세요.",
+  DETAIL_TOO_LONG: "상세 내용이 너무 깁니다.",
   UNKNOWN: "문제가 발생했습니다. 잠시 후 다시 시도해주세요.",
 };
 

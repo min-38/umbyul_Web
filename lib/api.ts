@@ -70,6 +70,7 @@ export type ArtistRef = { id: string; name: string };
 export type AlbumRef = { id: string; name: string; imageUrl: string | null };
 export type TrackRef = { id: string; name: string; durationMs: number; trackNumber: number };
 export type RatingSummary = { average: number | null; count: number };
+export type Reaction = "like" | "dislike";
 export type ReviewItem = {
   id: string;
   userId: string;
@@ -78,6 +79,9 @@ export type ReviewItem = {
   score: number;
   body: string | null;
   createdAt: string;
+  likeCount: number;
+  dislikeCount: number;
+  myReaction: Reaction | null;
 };
 // 장르는 Spotify 앱 토큰으로 안 내려와 제외. 레이블은 copyrights(℗/©) 텍스트.
 export type TrackDetail = {
@@ -110,9 +114,21 @@ export type AlbumDetail = {
   reviews: ReviewItem[];
 };
 
+// 로그인 시 토큰을 실어 보내면 상세 응답에 내 반응(myReaction)이 포함된다(공개 엔드포인트라 옵셔널).
+async function detailHeaders(): Promise<HeadersInit> {
+  const supabase = await createClient();
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+  return session ? { Authorization: `Bearer ${session.access_token}` } : {};
+}
+
 /** 트랙 상세 (공개). 없으면 null(404). */
 export async function getTrackDetail(id: string): Promise<TrackDetail | null> {
-  const res = await fetch(`${API_URL}/detail/track/${encodeURIComponent(id)}`, { cache: "no-store" });
+  const res = await fetch(`${API_URL}/detail/track/${encodeURIComponent(id)}`, {
+    headers: await detailHeaders(),
+    cache: "no-store",
+  });
   if (res.status === 404) return null;
   if (!res.ok) throw new Error(`track detail failed: ${res.status}`);
   const json = await res.json();
@@ -121,7 +137,10 @@ export async function getTrackDetail(id: string): Promise<TrackDetail | null> {
 
 /** 앨범 상세 (공개). 없으면 null(404). */
 export async function getAlbumDetail(id: string): Promise<AlbumDetail | null> {
-  const res = await fetch(`${API_URL}/detail/album/${encodeURIComponent(id)}`, { cache: "no-store" });
+  const res = await fetch(`${API_URL}/detail/album/${encodeURIComponent(id)}`, {
+    headers: await detailHeaders(),
+    cache: "no-store",
+  });
   if (res.status === 404) return null;
   if (!res.ok) throw new Error(`album detail failed: ${res.status}`);
   const json = await res.json();

@@ -1,0 +1,129 @@
+"use client";
+
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { submitReport } from "@/app/actions/social";
+import { msg } from "@/lib/messages";
+
+const REASONS = [
+  { value: "not_music", label: "음악과 무관한 내용" },
+  { value: "abuse", label: "악플·욕설" },
+  { value: "inappropriate_profile", label: "부적절한 이름·프로필 사진" },
+  { value: "other", label: "기타" },
+];
+
+export function ReportControl({ ratingId, loggedIn }: { ratingId: string; loggedIn: boolean }) {
+  const router = useRouter();
+  const [open, setOpen] = useState(false);
+  const [reason, setReason] = useState("");
+  const [detail, setDetail] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [done, setDone] = useState(false);
+
+  const openModal = () => {
+    if (!loggedIn) {
+      router.push("/login");
+      return;
+    }
+    setOpen(true);
+  };
+
+  const close = () => {
+    setOpen(false);
+    setError(null);
+  };
+
+  const submit = async () => {
+    if (!reason) {
+      setError("사유를 선택해주세요.");
+      return;
+    }
+    setBusy(true);
+    setError(null);
+    const r = await submitReport({ targetType: "rating", targetId: ratingId, reason, detail: detail.trim() || null });
+    setBusy(false);
+    if (r.ok) setDone(true);
+    else setError(msg(r.code));
+  };
+
+  return (
+    <>
+      <button type="button" onClick={openModal} className="text-xs text-zinc-400 hover:text-red-500">
+        신고
+      </button>
+      {open && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" onClick={close}>
+          <div
+            className="w-full max-w-sm rounded-2xl bg-white p-6 shadow-xl dark:bg-zinc-950"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {done ? (
+              <div className="flex flex-col gap-4 text-center">
+                <p className="text-sm text-zinc-700 dark:text-zinc-200">신고가 접수되었습니다.</p>
+                <button
+                  type="button"
+                  onClick={close}
+                  className="self-center rounded-lg bg-zinc-900 px-4 py-2 text-sm font-medium text-white dark:bg-zinc-100 dark:text-black"
+                >
+                  닫기
+                </button>
+              </div>
+            ) : (
+              <>
+                <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">리뷰 신고</h2>
+                <p className="mt-0.5 text-xs text-zinc-500">신고 내용은 운영자가 검토합니다.</p>
+
+                <fieldset className="mt-4 flex flex-col gap-2">
+                  {REASONS.map((r) => (
+                    <label key={r.value} className="flex cursor-pointer items-center gap-2 text-sm text-zinc-700 dark:text-zinc-200">
+                      <input
+                        type="radio"
+                        name="reason"
+                        value={r.value}
+                        checked={reason === r.value}
+                        onChange={() => setReason(r.value)}
+                        className="accent-indigo-600"
+                      />
+                      {r.label}
+                    </label>
+                  ))}
+                </fieldset>
+
+                <textarea
+                  value={detail}
+                  onChange={(e) => setDetail(e.target.value)}
+                  placeholder="상세 내용 (선택)"
+                  rows={3}
+                  maxLength={1000}
+                  className="mt-3 w-full resize-none rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 placeholder:text-zinc-400 focus:border-zinc-500 focus:outline-none dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100"
+                />
+
+                {error && <p className="mt-2 text-sm text-red-500">{error}</p>}
+
+                <div className="mt-4 flex justify-end gap-2">
+                  <button
+                    type="button"
+                    onClick={close}
+                    disabled={busy}
+                    className="rounded-lg px-4 py-2 text-sm font-medium text-zinc-600 hover:bg-zinc-100 disabled:opacity-50 dark:text-zinc-300 dark:hover:bg-zinc-900"
+                  >
+                    취소
+                  </button>
+                  <button
+                    type="button"
+                    onClick={submit}
+                    disabled={busy}
+                    className="rounded-lg bg-red-500 px-4 py-2 text-sm font-medium text-white hover:bg-red-600 disabled:opacity-50"
+                  >
+                    {busy ? "접수 중…" : "신고"}
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      )}
+    </>
+  );
+}
