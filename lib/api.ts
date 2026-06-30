@@ -166,14 +166,36 @@ export type UserProfile = {
   joinedAt: string;
   reviewCount: number;
   totalLikes: number;
+  followerCount: number;
+  followingCount: number;
+  isFollowing: boolean;
   reviews: ProfileReview[];
 };
 
-/** 공개 유저 프로필 (비로그인 열람). 없으면 null(404). */
+/** 공개 유저 프로필 (비로그인 열람). 로그인 시 토큰 실어 isFollowing 포함. 없으면 null(404). */
 export async function getUserProfile(username: string): Promise<UserProfile | null> {
-  const res = await fetch(`${API_URL}/users/${encodeURIComponent(username)}`, { cache: "no-store" });
+  const res = await fetch(`${API_URL}/users/${encodeURIComponent(username)}`, {
+    headers: await detailHeaders(),
+    cache: "no-store",
+  });
   if (res.status === 404) return null;
   if (!res.ok) throw new Error(`profile fetch failed: ${res.status}`);
   const json = await res.json();
   return json.data as UserProfile;
 }
+
+// 팔로워/팔로잉 목록 (NON-25)
+export type FollowUser = { username: string; avatarUrl: string | null; isFollowing: boolean };
+
+async function fetchFollowList(username: string, kind: "followers" | "following"): Promise<FollowUser[]> {
+  const res = await fetch(`${API_URL}/users/${encodeURIComponent(username)}/${kind}`, {
+    headers: await detailHeaders(),
+    cache: "no-store",
+  });
+  if (!res.ok) return [];
+  const json = await res.json();
+  return (json.data as FollowUser[]) ?? [];
+}
+
+export const getFollowers = (username: string) => fetchFollowList(username, "followers");
+export const getFollowing = (username: string) => fetchFollowList(username, "following");

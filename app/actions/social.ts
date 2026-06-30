@@ -2,14 +2,16 @@
 
 import { createClient } from "@/lib/supabase/server";
 import type { Reaction } from "@/lib/api";
+import { getFollowers, getFollowing } from "@/lib/api";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export type ReactionState = { likeCount: number; dislikeCount: number; myReaction: Reaction | null };
 
-async function authedPost<T>(
+async function authedRequest<T>(
+  method: string,
   path: string,
-  body: unknown,
+  body?: unknown,
 ): Promise<{ ok: boolean; code: string; data: T | null }> {
   const supabase = await createClient();
   const {
@@ -19,9 +21,9 @@ async function authedPost<T>(
 
   try {
     const res = await fetch(`${API_URL}${path}`, {
-      method: "POST",
+      method,
       headers: { Authorization: `Bearer ${session.access_token}`, "Content-Type": "application/json" },
-      body: JSON.stringify(body),
+      body: body === undefined ? undefined : JSON.stringify(body),
       cache: "no-store",
     });
     const json = await res.json().catch(() => null);
@@ -37,7 +39,7 @@ async function authedPost<T>(
 
 // 좋아요/싫어요 토글. 갱신된 카운트+내 반응을 돌려줌(클라가 로컬 반영 → 상세 재조회 불필요).
 export async function toggleReaction(input: { ratingId: string; value: Reaction }) {
-  return authedPost<ReactionState>("/me/reactions", input);
+  return authedRequest<ReactionState>("POST", "/me/reactions", input);
 }
 
 export async function submitReport(input: {
@@ -46,6 +48,25 @@ export async function submitReport(input: {
   reason: string;
   detail: string | null;
 }) {
-  const r = await authedPost<null>("/me/reports", input);
+  const r = await authedRequest<null>("POST", "/me/reports", input);
   return { ok: r.ok, code: r.code };
+}
+
+// 팔로우/언팔로우 (NON-25)
+export async function followUser(username: string) {
+  const r = await authedRequest<null>("POST", "/me/follows", { username });
+  return { ok: r.ok, code: r.code };
+}
+
+export async function unfollowUser(username: string) {
+  const r = await authedRequest<null>("DELETE", `/me/follows?username=${encodeURIComponent(username)}`);
+  return { ok: r.ok, code: r.code };
+}
+
+// 팔로워/팔로잉 목록 (모달에서 클라가 호출)
+export async function loadFollowers(username: string) {
+  return getFollowers(username);
+}
+export async function loadFollowing(username: string) {
+  return getFollowing(username);
 }

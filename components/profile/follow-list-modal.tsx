@@ -1,0 +1,94 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import type { FollowUser } from "@/lib/api";
+import { loadFollowers, loadFollowing, followUser, unfollowUser } from "@/app/actions/social";
+
+export function FollowListModal({
+  username,
+  kind,
+  loggedIn,
+  onClose,
+}: {
+  username: string;
+  kind: "followers" | "following";
+  loggedIn: boolean;
+  onClose: () => void;
+}) {
+  const [users, setUsers] = useState<FollowUser[] | null>(null);
+
+  useEffect(() => {
+    (kind === "followers" ? loadFollowers : loadFollowing)(username).then(setUsers);
+  }, [username, kind]);
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" onClick={onClose}>
+      <div
+        className="flex max-h-[70vh] w-full max-w-sm flex-col rounded-2xl bg-white p-5 shadow-xl dark:bg-zinc-950"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <h2 className="mb-3 text-base font-semibold text-zinc-900 dark:text-zinc-50">
+          {kind === "followers" ? "팔로워" : "팔로잉"}
+        </h2>
+        {users === null ? (
+          <p className="py-8 text-center text-sm text-zinc-400">불러오는 중…</p>
+        ) : users.length === 0 ? (
+          <p className="py-8 text-center text-sm text-zinc-400">아직 없습니다.</p>
+        ) : (
+          <ul className="flex flex-col gap-1 overflow-y-auto">
+            {users.map((u) => (
+              <FollowRow key={u.username} user={u} loggedIn={loggedIn} onNavigate={onClose} />
+            ))}
+          </ul>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function FollowRow({ user, loggedIn, onNavigate }: { user: FollowUser; loggedIn: boolean; onNavigate: () => void }) {
+  const router = useRouter();
+  const [following, setFollowing] = useState(user.isFollowing);
+  const [busy, setBusy] = useState(false);
+
+  const toggle = async () => {
+    if (!loggedIn) {
+      router.push("/login");
+      return;
+    }
+    setBusy(true);
+    const r = following ? await unfollowUser(user.username) : await followUser(user.username);
+    setBusy(false);
+    if (r.ok) setFollowing(!following);
+  };
+
+  return (
+    <li className="flex items-center gap-2 rounded-lg px-2 py-1.5 hover:bg-zinc-50 dark:hover:bg-zinc-900">
+      <Link href={`/u/${user.username}`} onClick={onNavigate} className="flex min-w-0 flex-1 items-center gap-2">
+        <span className="flex h-8 w-8 items-center justify-center overflow-hidden rounded-full bg-zinc-200 text-xs font-medium text-zinc-500 dark:bg-zinc-800 dark:text-zinc-300">
+          {user.avatarUrl ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={user.avatarUrl} alt="" className="h-full w-full object-cover" />
+          ) : (
+            user.username.charAt(0).toUpperCase()
+          )}
+        </span>
+        <span className="truncate text-sm text-zinc-800 dark:text-zinc-100">{user.username}</span>
+      </Link>
+      <button
+        type="button"
+        onClick={toggle}
+        disabled={busy}
+        className={`shrink-0 rounded-lg px-3 py-1 text-xs font-medium disabled:opacity-50 ${
+          following
+            ? "border border-zinc-300 text-zinc-600 dark:border-zinc-700 dark:text-zinc-300"
+            : "bg-indigo-600 text-white hover:bg-indigo-500"
+        }`}
+      >
+        {following ? "팔로잉" : "팔로우"}
+      </button>
+    </li>
+  );
+}
