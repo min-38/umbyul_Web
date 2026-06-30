@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import type {
   SearchResults,
   TrackResult,
@@ -58,28 +59,38 @@ function Thumb({ url, circle = false }: { url: string | null; circle?: boolean }
 }
 
 function TrackCard({ t }: { t: TrackResult }) {
+  // 앨범명은 앨범 상세로 따로 링크. <a> 중첩이 안 되므로 트랙 링크 바깥의 형제로 둔다.
   return (
     <div className="flex flex-col gap-1.5">
-      <Thumb url={t.imageUrl} />
-      <div className="min-w-0">
-        <p className="truncate text-sm font-medium text-black dark:text-zinc-50">{t.name}</p>
-        <p className="truncate text-xs text-zinc-500">{t.artist}</p>
-        {t.albumName && <p className="truncate text-xs text-zinc-400">{t.albumName}</p>}
-      </div>
+      <Link href={`/track/${t.id}`} className="flex flex-col gap-1.5">
+        <Thumb url={t.imageUrl} />
+        <div className="min-w-0">
+          <p className="truncate text-sm font-medium text-black dark:text-zinc-50">{t.name}</p>
+          <p className="truncate text-xs text-zinc-500">{t.artist}</p>
+        </div>
+      </Link>
+      {t.albumName &&
+        (t.albumId ? (
+          <Link href={`/album/${t.albumId}`} className="block truncate text-xs text-zinc-400 hover:text-zinc-600 hover:underline dark:hover:text-zinc-300">
+            {t.albumName}
+          </Link>
+        ) : (
+          <p className="truncate text-xs text-zinc-400">{t.albumName}</p>
+        ))}
     </div>
   );
 }
 
 function AlbumCard({ a }: { a: AlbumResult }) {
   return (
-    <div className="flex flex-col gap-1.5">
+    <Link href={`/album/${a.id}`} className="flex flex-col gap-1.5">
       <Thumb url={a.imageUrl} />
       <div className="min-w-0">
         <p className="truncate text-sm font-medium text-black dark:text-zinc-50">{a.name}</p>
         <p className="truncate text-xs text-zinc-500">{a.artist}</p>
         {a.releaseDate && <p className="truncate text-xs text-zinc-400">{a.releaseDate}</p>}
       </div>
-    </div>
+    </Link>
   );
 }
 
