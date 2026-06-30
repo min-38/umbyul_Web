@@ -33,7 +33,7 @@ export default async function ProfilePage({ params }: { params: Promise<{ userna
             followingCount={profile.followingCount}
             isFollowing={profile.isFollowing}
           />
-          <span className="text-sm text-zinc-400">가입 {joined}</span>
+          {isSelf && <span className="text-sm text-zinc-400">가입 {joined}</span>}
         </div>
       </div>
 
