@@ -62,14 +62,18 @@ export function ProfileReviews({ reviews }: { reviews: ProfileReview[] }) {
                 alt=""
                 className="h-12 w-12 shrink-0 rounded-md bg-zinc-100 object-cover dark:bg-zinc-900"
               />
+              <span
+                className={`flex w-11 shrink-0 items-center justify-center rounded-md py-1 text-xs font-medium ${
+                  r.targetType === "track"
+                    ? "bg-indigo-100 text-indigo-700 dark:bg-indigo-950 dark:text-indigo-300"
+                    : "bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300"
+                }`}
+              >
+                {r.targetType === "track" ? "곡" : "앨범"}
+              </span>
               <div className="min-w-0 flex-1">
-                <p className="flex items-center gap-1.5">
-                  <span className="truncate text-sm font-medium text-zinc-900 dark:text-zinc-50">
-                    {r.name ?? "(알 수 없는 항목)"}
-                  </span>
-                  <span className="shrink-0 rounded bg-zinc-100 px-1.5 py-0.5 text-[10px] text-zinc-500 dark:bg-zinc-800">
-                    {r.targetType === "track" ? "곡" : "앨범"}
-                  </span>
+                <p className="truncate text-sm font-medium text-zinc-900 dark:text-zinc-50">
+                  {r.name ?? "(알 수 없는 항목)"}
                 </p>
                 <p className="truncate text-xs text-zinc-500">{r.artist ?? ""}</p>
               </div>
