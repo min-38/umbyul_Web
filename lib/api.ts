@@ -87,6 +87,7 @@ export type TrackDetail = {
   artists: ArtistRef[];
   album: AlbumRef | null;
   isrc: string | null;
+  targetId: string;
   durationMs: number;
   releaseDate: string | null;
   copyright: string | null;
@@ -100,6 +101,7 @@ export type AlbumDetail = {
   artists: ArtistRef[];
   imageUrl: string | null;
   upc: string | null;
+  targetId: string;
   releaseDate: string | null;
   copyright: string | null;
   totalTracks: number;

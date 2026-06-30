@@ -19,6 +19,7 @@ export default async function TrackPage({ params }: { params: Promise<{ id: stri
   } = await supabase.auth.getUser();
 
   const artistNames = track.artists.map((a) => a.name).join(", ");
+  const mine = user ? track.reviews.find((r) => r.userId === user.id) : undefined;
 
   return (
     <div className="mx-auto w-full max-w-4xl px-6 py-8">
@@ -52,7 +53,15 @@ export default async function TrackPage({ params }: { params: Promise<{ id: stri
               <span className="text-xs text-zinc-400">{track.rating.count}개 평가</span>
             </span>
             <span className="ml-auto">
-              <RateButton loggedIn={!!user} />
+              <RateButton
+                loggedIn={!!user}
+                targetType="track"
+                targetId={track.targetId}
+                name={track.name}
+                myScore={mine?.score ?? 0}
+                myReview={mine?.body ?? ""}
+                path={`/track/${track.spotifyId}`}
+              />
             </span>
           </div>
         </div>

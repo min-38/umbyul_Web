@@ -8,6 +8,13 @@ const KO: Record<string, string> = {
   DB_NOT_CONFIGURED: "서버 설정 오류입니다. 잠시 후 다시 시도해주세요.",
   DB_UNAVAILABLE: "서버에 연결할 수 없습니다. 잠시 후 다시 시도해주세요.",
   UNAUTHORIZED: "로그인이 필요합니다.",
+  // 평점/리뷰 (NON-7)
+  INVALID_SCORE: "별점은 0.5 단위로 0.5~5.0 사이여야 합니다.",
+  INVALID_TARGET: "대상이 올바르지 않습니다.",
+  INVALID_TARGET_TYPE: "대상 종류가 올바르지 않습니다.",
+  REVIEW_TOO_LONG: "리뷰가 너무 깁니다.",
+  PROFILE_REQUIRED: "프로필 설정이 필요합니다.",
+  RATING_NOT_FOUND: "평가를 찾을 수 없습니다.",
   UNKNOWN: "문제가 발생했습니다. 잠시 후 다시 시도해주세요.",
 };
 

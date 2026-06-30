@@ -1,10 +1,28 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
+import { ReviewModal } from "./review-modal";
 
-// NON-6: 버튼은 항상 노출, 비로그인 클릭 시 로그인 유도(기획 §3).
-// 로그인 상태의 작성/수정 폼은 NON-7에서 연결.
-export function RateButton({ loggedIn }: { loggedIn: boolean }) {
+// 비로그인 → 로그인 유도. 로그인 → 작성/수정 모달.
+export function RateButton({
+  loggedIn,
+  targetType,
+  targetId,
+  name,
+  myScore,
+  myReview,
+  path,
+}: {
+  loggedIn: boolean;
+  targetType: "track" | "album";
+  targetId: string;
+  name: string;
+  myScore: number;
+  myReview: string;
+  path: string;
+}) {
+  const [open, setOpen] = useState(false);
   const cls =
     "inline-flex items-center justify-center rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-500";
 
@@ -15,9 +33,25 @@ export function RateButton({ loggedIn }: { loggedIn: boolean }) {
       </Link>
     );
   }
+
+  const editing = myScore > 0;
+
   return (
-    <button type="button" className={cls}>
-      평가하기
-    </button>
+    <>
+      <button type="button" className={cls} onClick={() => setOpen(true)}>
+        {editing ? "내 평가 수정" : "평가하기"}
+      </button>
+      {open && (
+        <ReviewModal
+          targetType={targetType}
+          targetId={targetId}
+          name={name}
+          initialScore={myScore}
+          initialReview={myReview}
+          path={path}
+          onClose={() => setOpen(false)}
+        />
+      )}
+    </>
   );
 }

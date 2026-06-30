@@ -18,6 +18,7 @@ export default async function AlbumPage({ params }: { params: Promise<{ id: stri
   } = await supabase.auth.getUser();
 
   const artistNames = album.artists.map((a) => a.name).join(", ");
+  const mine = user ? album.reviews.find((r) => r.userId === user.id) : undefined;
 
   return (
     <div className="mx-auto w-full max-w-4xl px-6 py-8">
@@ -41,7 +42,15 @@ export default async function AlbumPage({ params }: { params: Promise<{ id: stri
               <span className="text-xs text-zinc-400">{album.rating.count}개 평가</span>
             </span>
             <span className="ml-auto">
-              <RateButton loggedIn={!!user} />
+              <RateButton
+                loggedIn={!!user}
+                targetType="album"
+                targetId={album.targetId}
+                name={album.name}
+                myScore={mine?.score ?? 0}
+                myReview={mine?.body ?? ""}
+                path={`/album/${album.spotifyId}`}
+              />
             </span>
           </div>
           <SpotifyLink url={album.spotifyUrl} />
