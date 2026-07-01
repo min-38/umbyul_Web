@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
@@ -18,11 +18,23 @@ export default function ResetPasswordPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [done, setDone] = useState(false);
+  const completed = useRef(false); // 재설정 완료 여부 (이탈 시 정리 판단)
 
   useEffect(() => {
     createClient()
       .auth.getUser()
       .then(({ data }) => setReady(!!data.user));
+
+    // 재설정을 완료하지 않고 페이지를 떠나면(탭 닫기·이동) 복구 세션 제거.
+    // → 재설정 링크가 그대로 로그인 세션으로 남는 보안 문제 방지.
+    const cleanup = () => {
+      if (!completed.current) createClient().auth.signOut();
+    };
+    window.addEventListener("pagehide", cleanup);
+    return () => {
+      window.removeEventListener("pagehide", cleanup);
+      cleanup();
+    };
   }, []);
 
   const onSubmit = async (e: React.FormEvent) => {
@@ -31,10 +43,20 @@ export default function ResetPasswordPage() {
     if (pw !== pw2) return setError("비밀번호가 일치하지 않습니다.");
     setError(null);
     setLoading(true);
-    const { error } = await createClient().auth.updateUser({ password: pw });
+
+    const supabase = createClient();
+    const { error } = await supabase.auth.updateUser({ password: pw });
+    if (error) {
+      setLoading(false);
+      setError(error.message);
+      return;
+    }
+    // 변경 성공 → 복구 세션 로그아웃(재로그인 강제)
+    completed.current = true;
+    await supabase.auth.signOut();
     setLoading(false);
-    if (error) setError(error.message);
-    else setDone(true);
+    setDone(true);
+    router.refresh();
   };
 
   return (
@@ -44,6 +66,18 @@ export default function ResetPasswordPage() {
           <div className="flex justify-center py-6">
             <Spinner />
           </div>
+        ) : done ? (
+          <div className="flex flex-col items-center gap-3 text-center">
+            <BrandMark />
+            <p className="font-medium text-black dark:text-zinc-50">비밀번호가 변경되었습니다</p>
+            <p className="text-sm text-zinc-500">새 비밀번호로 다시 로그인해주세요.</p>
+            <Link
+              href="/login"
+              className="mt-2 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-500"
+            >
+              로그인하기
+            </Link>
+          </div>
         ) : !ready ? (
           <div className="flex flex-col items-center gap-3 text-center">
             <BrandMark />
@@ -52,21 +86,6 @@ export default function ResetPasswordPage() {
             <Link href="/forgot-password" className="mt-2 text-sm font-medium text-black underline dark:text-zinc-50">
               재설정 링크 다시 받기
             </Link>
-          </div>
-        ) : done ? (
-          <div className="flex flex-col items-center gap-3 text-center">
-            <BrandMark />
-            <p className="font-medium text-black dark:text-zinc-50">비밀번호가 변경되었습니다</p>
-            <button
-              type="button"
-              onClick={() => {
-                router.push("/");
-                router.refresh();
-              }}
-              className="mt-2 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-500"
-            >
-              홈으로
-            </button>
           </div>
         ) : (
           <div className="flex flex-col gap-5">
