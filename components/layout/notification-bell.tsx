@@ -12,7 +12,7 @@ import {
 import { useClickOutside } from "@/lib/use-click-outside";
 import { formatRelativeTime } from "@/lib/format";
 
-const POLL_MS = 12000;
+const POLL_MS = 5000;
 
 function label(n: NotificationItem) {
   return n.type === "follow" ? "회원님을 팔로우했습니다" : "회원님의 리뷰를 좋아합니다";
@@ -23,31 +23,59 @@ export function NotificationBell({ items, unreadCount }: { items: NotificationIt
   const [list, setList] = useState(items);
   const [unread, setUnread] = useState(unreadCount);
   const [toast, setToast] = useState<NotificationItem | null>(null);
+  const [toastShown, setToastShown] = useState(false); // opacity (페이드)
   const ref = useRef<HTMLDivElement>(null);
   const knownIds = useRef(new Set(items.map((i) => i.id)));
-  const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const toastTimers = useRef<ReturnType<typeof setTimeout>[]>([]);
   const openRef = useRef(open);
   openRef.current = open;
 
   useClickOutside(ref, () => setOpen(false), open);
 
-  // 폴링: 새 알림이 오면 즉시(≤12s) 목록·개수 반영 + 상단 토스트
+  const clearToastTimers = () => {
+    toastTimers.current.forEach(clearTimeout);
+    toastTimers.current = [];
+  };
+
+  const showToast = (n: NotificationItem) => {
+    clearToastTimers();
+    setToast(n);
+    setToastShown(false);
+    toastTimers.current.push(setTimeout(() => setToastShown(true), 20)); // 페이드 인
+    toastTimers.current.push(setTimeout(() => setToastShown(false), 3000)); // 페이드 아웃 시작
+    toastTimers.current.push(setTimeout(() => setToast(null), 3300)); // 트랜지션 후 제거
+  };
+
+  const dismissToast = () => {
+    clearToastTimers();
+    setToastShown(false);
+    toastTimers.current.push(setTimeout(() => setToast(null), 300));
+  };
+
+  // 폴링: 새 알림이 오면 빠르게 반영 + 상단 토스트. 탭 숨김 시 정지, 복귀 시 즉시 조회.
   useEffect(() => {
     const poll = async () => {
+      if (document.hidden) return;
       const data = await loadNotifications();
       setList(data.items);
       setUnread(openRef.current ? 0 : data.unreadCount);
 
       const fresh = data.items.filter((i) => !knownIds.current.has(i.id));
       data.items.forEach((i) => knownIds.current.add(i.id));
-      if (fresh.length > 0 && !openRef.current) {
-        setToast(fresh[0]);
-        if (toastTimer.current) clearTimeout(toastTimer.current);
-        toastTimer.current = setTimeout(() => setToast(null), 3000);
-      }
+      if (fresh.length > 0 && !openRef.current) showToast(fresh[0]);
     };
+
     const t = setInterval(poll, POLL_MS);
-    return () => clearInterval(t);
+    const onVisible = () => {
+      if (!document.hidden) poll();
+    };
+    document.addEventListener("visibilitychange", onVisible);
+    return () => {
+      clearInterval(t);
+      document.removeEventListener("visibilitychange", onVisible);
+      clearToastTimers();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const toggle = () => {
@@ -90,10 +118,26 @@ export function NotificationBell({ items, unreadCount }: { items: NotificationIt
         )}
       </button>
 
-      {/* 신규 알림 토스트 (상단 중앙, 3초) */}
+      {/* 신규 알림 토스트 (상단 중앙, 페이드, 3초, x로 즉시 닫기) */}
       {toast && (
-        <div className="fixed left-1/2 top-4 z-50 max-w-[90vw] -translate-x-1/2 rounded-full bg-zinc-900 px-4 py-2 text-sm text-white shadow-lg dark:bg-zinc-100 dark:text-black">
-          <span className="font-semibold">{toast.actorUsername}</span>님이 {label(toast)}
+        <div
+          className={`fixed left-1/2 top-4 z-50 flex max-w-[90vw] -translate-x-1/2 items-center gap-3 rounded-full bg-zinc-900 py-2 pl-4 pr-2 text-sm text-white shadow-lg transition-opacity duration-300 dark:bg-zinc-100 dark:text-black ${
+            toastShown ? "opacity-100" : "opacity-0"
+          }`}
+        >
+          <span className="truncate">
+            <span className="font-semibold">{toast.actorUsername}</span>님이 {label(toast)}
+          </span>
+          <button
+            type="button"
+            aria-label="닫기"
+            onClick={dismissToast}
+            className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full hover:bg-white/20 dark:hover:bg-black/10"
+          >
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true">
+              <path d="M18 6 6 18M6 6l12 12" />
+            </svg>
+          </button>
         </div>
       )}
 
