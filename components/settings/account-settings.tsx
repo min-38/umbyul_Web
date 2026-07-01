@@ -130,7 +130,7 @@ export function AccountSettings({
       </Section>
 
       {/* 아바타 */}
-      <Section title="Avatar">
+      <Section title="아바타">
         <div className="flex items-center gap-4">
           <span className="flex h-20 w-20 shrink-0 items-center justify-center overflow-hidden rounded-full bg-zinc-200 text-2xl font-semibold text-zinc-500 dark:bg-zinc-800 dark:text-zinc-300">
             {avatarUrl ? (
@@ -157,7 +157,7 @@ export function AccountSettings({
       </Section>
 
       {/* 닉네임 */}
-      <Section title="Nickname">
+      <Section title="닉네임">
         <div className="flex gap-2">
           <input
             value={username}
@@ -177,7 +177,7 @@ export function AccountSettings({
       </Section>
 
       {/* 비밀번호 */}
-      <Section title={hasPassword ? "Password 변경" : "Password 설정"}>
+      <Section title={hasPassword ? "비밀번호 변경" : "비밀번호 설정"}>
         {!hasPassword && (
           <p className="mb-2 text-xs text-zinc-400">
             소셜 로그인 계정입니다. 비밀번호를 설정하면 이메일로도 로그인할 수 있습니다.
@@ -211,7 +211,7 @@ export function AccountSettings({
       </Section>
 
       {/* 탈퇴 */}
-      <Section title="Delete Your Account">
+      <Section title="회원 탈퇴">
         <p className="mb-2 text-xs text-zinc-400">계정과 모든 데이터가 영구 삭제됩니다.</p>
         <button
           type="button"

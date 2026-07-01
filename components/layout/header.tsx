@@ -10,9 +10,9 @@ import { UserMenu } from "./user-menu";
 
 // 해당 페이지는 추후 → 플레이스홀더(#)
 const NAV = [
-  { label: "New", href: "#" },
-  { label: "Rising", href: "#" },
-  { label: "Charts", href: "#" },
+  { label: "신규", href: "#" },
+  { label: "급상승", href: "#" },
+  { label: "차트", href: "#" },
 ];
 
 export async function Header() {

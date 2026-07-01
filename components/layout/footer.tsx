@@ -29,8 +29,8 @@ export function Footer() {
           </a>
         </div>
         <div className="flex gap-12">
-          <FooterCol title="Policy" links={POLICY} />
-          <FooterCol title="Info" links={INFO} />
+          <FooterCol title="정책" links={POLICY} />
+          <FooterCol title="고객지원" links={INFO} />
         </div>
       </div>
     </footer>

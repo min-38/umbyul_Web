@@ -4,10 +4,10 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const TABS = [
-  { href: "/settings/account", label: "Account" },
-  { href: "/settings/notifications", label: "Notifications" },
-  { href: "/settings/display", label: "Display" },
-  { href: "/settings/integrations", label: "Integrations" },
+  { href: "/settings/account", label: "계정" },
+  { href: "/settings/notifications", label: "알림" },
+  { href: "/settings/display", label: "화면" },
+  { href: "/settings/integrations", label: "연동" },
 ];
 
 export function SettingsNav() {
