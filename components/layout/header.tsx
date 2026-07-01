@@ -52,7 +52,7 @@ export async function Header() {
           <SearchBar />
         </Suspense>
 
-        <div className="flex items-center gap-1">
+        <div className="ml-auto flex items-center gap-1">
           <ThemeToggle />
           {user ? (
             <UserMenu username={profile?.username ?? "프로필"} avatarUrl={profile?.avatarUrl ?? null} />
