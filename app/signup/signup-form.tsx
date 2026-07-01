@@ -7,6 +7,7 @@ import { createClient } from "@/lib/supabase/client";
 import { Spinner } from "@/components/ui/spinner";
 import { BrandMark } from "@/components/ui/brand-mark";
 import { isEmail, passwordChecks, borderClass, type FieldStatus } from "@/lib/validation";
+import { useT } from "@/components/i18n-provider";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -24,6 +25,7 @@ function Req({ ok, children }: { ok: boolean; children: React.ReactNode }) {
 type EmailState = "idle" | "checking" | "available" | "taken" | "invalid";
 
 export function SignupForm() {
+  const t = useT();
   const [step, setStep] = useState<"form" | "verify">("form");
   const [email, setEmail] = useState("");
   const [emailState, setEmailState] = useState<EmailState>("idle");
@@ -51,6 +53,8 @@ export function SignupForm() {
   const agreed = agreedTerms && agreedPrivacy;
   const canSubmit =
     emailState === "available" && pw.all && confirm === password && agreed && !loading;
+  // "{link}에 동의합니다." → 링크(약관/방침)를 문장 중간에 넣기 위해 앞/뒤로 분리(어순은 로케일별로 다름)
+  const [agreeBefore, agreeAfter] = t("{link}에 동의합니다.").split("{link}");
 
   // 이메일 실시간 형식 + 중복 확인 (디바운스 400ms)
   useEffect(() => {
@@ -63,7 +67,7 @@ export function SignupForm() {
       return;
     }
     setEmailState("checking");
-    const t = setTimeout(async () => {
+    const timer = setTimeout(async () => {
       try {
         const res = await fetch(`${API_URL}/email-available?email=${encodeURIComponent(email)}`);
         const { data } = await res.json();
@@ -75,7 +79,7 @@ export function SignupForm() {
         setEmailState("available");
       }
     }, 400);
-    return () => clearTimeout(t);
+    return () => clearTimeout(timer);
   }, [email]);
 
   const onSignUp = async (e: React.FormEvent) => {
@@ -107,14 +111,14 @@ export function SignupForm() {
     e.preventDefault();
     setError(null);
     if (code.length !== 6) {
-      setError("6자리 코드를 입력하세요.");
+      setError(t("6자리 코드를 입력하세요."));
       return;
     }
     setLoading(true);
     const { error } = await supabase.auth.verifyOtp({ email, token: code, type: "signup" });
     setLoading(false);
     if (error) {
-      setError("코드가 올바르지 않거나 만료되었습니다.");
+      setError(t("코드가 올바르지 않거나 만료되었습니다."));
       return;
     }
     // 인증 완료 → 세션 생성됨 → 프로필 설정(온보딩)으로
@@ -127,9 +131,9 @@ export function SignupForm() {
       <div className="flex flex-col gap-5">
         <div className="flex flex-col items-center gap-3 text-center">
           <BrandMark />
-          <h1 className="text-lg font-medium text-black dark:text-zinc-50">인증 메일을 보냈습니다</h1>
+          <h1 className="text-lg font-medium text-black dark:text-zinc-50">{t("인증 메일을 보냈습니다")}</h1>
           <p className="text-sm text-zinc-600 dark:text-zinc-400">
-            받은 편지함에서 6자리 코드를 입력하세요.
+            {t("받은 편지함에서 6자리 코드를 입력하세요.")}
           </p>
         </div>
 
@@ -139,7 +143,7 @@ export function SignupForm() {
             maxLength={6}
             value={code}
             onChange={(e) => setCode(e.target.value.replace(/\D/g, ""))}
-            placeholder="6자리 코드"
+            placeholder={t("6자리 코드")}
             className={`${inputBase} border-zinc-300 text-center tracking-[0.4em] dark:border-zinc-700`}
           />
           <button
@@ -147,13 +151,13 @@ export function SignupForm() {
             disabled={loading}
             className="mt-1 flex h-10 w-full items-center justify-center rounded-lg bg-indigo-600 text-sm font-medium text-white hover:bg-indigo-500 disabled:opacity-60"
           >
-            {loading ? <Spinner /> : "확인"}
+            {loading ? <Spinner /> : t("확인")}
           </button>
         </form>
 
         {error && <p className="text-center text-sm text-red-600 dark:text-red-400">{error}</p>}
 
-        <p className="text-center text-xs text-zinc-500">메일이 안 보이면 스팸함을 확인하세요.</p>
+        <p className="text-center text-xs text-zinc-500">{t("메일이 안 보이면 스팸함을 확인하세요.")}</p>
       </div>
     );
   }
@@ -163,7 +167,7 @@ export function SignupForm() {
       <div className="flex flex-col items-center gap-3">
         <BrandMark />
         <h1 className="text-center text-lg font-medium text-black dark:text-zinc-50">
-          가입을 환영합니다
+          {t("가입을 환영합니다")}
         </h1>
       </div>
 
@@ -173,18 +177,18 @@ export function SignupForm() {
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            placeholder="이메일"
+            placeholder={t("이메일")}
             className={`${inputBase} ${borderClass(emailStatus)}`}
           />
-          {emailState === "checking" && <p className="text-xs text-zinc-500">확인 중…</p>}
+          {emailState === "checking" && <p className="text-xs text-zinc-500">{t("확인 중…")}</p>}
           {emailState === "available" && (
-            <p className="text-xs text-green-600 dark:text-green-400">사용 가능</p>
+            <p className="text-xs text-green-600 dark:text-green-400">{t("사용 가능")}</p>
           )}
           {emailState === "invalid" && (
-            <p className="text-xs text-red-600 dark:text-red-400">올바른 이메일 형식이 아닙니다.</p>
+            <p className="text-xs text-red-600 dark:text-red-400">{t("올바른 이메일 형식이 아닙니다.")}</p>
           )}
           {emailState === "taken" && (
-            <p className="text-xs text-red-600 dark:text-red-400">이미 가입된 이메일입니다.</p>
+            <p className="text-xs text-red-600 dark:text-red-400">{t("이미 가입된 이메일입니다.")}</p>
           )}
         </div>
 
@@ -193,14 +197,14 @@ export function SignupForm() {
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            placeholder="비밀번호"
+            placeholder={t("비밀번호")}
             className={`${inputBase} ${borderClass(pwStatus)}`}
           />
           <div className="flex flex-col gap-0.5 text-xs">
-            <Req ok={pw.length}>8자 이상</Req>
-            <Req ok={pw.upper && pw.lower}>대소문자 포함</Req>
-            <Req ok={pw.digit}>숫자 포함</Req>
-            <Req ok={pw.special}>특수문자 포함</Req>
+            <Req ok={pw.length}>{t("8자 이상")}</Req>
+            <Req ok={pw.upper && pw.lower}>{t("대소문자 포함")}</Req>
+            <Req ok={pw.digit}>{t("숫자 포함")}</Req>
+            <Req ok={pw.special}>{t("특수문자 포함")}</Req>
           </div>
         </div>
 
@@ -209,11 +213,11 @@ export function SignupForm() {
             type="password"
             value={confirm}
             onChange={(e) => setConfirm(e.target.value)}
-            placeholder="비밀번호 확인"
+            placeholder={t("비밀번호 확인")}
             className={`${inputBase} ${borderClass(confirmStatus)}`}
           />
           {confirmStatus === "invalid" && (
-            <p className="text-xs text-red-600 dark:text-red-400">비밀번호가 일치하지 않습니다.</p>
+            <p className="text-xs text-red-600 dark:text-red-400">{t("비밀번호가 일치하지 않습니다.")}</p>
           )}
         </div>
 
@@ -226,10 +230,11 @@ export function SignupForm() {
               className="mt-0.5"
             />
             <span>
+              {agreeBefore}
               <Link href="#" className="underline">
-                이용약관
+                {t("이용약관")}
               </Link>
-              에 동의합니다. <span className="text-red-500">*</span>
+              {agreeAfter} <span className="text-red-500">*</span>
             </span>
           </label>
           <label className="flex items-start gap-2 text-xs text-zinc-600 dark:text-zinc-400">
@@ -240,10 +245,11 @@ export function SignupForm() {
               className="mt-0.5"
             />
             <span>
+              {agreeBefore}
               <Link href="#" className="underline">
-                개인정보 처리방침
+                {t("개인정보 처리방침")}
               </Link>
-              에 동의합니다. <span className="text-red-500">*</span>
+              {agreeAfter} <span className="text-red-500">*</span>
             </span>
           </label>
         </div>
@@ -253,16 +259,16 @@ export function SignupForm() {
           disabled={!canSubmit}
           className="flex h-10 w-full items-center justify-center rounded-lg bg-indigo-600 text-sm font-medium text-white hover:bg-indigo-500 disabled:opacity-50"
         >
-          {loading ? <Spinner /> : "가입하기"}
+          {loading ? <Spinner /> : t("가입하기")}
         </button>
       </form>
 
       {error && <p className="text-center text-sm text-red-600 dark:text-red-400">{error}</p>}
 
       <p className="text-center text-sm text-zinc-600 dark:text-zinc-400">
-        이미 계정이 있으신가요?{" "}
+        {t("이미 계정이 있으신가요?")}{" "}
         <Link href="/login" className="font-medium text-black underline dark:text-zinc-50">
-          로그인
+          {t("로그인")}
         </Link>
       </p>
     </div>

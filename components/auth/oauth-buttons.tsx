@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { Spinner } from "@/components/ui/spinner";
+import { useT } from "@/components/i18n-provider";
 
 type Provider = "google" | "discord";
 
@@ -38,6 +39,7 @@ function DiscordIcon() {
 }
 
 export function OAuthButtons({ disabled = false }: { disabled?: boolean } = {}) {
+  const t = useT();
   const [error, setError] = useState<string | null>(null);
   const [loadingProvider, setLoadingProvider] = useState<Provider | null>(null);
   const loading = loadingProvider !== null;
@@ -71,7 +73,7 @@ export function OAuthButtons({ disabled = false }: { disabled?: boolean } = {}) 
         ) : (
           <>
             <GoogleIcon />
-            Google로 계속하기
+            {t("Google로 계속하기")}
           </>
         )}
       </button>
@@ -86,7 +88,7 @@ export function OAuthButtons({ disabled = false }: { disabled?: boolean } = {}) 
         ) : (
           <>
             <DiscordIcon />
-            Discord로 계속하기
+            {t("Discord로 계속하기")}
           </>
         )}
       </button>

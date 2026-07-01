@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { signOut } from "@/app/auth/actions";
+import { getT } from "@/lib/i18n-server";
 import { LoginForm } from "./login-form";
 
 export default async function LoginPage() {
@@ -7,6 +8,7 @@ export default async function LoginPage() {
   const {
     data: { user },
   } = await supabase.auth.getUser();
+  const t = await getT();
 
   return (
     <div className="flex flex-1 items-center justify-center bg-zinc-50 px-6 dark:bg-black">
@@ -14,7 +16,7 @@ export default async function LoginPage() {
         {user ? (
           <div className="flex flex-col gap-4 text-center">
             <p className="text-sm text-zinc-600 dark:text-zinc-400">
-              로그인됨
+              {t("로그인됨")}
             </p>
             <p className="font-medium text-black dark:text-zinc-50">
               {user.email ?? user.id}
@@ -24,7 +26,7 @@ export default async function LoginPage() {
                 type="submit"
                 className="w-full rounded-lg bg-zinc-900 px-4 py-2.5 text-sm font-medium text-white hover:bg-zinc-700 dark:bg-zinc-50 dark:text-black dark:hover:bg-zinc-200"
               >
-                로그아웃
+                {t("로그아웃")}
               </button>
             </form>
           </div>

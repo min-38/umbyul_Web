@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useT } from "@/components/i18n-provider";
 
 const PATH = "M12 2.5l2.9 6 6.6.9-4.8 4.6 1.2 6.5L12 17.8 6.1 20.5l1.2-6.5L2.5 9.4l6.6-.9z";
 
@@ -29,6 +30,7 @@ export function StarInput({
   onChange: (v: number) => void;
   size?: number;
 }) {
+  const t = useT();
   const [hover, setHover] = useState(0);
   const shown = hover || value;
 
@@ -42,14 +44,14 @@ export function StarInput({
               <Star fill={fill} size={size} />
               <button
                 type="button"
-                aria-label={`${i - 0.5}점`}
+                aria-label={t("{score}점", { score: i - 0.5 })}
                 className="absolute left-0 top-0 z-10 h-full w-1/2 cursor-pointer"
                 onMouseEnter={() => setHover(i - 0.5)}
                 onClick={() => onChange(i - 0.5)}
               />
               <button
                 type="button"
-                aria-label={`${i}점`}
+                aria-label={t("{score}점", { score: i })}
                 className="absolute right-0 top-0 z-10 h-full w-1/2 cursor-pointer"
                 onMouseEnter={() => setHover(i)}
                 onClick={() => onChange(i)}

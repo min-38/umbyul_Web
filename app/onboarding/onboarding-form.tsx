@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
@@ -9,18 +9,12 @@ import { BrandMark } from "@/components/ui/brand-mark";
 import { COUNTRY_CODES } from "@/lib/countries";
 import { isUsername, borderClass, type FieldStatus } from "@/lib/validation";
 import { msg } from "@/lib/messages";
+import { useT, useLocale } from "@/components/i18n-provider";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 const inputBase =
   "w-full rounded-lg border px-3 py-2.5 text-sm text-black outline-none focus:ring-1 focus:ring-zinc-300 dark:bg-zinc-900 dark:text-zinc-50";
-
-const COUNTRIES = (() => {
-  const dn = new Intl.DisplayNames(["ko"], { type: "region" });
-  return COUNTRY_CODES.map((code) => ({ code, name: dn.of(code) ?? code })).sort(
-    (a, b) => a.name.localeCompare(b.name, "ko"),
-  );
-})();
 
 const GENDERS = [
   { v: "male", l: "남성" },
@@ -54,6 +48,14 @@ function ageOf(birth: string): number {
 type Availability = "idle" | "checking" | "available" | "taken" | "invalid";
 
 export function OnboardingForm({ needsConsent }: { needsConsent: boolean }) {
+  const t = useT();
+  const locale = useLocale();
+  const countries = useMemo(() => {
+    const dn = new Intl.DisplayNames([locale], { type: "region" });
+    return COUNTRY_CODES.map((code) => ({ code, name: dn.of(code) ?? code })).sort((a, b) =>
+      a.name.localeCompare(b.name, locale),
+    );
+  }, [locale]);
   const [username, setUsername] = useState("");
   const [avail, setAvail] = useState<Availability>("idle");
   const [year, setYear] = useState("");
@@ -90,7 +92,7 @@ export function OnboardingForm({ needsConsent }: { needsConsent: boolean }) {
       return;
     }
     setAvail("checking");
-    const t = setTimeout(async () => {
+    const timer = setTimeout(async () => {
       try {
         const res = await fetch(
           `${API_URL}/username-available?username=${encodeURIComponent(username)}`,
@@ -101,16 +103,17 @@ export function OnboardingForm({ needsConsent }: { needsConsent: boolean }) {
         setAvail("idle");
       }
     }, 400);
-    return () => clearTimeout(t);
+    return () => clearTimeout(timer);
   }, [username, localValid]);
 
   const canSubmit = avail === "available" && birthValid && consentOk && !loading;
+  const [agreeBefore, agreeAfter] = t("{link}에 동의합니다.").split("{link}");
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
     if (!canSubmit) {
-      if (!birthValid && year && month && day) setError("만 14세 이상만 가입할 수 있습니다.");
+      if (!birthValid && year && month && day) setError(t("만 14세 이상만 가입할 수 있습니다."));
       return;
     }
 
@@ -147,7 +150,7 @@ export function OnboardingForm({ needsConsent }: { needsConsent: boolean }) {
     const code = json?.code as string | undefined;
     if (code === "USERNAME_TAKEN") setAvail("taken");
     if (code === "UNDERAGE") {
-      setError("만 14세 이상만 가입할 수 있습니다.");
+      setError(t("만 14세 이상만 가입할 수 있습니다."));
       return;
     }
     setError(msg(code));
@@ -159,8 +162,8 @@ export function OnboardingForm({ needsConsent }: { needsConsent: boolean }) {
     <div className="flex flex-col gap-5">
       <div className="flex flex-col items-center gap-3 text-center">
         <BrandMark />
-        <h1 className="text-lg font-medium text-black dark:text-zinc-50">거의 다 됐어요</h1>
-        <p className="text-sm text-zinc-600 dark:text-zinc-400">프로필을 완성해주세요.</p>
+        <h1 className="text-lg font-medium text-black dark:text-zinc-50">{t("거의 다 됐어요")}</h1>
+        <p className="text-sm text-zinc-600 dark:text-zinc-400">{t("프로필을 완성해주세요.")}</p>
       </div>
 
       <form noValidate onSubmit={onSubmit} className="flex flex-col gap-3">
@@ -174,14 +177,14 @@ export function OnboardingForm({ needsConsent }: { needsConsent: boolean }) {
             className={`${inputBase} ${borderClass(uStatus)}`}
           />
           <div className="flex justify-between text-xs">
-            <span className="text-zinc-500">영문·숫자·하이픈, 2–30자.</span>
-            {avail === "checking" && <span className="text-zinc-500">확인 중…</span>}
+            <span className="text-zinc-500">{t("영문·숫자·하이픈, 2–30자.")}</span>
+            {avail === "checking" && <span className="text-zinc-500">{t("확인 중…")}</span>}
             {avail === "available" && (
-              <span className="text-green-600 dark:text-green-400">사용 가능</span>
+              <span className="text-green-600 dark:text-green-400">{t("사용 가능")}</span>
             )}
-            {avail === "taken" && <span className="text-red-600 dark:text-red-400">이미 사용 중</span>}
+            {avail === "taken" && <span className="text-red-600 dark:text-red-400">{t("이미 사용 중")}</span>}
             {avail === "invalid" && (
-              <span className="text-red-600 dark:text-red-400">사용할 수 없는 형식</span>
+              <span className="text-red-600 dark:text-red-400">{t("사용할 수 없는 형식")}</span>
             )}
           </div>
         </div>
@@ -189,7 +192,7 @@ export function OnboardingForm({ needsConsent }: { needsConsent: boolean }) {
         <div className="flex flex-col gap-1">
           <div className="grid grid-cols-3 gap-2">
             <select value={year} onChange={(e) => setYear(e.target.value)} className={selectClass}>
-              <option value="">년</option>
+              <option value="">{t("년")}</option>
               {YEARS.map((y) => (
                 <option key={y} value={y}>
                   {y}
@@ -197,7 +200,7 @@ export function OnboardingForm({ needsConsent }: { needsConsent: boolean }) {
               ))}
             </select>
             <select value={month} onChange={(e) => setMonth(e.target.value)} className={selectClass}>
-              <option value="">월</option>
+              <option value="">{t("월")}</option>
               {MONTHS.map((m) => (
                 <option key={m} value={m}>
                   {m}
@@ -205,7 +208,7 @@ export function OnboardingForm({ needsConsent }: { needsConsent: boolean }) {
               ))}
             </select>
             <select value={day} onChange={(e) => setDay(e.target.value)} className={selectClass}>
-              <option value="">일</option>
+              <option value="">{t("일")}</option>
               {DAYS.map((d) => (
                 <option key={d} value={d}>
                   {d}
@@ -215,15 +218,15 @@ export function OnboardingForm({ needsConsent }: { needsConsent: boolean }) {
           </div>
           {birthStatus === "invalid" ? (
             <p className="text-xs text-red-600 dark:text-red-400">
-              {birth ? "만 14세 이상만 가입할 수 있습니다." : "올바른 날짜를 선택하세요."}
+              {birth ? t("만 14세 이상만 가입할 수 있습니다.") : t("올바른 날짜를 선택하세요.")}
             </p>
           ) : (
-            <p className="text-xs text-zinc-500">생년월일</p>
+            <p className="text-xs text-zinc-500">{t("생년월일")}</p>
           )}
         </div>
 
         <select value={country} onChange={(e) => setCountry(e.target.value)} className={selectClass}>
-          {COUNTRIES.map(({ code, name }) => (
+          {countries.map(({ code, name }) => (
             <option key={code} value={code}>
               {name}
             </option>
@@ -232,10 +235,10 @@ export function OnboardingForm({ needsConsent }: { needsConsent: boolean }) {
 
         <div className="flex flex-col gap-1">
           <select value={gender} onChange={(e) => setGender(e.target.value)} className={selectClass}>
-            <option value="">성별 (선택)</option>
+            <option value="">{t("성별 (선택)")}</option>
             {GENDERS.map(({ v, l }) => (
               <option key={v} value={v}>
-                {l}
+                {t(l)}
               </option>
             ))}
           </select>
@@ -251,10 +254,11 @@ export function OnboardingForm({ needsConsent }: { needsConsent: boolean }) {
                 className="mt-0.5"
               />
               <span>
+                {agreeBefore}
                 <Link href="#" className="underline">
-                  이용약관
+                  {t("이용약관")}
                 </Link>
-                에 동의합니다. <span className="text-red-500">*</span>
+                {agreeAfter} <span className="text-red-500">*</span>
               </span>
             </label>
             <label className="flex items-start gap-2 text-xs text-zinc-600 dark:text-zinc-400">
@@ -265,10 +269,11 @@ export function OnboardingForm({ needsConsent }: { needsConsent: boolean }) {
                 className="mt-0.5"
               />
               <span>
+                {agreeBefore}
                 <Link href="#" className="underline">
-                  개인정보 처리방침
+                  {t("개인정보 처리방침")}
                 </Link>
-                에 동의합니다. <span className="text-red-500">*</span>
+                {agreeAfter} <span className="text-red-500">*</span>
               </span>
             </label>
           </div>
@@ -279,7 +284,7 @@ export function OnboardingForm({ needsConsent }: { needsConsent: boolean }) {
           disabled={!canSubmit}
           className="flex h-10 w-full items-center justify-center rounded-lg bg-indigo-600 text-sm font-medium text-white hover:bg-indigo-500 disabled:opacity-50"
         >
-          {loading ? <Spinner /> : "완료"}
+          {loading ? <Spinner /> : t("완료")}
         </button>
       </form>
 

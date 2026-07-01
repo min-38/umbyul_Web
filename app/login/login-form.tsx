@@ -7,11 +7,13 @@ import { createClient } from "@/lib/supabase/client";
 import { OAuthButtons } from "@/components/auth/oauth-buttons";
 import { Spinner } from "@/components/ui/spinner";
 import { BrandMark } from "@/components/ui/brand-mark";
+import { useT } from "@/components/i18n-provider";
 
 const inputBase =
   "w-full rounded-lg border px-3 py-2.5 text-sm text-black outline-none focus:ring-1 focus:ring-zinc-300 dark:bg-zinc-900 dark:text-zinc-50";
 
 export function LoginForm() {
+  const t = useT();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -43,7 +45,7 @@ export function LoginForm() {
       <div className="flex flex-col items-center gap-3">
         <BrandMark />
         <h1 className="text-center text-lg font-medium text-black dark:text-zinc-50">
-          환영합니다
+          {t("환영합니다")}
         </h1>
       </div>
 
@@ -55,7 +57,7 @@ export function LoginForm() {
             setEmail(e.target.value);
             setError(null);
           }}
-          placeholder="이메일"
+          placeholder={t("이메일")}
           className={`${inputBase} ${border}`}
         />
         <input
@@ -65,7 +67,7 @@ export function LoginForm() {
             setPassword(e.target.value);
             setError(null);
           }}
-          placeholder="비밀번호"
+          placeholder={t("비밀번호")}
           className={`${inputBase} ${border}`}
         />
         <button
@@ -73,7 +75,7 @@ export function LoginForm() {
           disabled={loading}
           className="mt-1 flex h-10 w-full items-center justify-center rounded-lg bg-indigo-600 text-sm font-medium text-white hover:bg-indigo-500 disabled:opacity-60"
         >
-          {loading ? <Spinner /> : "로그인"}
+          {loading ? <Spinner /> : t("로그인")}
         </button>
         {error && (
           <p className="text-center text-sm text-red-600 dark:text-red-400">{error}</p>
@@ -84,21 +86,21 @@ export function LoginForm() {
         href="/forgot-password"
         className="text-center text-sm text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300"
       >
-        비밀번호를 잊으셨나요?
+        {t("비밀번호를 잊으셨나요?")}
       </Link>
 
       <div className="flex items-center gap-3 text-xs text-zinc-400">
         <span className="h-px flex-1 bg-zinc-200 dark:bg-zinc-800" />
-        또는
+        {t("또는")}
         <span className="h-px flex-1 bg-zinc-200 dark:bg-zinc-800" />
       </div>
 
       <OAuthButtons />
 
       <p className="text-center text-sm text-zinc-600 dark:text-zinc-400">
-        처음이신가요?{" "}
+        {t("처음이신가요?")}{" "}
         <Link href="/signup" className="font-medium text-black underline dark:text-zinc-50">
-          회원가입
+          {t("회원가입")}
         </Link>
       </p>
     </div>

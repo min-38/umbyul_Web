@@ -3,8 +3,10 @@
 import { useState } from "react";
 import type { NotificationPrefs } from "@/lib/api";
 import { updateNotificationPrefs } from "@/app/actions/notifications";
+import { useT } from "@/components/i18n-provider";
 
 export function NotificationSettings({ initial }: { initial: NotificationPrefs }) {
+  const t = useT();
   const [prefs, setPrefs] = useState(initial);
 
   const save = (next: NotificationPrefs) => {
@@ -15,23 +17,23 @@ export function NotificationSettings({ initial }: { initial: NotificationPrefs }
   return (
     <div className="flex flex-col gap-6">
       <Row
-        title="전체 알림"
-        desc="모든 알림을 받습니다. 끄면 아래 항목과 무관하게 알림이 오지 않습니다."
+        title={t("전체 알림")}
+        desc={t("모든 알림을 받습니다. 끄면 아래 항목과 무관하게 알림이 오지 않습니다.")}
         on={prefs.master}
         onChange={(v) => save({ ...prefs, master: v })}
       />
 
       <div className="flex flex-col gap-5 border-t border-zinc-200 pt-6 dark:border-zinc-800">
         <Row
-          title="팔로우 알림"
-          desc="다른 유저가 회원님을 팔로우할 때"
+          title={t("팔로우 알림")}
+          desc={t("다른 유저가 회원님을 팔로우할 때")}
           on={prefs.follow}
           disabled={!prefs.master}
           onChange={(v) => save({ ...prefs, follow: v })}
         />
         <Row
-          title="리뷰 좋아요 알림"
-          desc="회원님의 리뷰에 좋아요가 달릴 때"
+          title={t("리뷰 좋아요 알림")}
+          desc={t("회원님의 리뷰에 좋아요가 달릴 때")}
           on={prefs.reviewLike}
           disabled={!prefs.master}
           onChange={(v) => save({ ...prefs, reviewLike: v })}

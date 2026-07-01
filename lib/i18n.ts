@@ -144,4 +144,119 @@ export const EN: Record<string, string> = {
   "알림 설정": "Notification settings",
   "모두 지우기": "Clear all",
   "알림 삭제": "Delete notification",
+
+  // ── 로그인 ──
+  환영합니다: "Welcome",
+  이메일: "Email",
+  비밀번호: "Password",
+  로그인: "Log in",
+  "비밀번호를 잊으셨나요?": "Forgot your password?",
+  또는: "or",
+  "처음이신가요?": "New here?",
+  회원가입: "Sign up",
+  로그인됨: "Logged in",
+
+  // ── OAuth ──
+  "Google로 계속하기": "Continue with Google",
+  "Discord로 계속하기": "Continue with Discord",
+
+  // ── 회원가입 ──
+  "6자리 코드를 입력하세요.": "Enter the 6-digit code.",
+  "코드가 올바르지 않거나 만료되었습니다.": "The code is incorrect or has expired.",
+  "인증 메일을 보냈습니다": "We sent a verification email",
+  "받은 편지함에서 6자리 코드를 입력하세요.": "Enter the 6-digit code from your inbox.",
+  "6자리 코드": "6-digit code",
+  확인: "Confirm",
+  "메일이 안 보이면 스팸함을 확인하세요.": "If you don't see it, check your spam folder.",
+  "가입을 환영합니다": "Create your account",
+  "확인 중…": "Checking…",
+  "사용 가능": "Available",
+  "올바른 이메일 형식이 아닙니다.": "Not a valid email address.",
+  "이미 가입된 이메일입니다.": "This email is already registered.",
+  "8자 이상": "At least 8 characters",
+  "대소문자 포함": "Upper and lowercase letters",
+  "숫자 포함": "A number",
+  "특수문자 포함": "A special character",
+  "비밀번호 확인": "Confirm password",
+  "비밀번호가 일치하지 않습니다.": "Passwords do not match.",
+  "{link}에 동의합니다.": "I agree to the {link}.",
+  가입하기: "Sign up",
+  "이미 계정이 있으신가요?": "Already have an account?",
+
+  // ── 온보딩 ──
+  "거의 다 됐어요": "Almost there",
+  "프로필을 완성해주세요.": "Complete your profile.",
+  "영문·숫자·하이픈, 2–30자.": "Letters, numbers, hyphens. 2–30 chars.",
+  "이미 사용 중": "Already taken",
+  "사용할 수 없는 형식": "Invalid format",
+  년: "Year",
+  월: "Month",
+  일: "Day",
+  "만 14세 이상만 가입할 수 있습니다.": "You must be at least 14 years old.",
+  "올바른 날짜를 선택하세요.": "Please select a valid date.",
+  생년월일: "Date of birth",
+  "성별 (선택)": "Gender (optional)",
+  남성: "Male",
+  여성: "Female",
+  비공개: "Undisclosed",
+  완료: "Done",
+
+  // ── 비밀번호 찾기/재설정 ──
+  "재설정 링크를 보냈습니다": "Reset link sent",
+  "{email}의 메일함을 확인해주세요.": "Check the inbox for {email}.",
+  로그인으로: "To login",
+  "비밀번호 재설정": "Reset password",
+  "가입한 이메일로 재설정 링크를 보내드립니다.": "We'll send a reset link to your email.",
+  "재설정 링크 보내기": "Send reset link",
+  "로그인으로 돌아가기": "Back to login",
+  "비밀번호는 8자 이상이어야 합니다.": "Password must be at least 8 characters.",
+  "비밀번호가 변경되었습니다": "Password changed",
+  "새 비밀번호로 다시 로그인해주세요.": "Please sign in again with your new password.",
+  로그인하기: "Log in",
+  "유효하지 않은 접근입니다": "Invalid access",
+  "재설정 링크가 만료되었거나 잘못되었습니다.": "The reset link has expired or is invalid.",
+  "재설정 링크 다시 받기": "Get a new reset link",
+  "새 비밀번호 설정": "Set a new password",
+  "새 비밀번호 (8자 이상)": "New password (8+ characters)",
+  "새 비밀번호 확인": "Confirm new password",
+  "비밀번호 변경": "Change password",
+
+  // ── 설정: 계정 ──
+  "변경되었습니다.": "Updated.",
+  "username 형식(2~30자, 영문/숫자/하이픈)을 확인하세요.":
+    "Check the username format (2–30 chars, letters/numbers/hyphens).",
+  "설정되었습니다.": "Set.",
+  "정말 탈퇴하시겠어요?\n모든 데이터가 삭제되며 되돌릴 수 없습니다.":
+    "Are you sure you want to delete your account?\nAll data will be removed and cannot be undone.",
+  "계정 정보": "Account info",
+  가입일: "Joined",
+  "연동 계정": "Linked accounts",
+  아바타: "Avatar",
+  "업로드 중…": "Uploading…",
+  "이미지 변경": "Change image",
+  "jpg, png, webp · 최대 5MB": "jpg, png, webp · up to 5MB",
+  닉네임: "Nickname",
+  변경: "Save",
+  "비밀번호 설정": "Set password",
+  "소셜 로그인 계정입니다. 비밀번호를 설정하면 이메일로도 로그인할 수 있습니다.":
+    "This is a social login account. Set a password to also sign in with email.",
+  "새 비밀번호": "New password",
+  "회원 탈퇴": "Delete account",
+  "계정과 모든 데이터가 영구 삭제됩니다.": "Your account and all data will be permanently deleted.",
+  "처리 중…": "Processing…",
+
+  // ── 설정: 알림 ──
+  "전체 알림": "All notifications",
+  "모든 알림을 받습니다. 끄면 아래 항목과 무관하게 알림이 오지 않습니다.":
+    "Receive all notifications. When off, nothing is sent regardless of the items below.",
+  "팔로우 알림": "Follow notifications",
+  "다른 유저가 회원님을 팔로우할 때": "When another user follows you",
+  "리뷰 좋아요 알림": "Review like notifications",
+  "회원님의 리뷰에 좋아요가 달릴 때": "When someone likes your review",
+
+  // ── 설정: 연동 ──
+  "준비 중입니다.": "Coming soon.",
+
+  // ── 별점 입력(접근성) ──
+  "{score}점": "{score} stars",
 };

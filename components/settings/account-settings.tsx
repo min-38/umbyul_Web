@@ -5,6 +5,7 @@ import { createClient } from "@/lib/supabase/client";
 import { updateUsername, uploadAvatar, deleteAccount } from "@/app/actions/account";
 import { msg } from "@/lib/messages";
 import { isUsername } from "@/lib/validation";
+import { useT, useLocale } from "@/components/i18n-provider";
 
 type Note = { ok: boolean; text: string } | null;
 
@@ -27,6 +28,8 @@ export function AccountSettings({
   joinedAt: string;
   providers: string[];
 }) {
+  const t = useT();
+  const locale = useLocale();
   // 아바타
   const [avatarUrl, setAvatarUrl] = useState(initialAvatarUrl);
   const fileRef = useRef<HTMLInputElement>(null);
@@ -45,7 +48,7 @@ export function AccountSettings({
     setAvatarBusy(false);
     if (r.ok && r.avatarUrl) {
       setAvatarUrl(r.avatarUrl);
-      setAvatarNote({ ok: true, text: "변경되었습니다." });
+      setAvatarNote({ ok: true, text: t("변경되었습니다.") });
     } else {
       setAvatarNote({ ok: false, text: msg(r.code) });
     }
@@ -58,14 +61,14 @@ export function AccountSettings({
 
   const saveNick = async () => {
     if (!isUsername(username)) {
-      setNickNote({ ok: false, text: "username 형식(2~30자, 영문/숫자/하이픈)을 확인하세요." });
+      setNickNote({ ok: false, text: t("username 형식(2~30자, 영문/숫자/하이픈)을 확인하세요.") });
       return;
     }
     setNickBusy(true);
     setNickNote(null);
     const r = await updateUsername(username);
     setNickBusy(false);
-    setNickNote(r.ok ? { ok: true, text: "변경되었습니다." } : { ok: false, text: msg(r.code) });
+    setNickNote(r.ok ? { ok: true, text: t("변경되었습니다.") } : { ok: false, text: msg(r.code) });
   };
 
   // 비밀번호
@@ -75,8 +78,8 @@ export function AccountSettings({
   const [pwNote, setPwNote] = useState<Note>(null);
 
   const savePw = async () => {
-    if (pw.length < 8) return setPwNote({ ok: false, text: "비밀번호는 8자 이상이어야 합니다." });
-    if (pw !== pw2) return setPwNote({ ok: false, text: "비밀번호가 일치하지 않습니다." });
+    if (pw.length < 8) return setPwNote({ ok: false, text: t("비밀번호는 8자 이상이어야 합니다.") });
+    if (pw !== pw2) return setPwNote({ ok: false, text: t("비밀번호가 일치하지 않습니다.") });
     setPwBusy(true);
     setPwNote(null);
     const { error } = await createClient().auth.updateUser({ password: pw });
@@ -84,13 +87,13 @@ export function AccountSettings({
     if (error) return setPwNote({ ok: false, text: error.message });
     setPw("");
     setPw2("");
-    setPwNote({ ok: true, text: hasPassword ? "변경되었습니다." : "설정되었습니다." });
+    setPwNote({ ok: true, text: hasPassword ? t("변경되었습니다.") : t("설정되었습니다.") });
   };
 
   // 탈퇴
   const [delBusy, setDelBusy] = useState(false);
   const doDelete = async () => {
-    if (!window.confirm("정말 탈퇴하시겠어요?\n모든 데이터가 삭제되며 되돌릴 수 없습니다.")) return;
+    if (!window.confirm(t("정말 탈퇴하시겠어요?\n모든 데이터가 삭제되며 되돌릴 수 없습니다."))) return;
     setDelBusy(true);
     const r = await deleteAccount();
     if (r.ok) window.location.href = "/";
@@ -103,14 +106,14 @@ export function AccountSettings({
   return (
     <div className="flex flex-col gap-10">
       {/* 계정 정보: 가입일 + 연동 계정 */}
-      <Section title="계정 정보">
+      <Section title={t("계정 정보")}>
         <dl className="flex flex-col gap-3 text-sm">
           <div className="flex gap-3">
-            <dt className="w-20 shrink-0 text-zinc-400">가입일</dt>
-            <dd className="text-zinc-800 dark:text-zinc-200">{new Date(joinedAt).toLocaleDateString("ko-KR")}</dd>
+            <dt className="w-20 shrink-0 text-zinc-400">{t("가입일")}</dt>
+            <dd className="text-zinc-800 dark:text-zinc-200">{new Date(joinedAt).toLocaleDateString(locale === "ko" ? "ko-KR" : "en-US")}</dd>
           </div>
           <div className="flex gap-3">
-            <dt className="w-20 shrink-0 text-zinc-400">연동 계정</dt>
+            <dt className="w-20 shrink-0 text-zinc-400">{t("연동 계정")}</dt>
             <dd className="flex flex-wrap gap-1.5">
               {providers.length === 0 ? (
                 <span className="text-zinc-500">-</span>
@@ -120,7 +123,7 @@ export function AccountSettings({
                     key={p}
                     className="rounded-full bg-zinc-100 px-2.5 py-0.5 text-xs text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300"
                   >
-                    {PROVIDER_LABELS[p] ?? p}
+                    {PROVIDER_LABELS[p] ? t(PROVIDER_LABELS[p]) : p}
                   </span>
                 ))
               )}
@@ -130,7 +133,7 @@ export function AccountSettings({
       </Section>
 
       {/* 아바타 */}
-      <Section title="아바타">
+      <Section title={t("아바타")}>
         <div className="flex items-center gap-4">
           <span className="flex h-20 w-20 shrink-0 items-center justify-center overflow-hidden rounded-full bg-zinc-200 text-2xl font-semibold text-zinc-500 dark:bg-zinc-800 dark:text-zinc-300">
             {avatarUrl ? (
@@ -147,9 +150,9 @@ export function AccountSettings({
               disabled={avatarBusy}
               className="w-fit rounded-lg border border-zinc-300 px-3 py-1.5 text-sm font-medium text-zinc-700 hover:bg-zinc-100 disabled:opacity-50 dark:border-zinc-700 dark:text-zinc-200 dark:hover:bg-zinc-900"
             >
-              {avatarBusy ? "업로드 중…" : "이미지 변경"}
+              {avatarBusy ? t("업로드 중…") : t("이미지 변경")}
             </button>
-            <p className="text-xs text-zinc-400">jpg, png, webp · 최대 5MB</p>
+            <p className="text-xs text-zinc-400">{t("jpg, png, webp · 최대 5MB")}</p>
             <input ref={fileRef} type="file" accept="image/jpeg,image/png,image/webp" onChange={onFile} className="hidden" />
           </div>
         </div>
@@ -157,7 +160,7 @@ export function AccountSettings({
       </Section>
 
       {/* 닉네임 */}
-      <Section title="닉네임">
+      <Section title={t("닉네임")}>
         <div className="flex gap-2">
           <input
             value={username}
@@ -170,17 +173,17 @@ export function AccountSettings({
             disabled={nickBusy || username === initialUsername}
             className="shrink-0 rounded-lg bg-zinc-900 px-4 py-2 text-sm font-medium text-white hover:bg-zinc-700 disabled:opacity-50 dark:bg-zinc-100 dark:text-black dark:hover:bg-zinc-200"
           >
-            변경
+            {t("변경")}
           </button>
         </div>
         <NoteText note={nickNote} />
       </Section>
 
       {/* 비밀번호 */}
-      <Section title={hasPassword ? "비밀번호 변경" : "비밀번호 설정"}>
+      <Section title={hasPassword ? t("비밀번호 변경") : t("비밀번호 설정")}>
         {!hasPassword && (
           <p className="mb-2 text-xs text-zinc-400">
-            소셜 로그인 계정입니다. 비밀번호를 설정하면 이메일로도 로그인할 수 있습니다.
+            {t("소셜 로그인 계정입니다. 비밀번호를 설정하면 이메일로도 로그인할 수 있습니다.")}
           </p>
         )}
         <div className="flex max-w-xs flex-col gap-2">
@@ -188,14 +191,14 @@ export function AccountSettings({
             type="password"
             value={pw}
             onChange={(e) => setPw(e.target.value)}
-            placeholder="새 비밀번호"
+            placeholder={t("새 비밀번호")}
             className="rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 placeholder:text-zinc-400 focus:border-zinc-500 focus:outline-none dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100"
           />
           <input
             type="password"
             value={pw2}
             onChange={(e) => setPw2(e.target.value)}
-            placeholder="새 비밀번호 확인"
+            placeholder={t("새 비밀번호 확인")}
             className="rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 placeholder:text-zinc-400 focus:border-zinc-500 focus:outline-none dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100"
           />
           <button
@@ -204,22 +207,22 @@ export function AccountSettings({
             disabled={pwBusy || !pw || !pw2}
             className="w-fit rounded-lg bg-zinc-900 px-4 py-2 text-sm font-medium text-white hover:bg-zinc-700 disabled:opacity-50 dark:bg-zinc-100 dark:text-black dark:hover:bg-zinc-200"
           >
-            {hasPassword ? "변경" : "설정"}
+            {hasPassword ? t("비밀번호 변경") : t("비밀번호 설정")}
           </button>
         </div>
         <NoteText note={pwNote} />
       </Section>
 
       {/* 탈퇴 */}
-      <Section title="회원 탈퇴">
-        <p className="mb-2 text-xs text-zinc-400">계정과 모든 데이터가 영구 삭제됩니다.</p>
+      <Section title={t("회원 탈퇴")}>
+        <p className="mb-2 text-xs text-zinc-400">{t("계정과 모든 데이터가 영구 삭제됩니다.")}</p>
         <button
           type="button"
           onClick={doDelete}
           disabled={delBusy}
           className="w-fit rounded-lg bg-red-500 px-4 py-2 text-sm font-medium text-white hover:bg-red-600 disabled:opacity-50"
         >
-          {delBusy ? "처리 중…" : "회원 탈퇴"}
+          {delBusy ? t("처리 중…") : t("회원 탈퇴")}
         </button>
       </Section>
     </div>

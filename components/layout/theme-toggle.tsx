@@ -3,8 +3,10 @@
 import { useEffect, useRef, useState } from "react";
 import { useClickOutside } from "@/lib/use-click-outside";
 import { type Theme, THEME_LABELS, resolveDark, applyTheme, getStoredTheme, setStoredTheme } from "@/lib/theme";
+import { useT } from "@/components/i18n-provider";
 
 export function ThemeToggle() {
+  const t = useT();
   const [theme, setTheme] = useState<Theme>("system");
   const [isDark, setIsDark] = useState(false);
   const [open, setOpen] = useState(false);
@@ -35,10 +37,10 @@ export function ThemeToggle() {
     return () => mq.removeEventListener("change", handler);
   }, [theme]);
 
-  const choose = (t: Theme) => {
-    setStoredTheme(t);
-    setTheme(t);
-    setIsDark(resolveDark(t));
+  const choose = (next: Theme) => {
+    setStoredTheme(next);
+    setTheme(next);
+    setIsDark(resolveDark(next));
     setOpen(false);
   };
 
@@ -47,7 +49,7 @@ export function ThemeToggle() {
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}
-        aria-label="테마"
+        aria-label={t("테마")}
         className="flex h-9 w-9 items-center justify-center rounded-lg text-zinc-600 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-900"
       >
         {isDark ? (
@@ -64,16 +66,16 @@ export function ThemeToggle() {
 
       {open && (
         <div className="absolute right-0 z-20 mt-1 w-28 overflow-hidden rounded-lg border border-zinc-200 bg-white py-1 shadow-lg dark:border-zinc-800 dark:bg-zinc-950">
-          {(["light", "dark", "system"] as Theme[]).map((t) => (
+          {(["light", "dark", "system"] as Theme[]).map((opt) => (
             <button
-              key={t}
+              key={opt}
               type="button"
-              onClick={() => choose(t)}
+              onClick={() => choose(opt)}
               className={`block w-full px-3 py-1.5 text-left text-sm hover:bg-zinc-100 dark:hover:bg-zinc-900 ${
-                theme === t ? "font-medium text-indigo-600 dark:text-indigo-400" : "text-zinc-700 dark:text-zinc-300"
+                theme === opt ? "font-medium text-indigo-600 dark:text-indigo-400" : "text-zinc-700 dark:text-zinc-300"
               }`}
             >
-              {THEME_LABELS[t]}
+              {t(THEME_LABELS[opt])}
             </button>
           ))}
         </div>
