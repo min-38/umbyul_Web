@@ -24,6 +24,31 @@ export async function markNotificationsRead(): Promise<{ ok: boolean }> {
   }
 }
 
+// 알림 설정 저장
+export async function updateNotificationPrefs(prefs: {
+  master: boolean;
+  follow: boolean;
+  reviewLike: boolean;
+}): Promise<{ ok: boolean }> {
+  const supabase = await createClient();
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+  if (!session) return { ok: false };
+
+  try {
+    const res = await fetch(`${API_URL}/me/notification-prefs`, {
+      method: "PUT",
+      headers: { Authorization: `Bearer ${session.access_token}`, "Content-Type": "application/json" },
+      body: JSON.stringify(prefs),
+      cache: "no-store",
+    });
+    return { ok: res.ok };
+  } catch {
+    return { ok: false };
+  }
+}
+
 // 알림 전체 삭제
 export async function clearNotifications(): Promise<{ ok: boolean }> {
   const supabase = await createClient();

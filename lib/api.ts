@@ -232,3 +232,27 @@ export async function getNotifications(): Promise<NotificationList> {
     return { items: [], unreadCount: 0 };
   }
 }
+
+export type NotificationPrefs = { master: boolean; follow: boolean; reviewLike: boolean };
+
+/** 알림 설정 조회 (로그인). 없으면/오류 시 기본 on. */
+export async function getNotificationPrefs(): Promise<NotificationPrefs> {
+  const supabase = await createClient();
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+  const defaults: NotificationPrefs = { master: true, follow: true, reviewLike: true };
+  if (!session) return defaults;
+
+  try {
+    const res = await fetch(`${API_URL}/me/notification-prefs`, {
+      headers: { Authorization: `Bearer ${session.access_token}` },
+      cache: "no-store",
+    });
+    if (!res.ok) return defaults;
+    const json = await res.json();
+    return json.data as NotificationPrefs;
+  } catch {
+    return defaults;
+  }
+}

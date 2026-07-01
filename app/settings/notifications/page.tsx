@@ -1,3 +1,7 @@
-export default function NotificationsTabPage() {
-  return <p className="text-sm text-zinc-400">준비 중입니다.</p>;
+import { getNotificationPrefs } from "@/lib/api";
+import { NotificationSettings } from "@/components/settings/notification-settings";
+
+export default async function NotificationsTabPage() {
+  const prefs = await getNotificationPrefs();
+  return <NotificationSettings initial={prefs} />;
 }
