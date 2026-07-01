@@ -38,10 +38,14 @@ export default async function ArtistPage({ params }: { params: Promise<{ id: str
         </div>
       </div>
 
-      {/* 탭: 평가 좋은 트랙 / 평가 좋은 앨범 / 디스코그래피 */}
-      {(artist.ratedTracks.length > 0 || artist.albums.length > 0) && (
+      {/* 탭: 평가 좋은 트랙 / 평가 좋은 앨범 / 디스코그래피 (Spotify 실패 시 오류 안내) */}
+      {artist.catalogError ? (
+        <div className="mt-10 rounded-xl border border-dashed border-zinc-300 px-6 py-10 text-center text-sm text-zinc-500 dark:border-zinc-700">
+          {t("음악 정보를 불러오지 못했습니다. 잠시 후 다시 시도해주세요.")}
+        </div>
+      ) : artist.ratedTracks.length > 0 || artist.albums.length > 0 ? (
         <ArtistTabs ratedTracks={artist.ratedTracks} albums={artist.albums} />
-      )}
+      ) : null}
 
       {/* 커뮤니티 최근 리뷰 */}
       {artist.recentReviews.length > 0 && (

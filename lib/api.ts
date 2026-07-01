@@ -190,6 +190,7 @@ export type ArtistDetail = {
   ratedTracks: ArtistRatedTrack[];
   albums: ArtistAlbum[];
   recentReviews: ArtistReview[];
+  catalogError: boolean;
 };
 
 /** 아티스트 상세 (공개). 없으면 null(404). */

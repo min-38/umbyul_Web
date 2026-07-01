@@ -283,4 +283,6 @@ export const EN: Record<string, string> = {
   "아직 평가된 앨범이 없습니다.": "No rated albums yet.",
   "평가된 릴리스 {rated} · 총 평가 {total}": "{rated} releases rated · {total} ratings",
   "커뮤니티 최근 리뷰": "Recent community reviews",
+  "음악 정보를 불러오지 못했습니다. 잠시 후 다시 시도해주세요.":
+    "Couldn't load music info. Please try again shortly.",
 };
