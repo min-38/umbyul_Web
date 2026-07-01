@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import { getAlbumDetail } from "@/lib/api";
+import { getT } from "@/lib/i18n-server";
 import { createClient } from "@/lib/supabase/server";
 import { Stars } from "@/components/detail/stars";
 import { RateButton } from "@/components/detail/rate-button";
@@ -19,6 +20,7 @@ export default async function AlbumPage({ params }: { params: Promise<{ id: stri
 
   const artistNames = album.artists.map((a) => a.name).join(", ");
   const mine = user ? album.reviews.find((r) => r.userId === user.id) : undefined;
+  const t = await getT();
 
   return (
     <div className="mx-auto w-full max-w-4xl px-6 py-8">
@@ -30,7 +32,7 @@ export default async function AlbumPage({ params }: { params: Promise<{ id: stri
           className="h-44 w-44 shrink-0 rounded-xl bg-zinc-100 object-cover dark:bg-zinc-900"
         />
         <div className="flex flex-1 flex-col gap-3">
-          <p className="text-xs font-medium uppercase tracking-wide text-zinc-400">앨범</p>
+          <p className="text-xs font-medium uppercase tracking-wide text-zinc-400">{t("앨범")}</p>
           <h1 className="text-3xl font-bold text-zinc-900 dark:text-zinc-50">{album.name}</h1>
           <p className="text-zinc-600 dark:text-zinc-300">{artistNames}</p>
           <div className="mt-1 flex items-center gap-3">
@@ -39,7 +41,7 @@ export default async function AlbumPage({ params }: { params: Promise<{ id: stri
             </span>
             <span className="flex flex-col">
               <Stars value={album.rating.average ?? 0} size={18} />
-              <span className="text-xs text-zinc-400">{album.rating.count}개 평가</span>
+              <span className="text-xs text-zinc-400">{t("{count}개 평가", { count: album.rating.count })}</span>
             </span>
             <span className="ml-auto">
               <RateButton
@@ -54,7 +56,7 @@ export default async function AlbumPage({ params }: { params: Promise<{ id: stri
               />
             </span>
           </div>
-          <SpotifyLink url={album.spotifyUrl} />
+          <SpotifyLink url={album.spotifyUrl} label={t("Spotify에서 듣기")} />
         </div>
       </div>
 
@@ -62,7 +64,7 @@ export default async function AlbumPage({ params }: { params: Promise<{ id: stri
 
       <section className="mt-10">
         <h2 className="mb-4 text-lg font-semibold text-zinc-900 dark:text-zinc-50">
-          리뷰 <span className="text-zinc-400">({album.rating.count})</span>
+          {t("리뷰")} <span className="text-zinc-400">({album.rating.count})</span>
         </h2>
         <ReviewList reviews={album.reviews} currentUserId={user?.id ?? null} />
       </section>

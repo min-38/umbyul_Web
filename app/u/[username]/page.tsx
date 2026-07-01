@@ -1,11 +1,12 @@
 import { notFound } from "next/navigation";
 import { getUserProfile, getProfile } from "@/lib/api";
+import { getT } from "@/lib/i18n-server";
 import { ProfileReviews } from "@/components/profile/profile-reviews";
 import { ProfileSocial } from "@/components/profile/profile-social";
 
 export default async function ProfilePage({ params }: { params: Promise<{ username: string }> }) {
   const { username } = await params;
-  const [profile, me] = await Promise.all([getUserProfile(username), getProfile()]);
+  const [profile, me, t] = await Promise.all([getUserProfile(username), getProfile(), getT()]);
   if (!profile) notFound();
 
   const loggedIn = me !== null;
@@ -39,9 +40,9 @@ export default async function ProfilePage({ params }: { params: Promise<{ userna
       <section className="mt-10">
         <div className="mb-4 flex items-baseline gap-3">
           <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">
-            작성한 리뷰<span className="text-zinc-400">({profile.reviewCount.toLocaleString()})</span>
+            {t("작성한 리뷰")}<span className="text-zinc-400">({profile.reviewCount.toLocaleString()})</span>
           </h2>
-          <span className="text-sm text-zinc-400">받은 좋아요 {profile.totalLikes.toLocaleString()}</span>
+          <span className="text-sm text-zinc-400">{t("받은 좋아요 {count}", { count: profile.totalLikes.toLocaleString() })}</span>
         </div>
         <ProfileReviews reviews={profile.reviews} />
       </section>

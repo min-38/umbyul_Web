@@ -5,6 +5,7 @@ import Link from "next/link";
 import type { ProfileReview } from "@/lib/api";
 import { Stars } from "@/components/detail/stars";
 import { formatRelativeTime } from "@/lib/format";
+import { useT, useLocale } from "@/components/i18n-provider";
 
 type Sort = "newest" | "rated" | "liked";
 const SORTS: { key: Sort; label: string }[] = [
@@ -15,11 +16,13 @@ const SORTS: { key: Sort; label: string }[] = [
 
 export function ProfileReviews({ reviews }: { reviews: ProfileReview[] }) {
   const [sort, setSort] = useState<Sort>("newest");
+  const t = useT();
+  const locale = useLocale();
 
   if (reviews.length === 0) {
     return (
       <p className="rounded-xl border border-dashed border-zinc-300 px-6 py-10 text-center text-sm text-zinc-500 dark:border-zinc-700">
-        아직 작성한 리뷰가 없습니다.
+        {t("아직 작성한 리뷰가 없습니다.")}
       </p>
     );
   }
@@ -46,7 +49,7 @@ export function ProfileReviews({ reviews }: { reviews: ProfileReview[] }) {
                 : "text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-200"
             }`}
           >
-            {s.label}
+            {t(s.label)}
           </button>
         ))}
       </div>
@@ -69,11 +72,11 @@ export function ProfileReviews({ reviews }: { reviews: ProfileReview[] }) {
                     : "bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300"
                 }`}
               >
-                {r.targetType === "track" ? "곡" : "앨범"}
+                {r.targetType === "track" ? t("곡") : t("앨범")}
               </span>
               <div className="min-w-0 flex-1">
                 <p className="truncate text-sm font-medium text-zinc-900 dark:text-zinc-50">
-                  {r.name ?? "(알 수 없는 항목)"}
+                  {r.name ?? t("(알 수 없는 항목)")}
                 </p>
                 <p className="truncate text-xs text-zinc-500">{r.artist ?? ""}</p>
               </div>
@@ -83,7 +86,7 @@ export function ProfileReviews({ reviews }: { reviews: ProfileReview[] }) {
                   <span className="text-sm font-semibold text-zinc-700 dark:text-zinc-200">{r.score.toFixed(1)}</span>
                 </span>
                 <span className="text-xs text-zinc-400">
-                  ♥ {r.likeCount} · {formatRelativeTime(r.createdAt)}
+                  ♥ {r.likeCount} · {formatRelativeTime(r.createdAt, locale)}
                 </span>
               </div>
             </div>

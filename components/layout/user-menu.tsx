@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { signOut } from "@/app/auth/actions";
 import { useClickOutside } from "@/lib/use-click-outside";
+import { useT } from "@/components/i18n-provider";
 
 // 미구현 대상은 플레이스홀더(#) — 각 기능 이슈에서 연결
 const STATIC_ITEMS = [
@@ -17,6 +18,7 @@ export function UserMenu({ username, avatarUrl }: { username: string; avatarUrl:
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
   const ref = useRef<HTMLDivElement>(null);
+  const t = useT();
   useClickOutside(ref, () => setOpen(false), open);
   const items = [{ label: "프로필", href: `/u/${username}` }, ...STATIC_ITEMS];
 
@@ -47,7 +49,7 @@ export function UserMenu({ username, avatarUrl }: { username: string; avatarUrl:
               onClick={() => setOpen(false)}
               className="block px-3 py-1.5 text-sm text-zinc-700 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-900"
             >
-              {it.label}
+              {t(it.label)}
             </Link>
           ))}
           <div className="my-1 border-t border-zinc-200 dark:border-zinc-800" />
@@ -56,7 +58,7 @@ export function UserMenu({ username, avatarUrl }: { username: string; avatarUrl:
               type="submit"
               className="block w-full px-3 py-1.5 text-left text-sm text-zinc-700 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-900"
             >
-              로그아웃
+              {t("로그아웃")}
             </button>
           </form>
         </div>

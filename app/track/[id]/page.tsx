@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { getTrackDetail } from "@/lib/api";
+import { getT } from "@/lib/i18n-server";
 import { createClient } from "@/lib/supabase/server";
 import { Stars } from "@/components/detail/stars";
 import { ReviewList } from "@/components/detail/review-list";
@@ -20,6 +21,7 @@ export default async function TrackPage({ params }: { params: Promise<{ id: stri
 
   const artistNames = track.artists.map((a) => a.name).join(", ");
   const mine = user ? track.reviews.find((r) => r.userId === user.id) : undefined;
+  const t = await getT();
 
   return (
     <div className="mx-auto w-full max-w-4xl px-6 py-8">
@@ -31,7 +33,7 @@ export default async function TrackPage({ params }: { params: Promise<{ id: stri
           className="h-44 w-44 shrink-0 rounded-xl bg-zinc-100 object-cover dark:bg-zinc-900"
         />
         <div className="flex flex-1 flex-col gap-3">
-          <p className="text-xs font-medium uppercase tracking-wide text-zinc-400">곡</p>
+          <p className="text-xs font-medium uppercase tracking-wide text-zinc-400">{t("곡")}</p>
           <h1 className="text-3xl font-bold text-zinc-900 dark:text-zinc-50">{track.name}</h1>
           <p className="text-zinc-600 dark:text-zinc-300">
             {artistNames}
@@ -50,7 +52,7 @@ export default async function TrackPage({ params }: { params: Promise<{ id: stri
             </span>
             <span className="flex flex-col">
               <Stars value={track.rating.average ?? 0} size={18} />
-              <span className="text-xs text-zinc-400">{track.rating.count}개 평가</span>
+              <span className="text-xs text-zinc-400">{t("{count}개 평가", { count: track.rating.count })}</span>
             </span>
             <span className="ml-auto">
               <RateButton
@@ -70,17 +72,17 @@ export default async function TrackPage({ params }: { params: Promise<{ id: stri
 
       <MetaRow
         items={[
-          { label: "발매일", value: formatReleaseDate(track.releaseDate) },
-          { label: "길이", value: formatDuration(track.durationMs) },
+          { label: t("발매일"), value: formatReleaseDate(track.releaseDate) },
+          { label: t("길이"), value: formatDuration(track.durationMs) },
         ]}
       />
       <Copyright text={track.copyright} />
 
-      <SpotifyLink url={track.spotifyUrl} />
+      <SpotifyLink url={track.spotifyUrl} label={t("Spotify에서 듣기")} />
 
       <section className="mt-10">
         <h2 className="mb-4 text-lg font-semibold text-zinc-900 dark:text-zinc-50">
-          리뷰 <span className="text-zinc-400">({track.rating.count})</span>
+          {t("리뷰")} <span className="text-zinc-400">({track.rating.count})</span>
         </h2>
         <ReviewList reviews={track.reviews} currentUserId={user?.id ?? null} />
       </section>

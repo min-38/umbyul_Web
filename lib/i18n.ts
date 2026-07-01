@@ -25,6 +25,13 @@ export const EN: Record<string, string> = {
   홈: "Home",
   "앨범, 곡, 아티스트, 유저 검색": "Search albums, tracks, artists, users",
 
+  // ── 유저 메뉴 ──
+  프로필: "Profile",
+  "포인트 내역": "Points",
+  업적: "Achievements",
+  설정: "Settings",
+  로그아웃: "Log out",
+
   // ── 푸터 ──
   정책: "Policy",
   고객지원: "Support",
@@ -63,4 +70,37 @@ export const EN: Record<string, string> = {
   "화면 밝기 테마를 선택합니다. 시스템은 기기 설정을 따릅니다.":
     "Choose the display theme. System follows your device setting.",
   "표시 언어입니다.": "The language shown across the app.",
+
+  // ── 프로필 ──
+  팔로워: "Followers",
+  팔로잉: "Following",
+  팔로우: "Follow",
+  "프로필 편집": "Edit profile",
+  "작성한 리뷰": "Reviews",
+  "받은 좋아요 {count}": "{count} likes received",
+  "아직 작성한 리뷰가 없습니다.": "No reviews yet.",
+  "(알 수 없는 항목)": "(Unknown item)",
+  "불러오는 중…": "Loading…",
+  "아직 없습니다.": "None yet.",
+  평점순: "By rating",
+  좋아요순: "Most liked",
+
+  // ── 상세 (앨범/곡) ──
+  곡: "Track",
+  앨범: "Album",
+  리뷰: "Reviews",
+  "{count}개 평가": "{count} ratings",
+  "Spotify에서 듣기": "Listen on Spotify",
+  트랙리스트: "Tracklist",
+  정보: "Info",
+  "{count}곡": "{count} tracks",
+  발매일: "Release date",
+  "트랙 수": "Tracks",
+  저작권: "Copyright",
+  길이: "Length",
+  "아직 리뷰가 없습니다. 첫 평가를 남겨보세요.": "No reviews yet. Be the first to rate.",
+  인기순: "Popular",
+  최신순: "Newest",
+  평가하기: "Rate",
+  "내 평가 수정": "Edit my rating",
 };

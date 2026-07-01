@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import type { FollowUser } from "@/lib/api";
 import { loadFollowers, loadFollowing, followUser, unfollowUser } from "@/app/actions/social";
+import { useT } from "@/components/i18n-provider";
 
 export function FollowListModal({
   username,
@@ -22,6 +23,7 @@ export function FollowListModal({
   onClose: () => void;
 }) {
   const [users, setUsers] = useState<FollowUser[] | null>(null);
+  const t = useT();
 
   useEffect(() => {
     (kind === "followers" ? loadFollowers : loadFollowing)(username).then(setUsers);
@@ -34,12 +36,12 @@ export function FollowListModal({
         onClick={(e) => e.stopPropagation()}
       >
         <h2 className="mb-3 text-base font-semibold text-zinc-900 dark:text-zinc-50">
-          {kind === "followers" ? "팔로워" : "팔로잉"}
+          {kind === "followers" ? t("팔로워") : t("팔로잉")}
         </h2>
         {users === null ? (
-          <p className="py-8 text-center text-sm text-zinc-400">불러오는 중…</p>
+          <p className="py-8 text-center text-sm text-zinc-400">{t("불러오는 중…")}</p>
         ) : users.length === 0 ? (
-          <p className="py-8 text-center text-sm text-zinc-400">아직 없습니다.</p>
+          <p className="py-8 text-center text-sm text-zinc-400">{t("아직 없습니다.")}</p>
         ) : (
           <ul className="flex flex-col gap-1 overflow-y-auto">
             {users.map((u) => (
@@ -66,6 +68,7 @@ function FollowRow({
   onNavigate: () => void;
 }) {
   const router = useRouter();
+  const t = useT();
   const [following, setFollowing] = useState(user.isFollowing);
   const [busy, setBusy] = useState(false);
   const isMe = myUsername !== null && user.username.toLowerCase() === myUsername.toLowerCase();
@@ -108,7 +111,7 @@ function FollowRow({
               : "bg-indigo-600 text-white hover:bg-indigo-500"
           }`}
         >
-          {following ? "팔로잉" : "팔로우"}
+          {following ? t("팔로잉") : t("팔로우")}
         </button>
       )}
     </li>

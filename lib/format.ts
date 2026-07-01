@@ -23,8 +23,8 @@ export function formatReleaseDate(date: string | null): string {
   return date.replaceAll("-", ".");
 }
 
-/** ISO 시각 → 한국어 상대시간 ("방금", "3시간 전", "2일 전", …). 30일 넘으면 날짜. */
-export function formatRelativeTime(iso: string): string {
+/** ISO 시각 → 상대시간 ("방금", "3시간 전" / "just now", "3h ago", …). 30일 넘으면 날짜. */
+export function formatRelativeTime(iso: string, locale: "ko" | "en" = "ko"): string {
   const then = new Date(iso).getTime();
   if (Number.isNaN(then)) return "";
   const diff = Date.now() - then;
@@ -32,6 +32,14 @@ export function formatRelativeTime(iso: string): string {
   const min = Math.floor(sec / 60);
   const hour = Math.floor(min / 60);
   const day = Math.floor(hour / 24);
+  if (locale === "en") {
+    if (sec < 60) return "just now";
+    if (min < 60) return `${min}m ago`;
+    if (hour < 24) return `${hour}h ago`;
+    if (day < 7) return `${day}d ago`;
+    if (day < 30) return `${Math.floor(day / 7)}w ago`;
+    return new Date(iso).toLocaleDateString("en-US");
+  }
   if (sec < 60) return "방금";
   if (min < 60) return `${min}분 전`;
   if (hour < 24) return `${hour}시간 전`;

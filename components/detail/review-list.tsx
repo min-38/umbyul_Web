@@ -7,6 +7,7 @@ import { Stars } from "./stars";
 import { ReactionBar } from "./reaction-bar";
 import { ReportControl } from "./report-control";
 import { formatRelativeTime } from "@/lib/format";
+import { useT, useLocale } from "@/components/i18n-provider";
 
 // 인기순 = 순좋아요(좋아요-싫어요) 내림차순. 최신순 = 작성시간.
 type Sort = "latest" | "popular";
@@ -19,11 +20,13 @@ export function ReviewList({
   currentUserId: string | null;
 }) {
   const [sort, setSort] = useState<Sort>("latest");
+  const t = useT();
+  const locale = useLocale();
 
   if (reviews.length === 0) {
     return (
       <p className="rounded-xl border border-dashed border-zinc-300 px-6 py-10 text-center text-sm text-zinc-500 dark:border-zinc-700">
-        아직 리뷰가 없습니다. 첫 평가를 남겨보세요.
+        {t("아직 리뷰가 없습니다. 첫 평가를 남겨보세요.")}
       </p>
     );
   }
@@ -48,7 +51,7 @@ export function ReviewList({
                 : "text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-200"
             }`}
           >
-            {s === "popular" ? "인기순" : "최신순"}
+            {s === "popular" ? t("인기순") : t("최신순")}
           </button>
         ))}
       </div>
@@ -68,7 +71,7 @@ export function ReviewList({
               <Link href={`/u/${r.username}`} className="text-sm font-medium text-zinc-800 hover:underline dark:text-zinc-100">
                 {r.username}
               </Link>
-              <span className="text-xs text-zinc-400">{formatRelativeTime(r.createdAt)}</span>
+              <span className="text-xs text-zinc-400">{formatRelativeTime(r.createdAt, locale)}</span>
               <span className="ml-auto flex items-center gap-1.5">
                 <Stars value={r.score} size={14} />
                 <span className="text-sm font-semibold text-zinc-700 dark:text-zinc-200">{r.score.toFixed(1)}</span>

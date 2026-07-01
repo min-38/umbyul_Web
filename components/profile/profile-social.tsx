@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { followUser, unfollowUser } from "@/app/actions/social";
+import { useT } from "@/components/i18n-provider";
 import { FollowListModal } from "./follow-list-modal";
 
 export function ProfileSocial({
@@ -24,6 +25,7 @@ export function ProfileSocial({
   isFollowing: boolean;
 }) {
   const router = useRouter();
+  const t = useT();
   const [following, setFollowing] = useState(isFollowing);
   const [followers, setFollowers] = useState(followerCount);
   const [followingCount, setFollowingCount] = useState(initialFollowingCount);
@@ -48,10 +50,10 @@ export function ProfileSocial({
     <div className="flex flex-col gap-3">
       <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-zinc-500">
         <button type="button" onClick={() => setModal("followers")} className="hover:text-zinc-800 dark:hover:text-zinc-200">
-          <b className="text-zinc-800 dark:text-zinc-200">{followers}</b> 팔로워
+          <b className="text-zinc-800 dark:text-zinc-200">{followers}</b> {t("팔로워")}
         </button>
         <button type="button" onClick={() => setModal("following")} className="hover:text-zinc-800 dark:hover:text-zinc-200">
-          <b className="text-zinc-800 dark:text-zinc-200">{followingCount}</b> 팔로잉
+          <b className="text-zinc-800 dark:text-zinc-200">{followingCount}</b> {t("팔로잉")}
         </button>
       </div>
 
@@ -60,7 +62,7 @@ export function ProfileSocial({
           href="/settings/account"
           className="w-fit rounded-lg border border-zinc-300 px-4 py-1.5 text-sm font-medium text-zinc-700 hover:bg-zinc-100 dark:border-zinc-700 dark:text-zinc-200 dark:hover:bg-zinc-900"
         >
-          프로필 편집
+          {t("프로필 편집")}
         </Link>
       ) : (
         <button
@@ -73,7 +75,7 @@ export function ProfileSocial({
               : "bg-indigo-600 text-white hover:bg-indigo-500"
           }`}
         >
-          {following ? "팔로잉" : "팔로우"}
+          {following ? t("팔로잉") : t("팔로우")}
         </button>
       )}
 
