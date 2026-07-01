@@ -37,21 +37,24 @@ export function AlbumTabs({ album }: { album: AlbumDetail }) {
 
       <div className="pt-5">
         {tab === "tracklist" && (
-          <ol className="flex flex-col">
-            {album.tracks.map((t) => (
-              <li key={t.id} className="flex items-center gap-3 border-b border-zinc-100 py-2.5 last:border-0 dark:border-zinc-900">
-                <span className="w-6 text-right text-sm tabular-nums text-zinc-400">{t.trackNumber}</span>
-                <Link href={`/track/${t.id}`} className="flex-1 truncate text-sm text-zinc-800 hover:underline dark:text-zinc-100">
-                  {t.name}
-                </Link>
-                <span className="text-xs tabular-nums text-zinc-400">{formatDuration(t.durationMs)}</span>
-              </li>
-            ))}
-            <li className="flex justify-between pt-3 text-xs text-zinc-400">
+          <div>
+            {/* 트랙이 많아도 리뷰가 멀리 밀리지 않게 자체 스크롤(최대 높이) */}
+            <ol className="flex max-h-96 flex-col overflow-y-auto pr-1">
+              {album.tracks.map((t) => (
+                <li key={t.id} className="flex items-center gap-3 border-b border-zinc-100 py-2.5 last:border-0 dark:border-zinc-900">
+                  <span className="w-6 text-right text-sm tabular-nums text-zinc-400">{t.trackNumber}</span>
+                  <Link href={`/track/${t.id}`} className="flex-1 truncate text-sm text-zinc-800 hover:underline dark:text-zinc-100">
+                    {t.name}
+                  </Link>
+                  <span className="text-xs tabular-nums text-zinc-400">{formatDuration(t.durationMs)}</span>
+                </li>
+              ))}
+            </ol>
+            <div className="mt-3 flex justify-between border-t border-zinc-200 pt-3 text-xs text-zinc-400 dark:border-zinc-800">
               <span>{album.totalTracks}곡</span>
               <span>{formatTotalDuration(album.tracks.map((t) => t.durationMs))}</span>
-            </li>
-          </ol>
+            </div>
+          </div>
         )}
 
         {tab === "info" && (
