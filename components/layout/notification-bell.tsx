@@ -64,7 +64,7 @@ export function NotificationBell({ items, unreadCount }: { items: NotificationIt
 
           <div className="flex items-center justify-between border-t border-zinc-200 px-3 py-2 dark:border-zinc-800">
             <Link
-              href="/settings?tab=notifications"
+              href="/settings/notifications"
               onClick={() => setOpen(false)}
               className="text-xs text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-200"
             >
