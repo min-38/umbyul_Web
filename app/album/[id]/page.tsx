@@ -5,6 +5,7 @@ import { createClient } from "@/lib/supabase/server";
 import { Stars } from "@/components/detail/stars";
 import { RateButton } from "@/components/detail/rate-button";
 import { SpotifyLink } from "@/components/detail/detail-bits";
+import { ShareButton } from "@/components/detail/share-button";
 import { AlbumTabs } from "@/components/detail/album-tabs";
 import { ReviewList } from "@/components/detail/review-list";
 
@@ -56,7 +57,10 @@ export default async function AlbumPage({ params }: { params: Promise<{ id: stri
               />
             </span>
           </div>
-          <SpotifyLink url={album.spotifyUrl} label={t("Spotify에서 듣기")} />
+          <div className="flex items-center gap-4">
+            <SpotifyLink url={album.spotifyUrl} label={t("Spotify에서 듣기")} />
+            <ShareButton path={`/album/${album.spotifyId}`} title={album.name} label />
+          </div>
         </div>
       </div>
 
@@ -66,7 +70,7 @@ export default async function AlbumPage({ params }: { params: Promise<{ id: stri
         <h2 className="mb-4 text-lg font-semibold text-zinc-900 dark:text-zinc-50">
           {t("리뷰")} <span className="text-zinc-400">({album.rating.count})</span>
         </h2>
-        <ReviewList reviews={album.reviews} currentUserId={user?.id ?? null} />
+        <ReviewList reviews={album.reviews} currentUserId={user?.id ?? null} shareBasePath={`/album/${album.spotifyId}`} />
       </section>
     </div>
   );

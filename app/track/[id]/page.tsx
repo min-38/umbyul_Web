@@ -7,6 +7,7 @@ import { Stars } from "@/components/detail/stars";
 import { ReviewList } from "@/components/detail/review-list";
 import { RateButton } from "@/components/detail/rate-button";
 import { MetaRow, SpotifyLink, Copyright } from "@/components/detail/detail-bits";
+import { ShareButton } from "@/components/detail/share-button";
 import { formatDuration, formatReleaseDate } from "@/lib/format";
 
 export default async function TrackPage({ params }: { params: Promise<{ id: string }> }) {
@@ -78,13 +79,16 @@ export default async function TrackPage({ params }: { params: Promise<{ id: stri
       />
       <Copyright text={track.copyright} />
 
-      <SpotifyLink url={track.spotifyUrl} label={t("Spotify에서 듣기")} />
+      <div className="flex items-center gap-4">
+        <SpotifyLink url={track.spotifyUrl} label={t("Spotify에서 듣기")} />
+        <ShareButton path={`/track/${track.spotifyId}`} title={track.name} label />
+      </div>
 
       <section className="mt-10">
         <h2 className="mb-4 text-lg font-semibold text-zinc-900 dark:text-zinc-50">
           {t("리뷰")} <span className="text-zinc-400">({track.rating.count})</span>
         </h2>
-        <ReviewList reviews={track.reviews} currentUserId={user?.id ?? null} />
+        <ReviewList reviews={track.reviews} currentUserId={user?.id ?? null} shareBasePath={`/track/${track.spotifyId}`} />
       </section>
     </div>
   );

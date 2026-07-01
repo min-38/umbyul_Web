@@ -83,6 +83,15 @@ export type ReviewItem = {
   likeCount: number;
   dislikeCount: number;
   myReaction: Reaction | null;
+  commentCount: number;
+};
+export type ReviewComment = {
+  id: string;
+  userId: string;
+  username: string;
+  avatarUrl: string | null;
+  body: string;
+  createdAt: string;
 };
 // 장르는 Spotify 앱 토큰으로 안 내려와 제외. 레이블은 copyrights(℗/©) 텍스트.
 export type TrackDetail = {

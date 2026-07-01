@@ -6,6 +6,8 @@ import type { ReviewItem } from "@/lib/api";
 import { Stars } from "./stars";
 import { ReactionBar } from "./reaction-bar";
 import { ReportControl } from "./report-control";
+import { ReviewComments } from "./review-comments";
+import { ShareButton } from "./share-button";
 import { formatRelativeTime } from "@/lib/format";
 import { useT, useLocale } from "@/components/i18n-provider";
 
@@ -15,9 +17,11 @@ type Sort = "latest" | "popular";
 export function ReviewList({
   reviews,
   currentUserId,
+  shareBasePath,
 }: {
   reviews: ReviewItem[];
   currentUserId: string | null;
+  shareBasePath: string;
 }) {
   const [sort, setSort] = useState<Sort>("latest");
   const t = useT();
@@ -58,7 +62,7 @@ export function ReviewList({
 
       <ul className="flex flex-col divide-y divide-zinc-200 dark:divide-zinc-800">
         {sorted.map((r) => (
-          <li key={r.id} className="flex flex-col gap-2 py-4">
+          <li key={r.id} id={`review-${r.id}`} className="flex flex-col gap-2 py-4 scroll-mt-20">
             <div className="flex items-center gap-2">
               <span className="flex h-7 w-7 items-center justify-center overflow-hidden rounded-full bg-zinc-200 text-xs font-medium text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300">
                 {r.avatarUrl ? (
@@ -84,8 +88,13 @@ export function ReviewList({
                 loggedIn={currentUserId !== null}
                 initial={{ likeCount: r.likeCount, dislikeCount: r.dislikeCount, myReaction: r.myReaction }}
               />
+              <ShareButton
+                path={`${shareBasePath}#review-${r.id}`}
+                title={t("{username}님의 리뷰", { username: r.username })}
+              />
               {r.userId !== currentUserId && <ReportControl ratingId={r.id} loggedIn={currentUserId !== null} />}
             </div>
+            <ReviewComments ratingId={r.id} initialCount={r.commentCount} currentUserId={currentUserId} />
           </li>
         ))}
       </ul>

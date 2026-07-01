@@ -261,4 +261,14 @@ export const EN: Record<string, string> = {
 
   // ── 별점 입력(접근성) ──
   "{score}점": "{score} stars",
+
+  // ── 리뷰 댓글 & 공유 (NON-36) ──
+  댓글: "Comments",
+  "댓글 {count}": "{count} comments",
+  "첫 댓글을 남겨보세요.": "Be the first to comment.",
+  "댓글 달기…": "Add a comment…",
+  "로그인하고 댓글 달기": "Log in to comment",
+  공유: "Share",
+  복사됨: "Copied",
+  "{username}님의 리뷰": "{username}'s review",
 };
