@@ -18,10 +18,10 @@ type Tab = "track" | "album" | "artist" | "user";
 type AnyItem = TrackResult | AlbumResult | ArtistResult | UserResult;
 
 const TABS: { key: Tab; label: string }[] = [
-  { key: "track", label: "Track" },
-  { key: "album", label: "Album" },
-  { key: "artist", label: "Artist" },
-  { key: "user", label: "User" },
+  { key: "track", label: "곡" },
+  { key: "album", label: "앨범" },
+  { key: "artist", label: "아티스트" },
+  { key: "user", label: "유저" },
 ];
 
 type Cat = { items: AnyItem[]; total: number; page: number; loading: boolean; done: boolean };
@@ -192,7 +192,7 @@ export function SearchView({
                 : "border-zinc-300 text-zinc-600 hover:bg-zinc-50 dark:border-zinc-700 dark:text-zinc-400 dark:hover:bg-zinc-900"
             }`}
           >
-            {t.label} ({state[t.key].total})
+            {tr(t.label)} ({state[t.key].total})
           </button>
         ))}
       </div>

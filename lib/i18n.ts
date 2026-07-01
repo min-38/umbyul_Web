@@ -112,6 +112,8 @@ export const EN: Record<string, string> = {
   "이 카테고리엔 결과가 없습니다.": "No results in this category.",
   "더 보기": "Show more",
   "검색 중…": "Searching…",
+  아티스트: "Artist",
+  유저: "User",
 
   // ── 평가 모달 ──
   "별점을 선택해주세요.": "Please select a rating.",
