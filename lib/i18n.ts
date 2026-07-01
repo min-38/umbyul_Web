@@ -14,7 +14,6 @@ export function translate(locale: Locale, ko: string, params?: Record<string, st
 // 한국어 → 영어 매핑. 문구를 i18n 대상으로 옮길 때 여기에 추가.
 export const EN: Record<string, string> = {
   // ── 메타 ──
-  "음악 평가 서비스": "Music Rating",
   "음악을 듣고 평가하고 기록하세요.": "Listen, rate, and remember music you love.",
 
   // ── 헤더 ──

@@ -22,7 +22,7 @@ const geistMono = Geist_Mono({
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getT();
   return {
-    title: t("음악 평가 서비스"),
+    title: "Glitter",
     description: t("음악을 듣고 평가하고 기록하세요."),
   };
 }
