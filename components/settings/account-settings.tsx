@@ -114,7 +114,7 @@ export function AccountSettings({
           </div>
           <div className="flex gap-3">
             <dt className="w-20 shrink-0 text-zinc-400">{t("연동 계정")}</dt>
-            <dd className="flex flex-wrap gap-1.5">
+            <dd className="flex flex-wrap items-start gap-1.5">
               {providers.length === 0 ? (
                 <span className="text-zinc-500">-</span>
               ) : (
