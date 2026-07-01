@@ -17,20 +17,16 @@ export default async function ArtistPage({ params }: { params: Promise<{ id: str
   const [artist, t, locale] = await Promise.all([getArtistDetail(id), getT(), getLocale()]);
   if (!artist) notFound();
 
-  // 파생 데이터: 스탯 / "커뮤니티가 사랑한" / 리뷰의 릴리스 이름 맵.
-  const rated = [...artist.topTracks, ...artist.albums].filter((x) => x.rating);
-  const totalRatings = rated.reduce((n, x) => n + (x.rating?.count ?? 0), 0);
+  // 파생 데이터: 스탯 / "커뮤니티가 사랑한" / 리뷰의 릴리스 이름 맵. (앱 토큰 제약으로 앨범 기준)
+  const rated = artist.albums.filter((a) => a.rating);
+  const totalRatings = rated.reduce((n, a) => n + (a.rating?.count ?? 0), 0);
 
-  const loved = [
-    ...artist.topTracks.map((tr) => ({ type: "track" as const, spotifyId: tr.spotifyId, name: tr.name, imageUrl: tr.imageUrl, rating: tr.rating })),
-    ...artist.albums.map((a) => ({ type: "album" as const, spotifyId: a.spotifyId, name: a.name, imageUrl: a.imageUrl, rating: a.rating })),
-  ]
-    .filter((x) => x.rating && x.rating.count >= MIN_TOP)
-    .sort((a, b) => (b.rating!.average) - (a.rating!.average))
+  const loved = artist.albums
+    .filter((a) => a.rating && a.rating.count >= MIN_TOP)
+    .sort((a, b) => b.rating!.average - a.rating!.average)
     .slice(0, 6);
 
   const nameOf = new Map<string, string>();
-  artist.topTracks.forEach((tr) => nameOf.set(tr.spotifyId, tr.name));
   artist.albums.forEach((a) => nameOf.set(a.spotifyId, a.name));
 
   return (
@@ -46,12 +42,11 @@ export default async function ArtistPage({ params }: { params: Promise<{ id: str
         <div className="flex flex-col gap-2">
           <p className="text-xs font-medium uppercase tracking-wide text-zinc-400">{t("아티스트")}</p>
           <h1 className="text-3xl font-bold text-zinc-900 sm:text-4xl dark:text-zinc-50">{artist.name}</h1>
-          <p className="text-sm text-zinc-500">
-            {t("Spotify 팔로워 {count}", { count: artist.followers.toLocaleString() })}
-            {totalRatings > 0 && (
-              <> · {t("평가된 릴리스 {rated} · 총 평가 {total}", { rated: rated.length, total: totalRatings })}</>
-            )}
-          </p>
+          {totalRatings > 0 && (
+            <p className="text-sm text-zinc-500">
+              {t("평가된 릴리스 {rated} · 총 평가 {total}", { rated: rated.length, total: totalRatings })}
+            </p>
+          )}
           <div className="mt-1 flex items-center justify-center gap-4 sm:justify-start">
             <SpotifyLink url={artist.spotifyUrl} label={t("Spotify에서 열기")} />
             <ShareButton path={`/artist/${artist.spotifyId}`} title={artist.name} size={24} />
@@ -65,7 +60,7 @@ export default async function ArtistPage({ params }: { params: Promise<{ id: str
           <h2 className="mb-4 text-lg font-semibold text-zinc-900 dark:text-zinc-50">{t("커뮤니티가 사랑한")}</h2>
           <div className="grid grid-cols-2 gap-x-4 gap-y-6 sm:grid-cols-3 md:grid-cols-6">
             {loved.map((x) => (
-              <Link key={`${x.type}-${x.spotifyId}`} href={`/${x.type}/${x.spotifyId}`} className="flex flex-col gap-1.5">
+              <Link key={x.spotifyId} href={`/album/${x.spotifyId}`} className="flex flex-col gap-1.5">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={x.imageUrl ?? "/placeholder.svg"}
@@ -77,34 +72,6 @@ export default async function ArtistPage({ params }: { params: Promise<{ id: str
               </Link>
             ))}
           </div>
-        </section>
-      )}
-
-      {/* 인기 곡 (Spotify) */}
-      {artist.topTracks.length > 0 && (
-        <section className="mt-10">
-          <h2 className="mb-4 text-lg font-semibold text-zinc-900 dark:text-zinc-50">{t("인기 곡")}</h2>
-          <ul className="flex flex-col divide-y divide-zinc-100 dark:divide-zinc-900">
-            {artist.topTracks.map((tr) => (
-              <li key={tr.spotifyId}>
-                <Link
-                  href={`/track/${tr.spotifyId}`}
-                  className="flex items-center gap-3 py-2.5 hover:bg-zinc-50 dark:hover:bg-zinc-900/50"
-                >
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={tr.imageUrl ?? "/placeholder.svg"}
-                    alt=""
-                    className="h-11 w-11 shrink-0 rounded-md bg-zinc-100 object-cover dark:bg-zinc-900"
-                  />
-                  <span className="min-w-0 flex-1 truncate text-sm font-medium text-zinc-900 dark:text-zinc-50">
-                    {tr.name}
-                  </span>
-                  <ScoreBadge rating={tr.rating} />
-                </Link>
-              </li>
-            ))}
-          </ul>
         </section>
       )}
 

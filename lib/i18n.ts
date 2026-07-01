@@ -273,9 +273,7 @@ export const EN: Record<string, string> = {
   "{username}님의 리뷰": "{username}'s review",
 
   // ── 아티스트 상세 (NON-13) ──
-  "Spotify 팔로워 {count}": "{count} followers on Spotify",
   "Spotify에서 열기": "Open on Spotify",
-  "인기 곡": "Popular tracks",
   디스코그래피: "Discography",
   싱글: "Single",
   컴필레이션: "Compilation",

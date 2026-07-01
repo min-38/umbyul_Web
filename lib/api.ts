@@ -159,8 +159,8 @@ export async function getAlbumDetail(id: string): Promise<AlbumDetail | null> {
 
 // ── 아티스트 상세 (NON-13) ──
 // 아티스트 종합점수는 없음. 릴리스별로 이미 존재하는 평가만 배지로 노출.
+// 앱 토큰 제약(실측): followers·popularity·top-tracks 불가 → 앨범(디스코그래피) 중심.
 export type RatingBadge = { average: number; count: number };
-export type ArtistTrack = { spotifyId: string; name: string; imageUrl: string | null; rating: RatingBadge | null };
 export type ArtistAlbum = {
   spotifyId: string;
   name: string;
@@ -182,10 +182,7 @@ export type ArtistDetail = {
   spotifyId: string;
   name: string;
   imageUrl: string | null;
-  followers: number;
-  popularity: number;
   spotifyUrl: string;
-  topTracks: ArtistTrack[];
   albums: ArtistAlbum[];
   recentReviews: ArtistReview[];
 };
