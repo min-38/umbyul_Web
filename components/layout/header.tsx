@@ -1,10 +1,11 @@
 import Link from "next/link";
 import { Suspense } from "react";
 import { createClient } from "@/lib/supabase/server";
-import { getProfile } from "@/lib/api";
+import { getProfile, getNotifications } from "@/lib/api";
 import { BrandMark } from "@/components/ui/brand-mark";
 import { SearchBar } from "./search-bar";
 import { ThemeToggle } from "./theme-toggle";
+import { NotificationBell } from "./notification-bell";
 import { UserMenu } from "./user-menu";
 
 // 해당 페이지는 추후 → 플레이스홀더(#)
@@ -21,9 +22,10 @@ export async function Header() {
   } = await supabase.auth.getUser();
 
   let profile = null;
+  let notifs = { items: [], unreadCount: 0 } as Awaited<ReturnType<typeof getNotifications>>;
   if (user) {
     try {
-      profile = await getProfile();
+      [profile, notifs] = await Promise.all([getProfile(), getNotifications()]);
     } catch {
       // Api 불가 시 익명처럼 처리(헤더는 죽지 않게)
     }
@@ -61,6 +63,7 @@ export async function Header() {
         {/* 우: 테마 + 프로필 */}
         <div className="flex flex-1 items-center justify-end gap-1">
           <ThemeToggle />
+          {user && <NotificationBell items={notifs.items} unreadCount={notifs.unreadCount} />}
           {user ? (
             <UserMenu username={profile?.username ?? "프로필"} avatarUrl={profile?.avatarUrl ?? null} />
           ) : (

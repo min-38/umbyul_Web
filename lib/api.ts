@@ -199,3 +199,36 @@ async function fetchFollowList(username: string, kind: "followers" | "following"
 
 export const getFollowers = (username: string) => fetchFollowList(username, "followers");
 export const getFollowing = (username: string) => fetchFollowList(username, "following");
+
+// ── 알림 (NON-26) ──
+export type NotificationItem = {
+  id: string;
+  type: "follow" | "review_like";
+  actorUsername: string;
+  actorAvatarUrl: string | null;
+  createdAt: string;
+  read: boolean;
+  link: string | null;
+};
+export type NotificationList = { items: NotificationItem[]; unreadCount: number };
+
+/** 내 알림 목록 + 안읽음 수 (로그인). 비로그인/오류 시 빈 값. */
+export async function getNotifications(): Promise<NotificationList> {
+  const supabase = await createClient();
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+  if (!session) return { items: [], unreadCount: 0 };
+
+  try {
+    const res = await fetch(`${API_URL}/me/notifications`, {
+      headers: { Authorization: `Bearer ${session.access_token}` },
+      cache: "no-store",
+    });
+    if (!res.ok) return { items: [], unreadCount: 0 };
+    const json = await res.json();
+    return json.data as NotificationList;
+  } catch {
+    return { items: [], unreadCount: 0 };
+  }
+}
