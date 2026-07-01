@@ -49,6 +49,9 @@ export function ArtistTabs({ ratedTracks, albums }: { ratedTracks: ArtistRatedTr
             {tb.key === "albums" && ratedAlbums.length > 0 && (
               <span className="ml-1 text-zinc-400">({ratedAlbums.length})</span>
             )}
+            {tb.key === "discography" && albums.length > 0 && (
+              <span className="ml-1 text-zinc-400">({albums.length})</span>
+            )}
           </button>
         ))}
       </div>
