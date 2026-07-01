@@ -11,14 +11,17 @@ import {
 } from "@/app/actions/notifications";
 import { useClickOutside } from "@/lib/use-click-outside";
 import { formatRelativeTime } from "@/lib/format";
+import { useT, useLocale } from "@/components/i18n-provider";
 
 const POLL_MS = 5000;
 
-function label(n: NotificationItem) {
-  return n.type === "follow" ? "회원님을 팔로우했습니다" : "회원님의 리뷰를 좋아합니다";
+// 이름(span) 뒤에 붙는 문구. ko: "{이름}님이 …", en: "{name} …" 로 자연스럽게.
+function suffix(n: NotificationItem) {
+  return n.type === "follow" ? "님이 회원님을 팔로우했습니다" : "님이 회원님의 리뷰를 좋아합니다";
 }
 
 export function NotificationBell({ items, unreadCount }: { items: NotificationItem[]; unreadCount: number }) {
+  const t = useT();
   const [open, setOpen] = useState(false);
   const [list, setList] = useState(items);
   const [unread, setUnread] = useState(unreadCount);
@@ -104,7 +107,7 @@ export function NotificationBell({ items, unreadCount }: { items: NotificationIt
       <button
         type="button"
         onClick={toggle}
-        aria-label="알림"
+        aria-label={t("알림")}
         className="relative flex h-9 w-9 items-center justify-center rounded-lg text-zinc-600 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-900"
       >
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" aria-hidden="true">
@@ -126,11 +129,11 @@ export function NotificationBell({ items, unreadCount }: { items: NotificationIt
           }`}
         >
           <span className="truncate">
-            <span className="font-semibold">{toast.actorUsername}</span>님이 {label(toast)}
+            <span className="font-semibold">{toast.actorUsername}</span>{t(suffix(toast))}
           </span>
           <button
             type="button"
-            aria-label="닫기"
+            aria-label={t("닫기")}
             onClick={dismissToast}
             className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full hover:bg-white/20 dark:hover:bg-black/10"
           >
@@ -145,7 +148,7 @@ export function NotificationBell({ items, unreadCount }: { items: NotificationIt
         <div className="absolute right-0 z-20 mt-1 flex w-80 flex-col overflow-hidden rounded-lg border border-zinc-200 bg-white shadow-lg dark:border-zinc-800 dark:bg-zinc-950">
           <div className="max-h-80 overflow-y-auto py-1">
             {list.length === 0 ? (
-              <p className="px-4 py-8 text-center text-sm text-zinc-400">알림이 없습니다.</p>
+              <p className="px-4 py-8 text-center text-sm text-zinc-400">{t("알림이 없습니다.")}</p>
             ) : (
               <ul>
                 {list.map((n) => (
@@ -161,7 +164,7 @@ export function NotificationBell({ items, unreadCount }: { items: NotificationIt
               onClick={() => setOpen(false)}
               className="text-xs text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-200"
             >
-              알림 설정
+              {t("알림 설정")}
             </Link>
             <button
               type="button"
@@ -169,7 +172,7 @@ export function NotificationBell({ items, unreadCount }: { items: NotificationIt
               disabled={list.length === 0}
               className="text-xs text-zinc-500 hover:text-red-500 disabled:opacity-40"
             >
-              모두 지우기
+              {t("모두 지우기")}
             </button>
           </div>
         </div>
@@ -187,6 +190,8 @@ function NotifRow({
   onClose: () => void;
   onDelete: (n: NotificationItem) => void;
 }) {
+  const t = useT();
+  const locale = useLocale();
   // 확인한(읽은) 알림은 흐리게, 안읽음은 강조 + 배경 하이라이트.
   const nameCls = n.read ? "text-zinc-400 dark:text-zinc-500" : "font-medium text-zinc-900 dark:text-zinc-50";
   const textCls = n.read ? "text-zinc-400 dark:text-zinc-500" : "text-zinc-700 dark:text-zinc-200";
@@ -202,8 +207,8 @@ function NotifRow({
         )}
       </span>
       <p className={`min-w-0 flex-1 text-sm ${textCls}`}>
-        <span className={nameCls}>{n.actorUsername}</span>님이 {label(n)}
-        <span className="ml-1 text-xs text-zinc-400">{formatRelativeTime(n.createdAt)}</span>
+        <span className={nameCls}>{n.actorUsername}</span>{t(suffix(n))}
+        <span className="ml-1 text-xs text-zinc-400">{formatRelativeTime(n.createdAt, locale)}</span>
       </p>
     </div>
   );
@@ -219,7 +224,7 @@ function NotifRow({
       )}
       <button
         type="button"
-        aria-label="알림 삭제"
+        aria-label={t("알림 삭제")}
         onClick={(e) => {
           e.preventDefault();
           e.stopPropagation();

@@ -103,4 +103,45 @@ export const EN: Record<string, string> = {
   최신순: "Newest",
   평가하기: "Rate",
   "내 평가 수정": "Edit my rating",
+
+  // ── 검색 ──
+  "검색어를 입력하세요.": "Enter a search term.",
+  "검색 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.":
+    "Something went wrong. Please try again shortly.",
+  '"{q}"에 대한 검색 결과가 없습니다.': 'No results for "{q}".',
+  "이 카테고리엔 결과가 없습니다.": "No results in this category.",
+  "더 보기": "Show more",
+  "검색 중…": "Searching…",
+
+  // ── 평가 모달 ──
+  "별점을 선택해주세요.": "Please select a rating.",
+  "평가를 삭제할까요?": "Delete this rating?",
+  "리뷰를 남겨보세요 (선택)": "Write a review (optional)",
+  삭제: "Delete",
+  취소: "Cancel",
+  "저장 중…": "Saving…",
+  수정: "Update",
+  등록: "Submit",
+
+  // ── 신고 ──
+  "음악과 무관한 내용": "Not about music",
+  "악플·욕설": "Abuse or insults",
+  "부적절한 이름·프로필 사진": "Inappropriate name or profile picture",
+  기타: "Other",
+  "사유를 선택해주세요.": "Please select a reason.",
+  신고: "Report",
+  "신고가 접수되었습니다.": "Your report has been submitted.",
+  닫기: "Close",
+  "리뷰 신고": "Report review",
+  "신고 내용은 운영자가 검토합니다.": "Reports are reviewed by our moderators.",
+  "상세 내용 (선택)": "Details (optional)",
+  "접수 중…": "Submitting…",
+
+  // ── 알림 ──
+  "님이 회원님을 팔로우했습니다": " followed you",
+  "님이 회원님의 리뷰를 좋아합니다": " liked your review",
+  "알림이 없습니다.": "No notifications.",
+  "알림 설정": "Notification settings",
+  "모두 지우기": "Clear all",
+  "알림 삭제": "Delete notification",
 };

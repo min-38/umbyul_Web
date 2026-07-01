@@ -9,6 +9,7 @@ import type {
   ArtistResult,
   UserResult,
 } from "@/lib/api";
+import { useT } from "@/components/i18n-provider";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 const PAGE = 10;
@@ -135,6 +136,7 @@ export function SearchView({
   error: boolean;
 }) {
   const [tab, setTab] = useState<Tab>("track");
+  const tr = useT();
   const [state, setState] = useState<Record<Tab, Cat>>(() => ({
     track: init(results?.tracks.items ?? [], results?.tracks.total ?? 0),
     album: init(results?.albums.items ?? [], results?.albums.total ?? 0),
@@ -142,8 +144,8 @@ export function SearchView({
     user: init(results?.users.items ?? [], results?.users.total ?? 0),
   }));
 
-  if (!q) return <Centered>검색어를 입력하세요.</Centered>;
-  if (error) return <Centered>검색 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.</Centered>;
+  if (!q) return <Centered>{tr("검색어를 입력하세요.")}</Centered>;
+  if (error) return <Centered>{tr("검색 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.")}</Centered>;
   if (!results) return null;
 
   const total = TABS.reduce((n, t) => n + state[t.key].items.length, 0);
@@ -196,9 +198,9 @@ export function SearchView({
       </div>
 
       {total === 0 ? (
-        <Centered>{`"${q}"에 대한 검색 결과가 없습니다.`}</Centered>
+        <Centered>{tr('"{q}"에 대한 검색 결과가 없습니다.', { q })}</Centered>
       ) : active.items.length === 0 ? (
-        <Centered>이 카테고리엔 결과가 없습니다.</Centered>
+        <Centered>{tr("이 카테고리엔 결과가 없습니다.")}</Centered>
       ) : (
         <>
           <Grid>{renderCards(tab, active.items)}</Grid>
@@ -210,7 +212,7 @@ export function SearchView({
                 onClick={() => loadMore(tab)}
                 className="rounded-full border border-zinc-300 px-5 py-2 text-sm font-medium text-zinc-700 hover:bg-zinc-50 disabled:opacity-50 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-900"
               >
-                {active.loading ? "불러오는 중…" : "더 보기"}
+                {active.loading ? tr("불러오는 중…") : tr("더 보기")}
               </button>
             </div>
           )}

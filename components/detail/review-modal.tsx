@@ -4,6 +4,7 @@ import { useState } from "react";
 import { StarInput } from "./star-input";
 import { saveRating, deleteRating } from "@/app/actions/ratings";
 import { msg } from "@/lib/messages";
+import { useT } from "@/components/i18n-provider";
 
 export function ReviewModal({
   targetType,
@@ -25,6 +26,7 @@ export function ReviewModal({
   onClose: () => void;
 }) {
   const editing = initialScore > 0;
+  const t = useT();
   const [score, setScore] = useState(initialScore);
   const [review, setReview] = useState(initialReview);
   const [busy, setBusy] = useState(false);
@@ -32,7 +34,7 @@ export function ReviewModal({
 
   const submit = async () => {
     if (score <= 0) {
-      setError("별점을 선택해주세요.");
+      setError(t("별점을 선택해주세요."));
       return;
     }
     setBusy(true);
@@ -44,7 +46,7 @@ export function ReviewModal({
   };
 
   const remove = async () => {
-    if (!window.confirm("평가를 삭제할까요?")) return;
+    if (!window.confirm(t("평가를 삭제할까요?"))) return;
     setBusy(true);
     setError(null);
     const r = await deleteRating({ targetType, targetId, path });
@@ -62,7 +64,7 @@ export function ReviewModal({
         className="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl dark:bg-zinc-950"
         onClick={(e) => e.stopPropagation()}
       >
-        <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">평가하기</h2>
+        <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">{t("평가하기")}</h2>
         <p className="mt-0.5 truncate text-sm text-zinc-500">{name}</p>
 
         <div className="mt-5">
@@ -72,7 +74,7 @@ export function ReviewModal({
         <textarea
           value={review}
           onChange={(e) => setReview(e.target.value)}
-          placeholder="리뷰를 남겨보세요 (선택)"
+          placeholder={t("리뷰를 남겨보세요 (선택)")}
           rows={5}
           maxLength={5000}
           className="mt-4 w-full resize-none rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 placeholder:text-zinc-400 focus:border-zinc-500 focus:outline-none dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100"
@@ -88,7 +90,7 @@ export function ReviewModal({
               disabled={busy}
               className="rounded-lg px-3 py-2 text-sm font-medium text-red-500 hover:bg-red-50 disabled:opacity-50 dark:hover:bg-red-950/40"
             >
-              삭제
+              {t("삭제")}
             </button>
           )}
           <button
@@ -97,7 +99,7 @@ export function ReviewModal({
             disabled={busy}
             className="ml-auto rounded-lg px-4 py-2 text-sm font-medium text-zinc-600 hover:bg-zinc-100 disabled:opacity-50 dark:text-zinc-300 dark:hover:bg-zinc-900"
           >
-            취소
+            {t("취소")}
           </button>
           <button
             type="button"
@@ -105,7 +107,7 @@ export function ReviewModal({
             disabled={busy}
             className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-500 disabled:opacity-50"
           >
-            {busy ? "저장 중…" : editing ? "수정" : "등록"}
+            {busy ? t("저장 중…") : editing ? t("수정") : t("등록")}
           </button>
         </div>
       </div>
