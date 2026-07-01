@@ -10,7 +10,6 @@ export default async function ProfilePage({ params }: { params: Promise<{ userna
 
   const loggedIn = me !== null;
   const isSelf = me !== null && me.username.toLowerCase() === profile.username.toLowerCase();
-  const joined = new Date(profile.joinedAt).toLocaleDateString("ko-KR");
 
   return (
     <div className="mx-auto w-full max-w-3xl px-6 py-8">
@@ -34,7 +33,6 @@ export default async function ProfilePage({ params }: { params: Promise<{ userna
             followingCount={profile.followingCount}
             isFollowing={profile.isFollowing}
           />
-          {isSelf && <span className="text-sm text-zinc-400">가입 {joined}</span>}
         </div>
       </div>
 

@@ -8,14 +8,24 @@ import { isUsername } from "@/lib/validation";
 
 type Note = { ok: boolean; text: string } | null;
 
+const PROVIDER_LABELS: Record<string, string> = {
+  email: "이메일",
+  google: "Google",
+  discord: "Discord",
+};
+
 export function AccountSettings({
   initialUsername,
   initialAvatarUrl,
   hasPassword,
+  joinedAt,
+  providers,
 }: {
   initialUsername: string;
   initialAvatarUrl: string | null;
   hasPassword: boolean;
+  joinedAt: string;
+  providers: string[];
 }) {
   // 아바타
   const [avatarUrl, setAvatarUrl] = useState(initialAvatarUrl);
@@ -92,6 +102,33 @@ export function AccountSettings({
 
   return (
     <div className="flex flex-col gap-10">
+      {/* 계정 정보: 가입일 + 연동 계정 */}
+      <Section title="계정 정보">
+        <dl className="flex flex-col gap-3 text-sm">
+          <div className="flex gap-3">
+            <dt className="w-20 shrink-0 text-zinc-400">가입일</dt>
+            <dd className="text-zinc-800 dark:text-zinc-200">{new Date(joinedAt).toLocaleDateString("ko-KR")}</dd>
+          </div>
+          <div className="flex gap-3">
+            <dt className="w-20 shrink-0 text-zinc-400">연동 계정</dt>
+            <dd className="flex flex-wrap gap-1.5">
+              {providers.length === 0 ? (
+                <span className="text-zinc-500">-</span>
+              ) : (
+                providers.map((p) => (
+                  <span
+                    key={p}
+                    className="rounded-full bg-zinc-100 px-2.5 py-0.5 text-xs text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300"
+                  >
+                    {PROVIDER_LABELS[p] ?? p}
+                  </span>
+                ))
+              )}
+            </dd>
+          </div>
+        </dl>
+      </Section>
+
       {/* 아바타 */}
       <Section title="Avatar">
         <div className="flex items-center gap-4">

@@ -16,10 +16,14 @@ export function SettingsView({
   username,
   avatarUrl,
   hasPassword,
+  joinedAt,
+  providers,
 }: {
   username: string;
   avatarUrl: string | null;
   hasPassword: boolean;
+  joinedAt: string;
+  providers: string[];
 }) {
   const [tab, setTab] = useState<Tab>("account");
 
@@ -44,7 +48,13 @@ export function SettingsView({
 
       <div className="min-w-0 flex-1">
         {tab === "account" ? (
-          <AccountSettings initialUsername={username} initialAvatarUrl={avatarUrl} hasPassword={hasPassword} />
+          <AccountSettings
+            initialUsername={username}
+            initialAvatarUrl={avatarUrl}
+            hasPassword={hasPassword}
+            joinedAt={joinedAt}
+            providers={providers}
+          />
         ) : (
           <p className="text-sm text-zinc-400">준비 중입니다.</p>
         )}
