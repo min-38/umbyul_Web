@@ -2,18 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useClickOutside } from "@/lib/use-click-outside";
-
-type Theme = "light" | "dark" | "system";
-
-const LABELS: Record<Theme, string> = { light: "라이트", dark: "다크", system: "시스템" };
-
-function resolveDark(t: Theme) {
-  return t === "dark" || (t === "system" && matchMedia("(prefers-color-scheme: dark)").matches);
-}
-
-function apply(t: Theme) {
-  document.documentElement.classList.toggle("dark", resolveDark(t));
-}
+import { type Theme, THEME_LABELS, resolveDark, applyTheme, getStoredTheme, setStoredTheme } from "@/lib/theme";
 
 export function ThemeToggle() {
   const [theme, setTheme] = useState<Theme>("system");
@@ -23,9 +12,15 @@ export function ThemeToggle() {
   useClickOutside(ref, () => setOpen(false), open);
 
   useEffect(() => {
-    const stored = ((localStorage.getItem("theme") as Theme) || "system");
-    setTheme(stored);
-    setIsDark(resolveDark(stored));
+    const sync = () => {
+      const stored = getStoredTheme();
+      setTheme(stored);
+      setIsDark(resolveDark(stored));
+    };
+    sync();
+    // 설정(Display 탭)에서 테마를 바꾸면 헤더 아이콘도 동기화
+    window.addEventListener("themechange", sync);
+    return () => window.removeEventListener("themechange", sync);
   }, []);
 
   // 시스템 모드일 때 OS 변경 반영
@@ -33,7 +28,7 @@ export function ThemeToggle() {
     if (theme !== "system") return;
     const mq = matchMedia("(prefers-color-scheme: dark)");
     const handler = () => {
-      apply("system");
+      applyTheme("system");
       setIsDark(resolveDark("system"));
     };
     mq.addEventListener("change", handler);
@@ -41,9 +36,8 @@ export function ThemeToggle() {
   }, [theme]);
 
   const choose = (t: Theme) => {
-    localStorage.setItem("theme", t);
+    setStoredTheme(t);
     setTheme(t);
-    apply(t);
     setIsDark(resolveDark(t));
     setOpen(false);
   };
@@ -79,7 +73,7 @@ export function ThemeToggle() {
                 theme === t ? "font-medium text-indigo-600 dark:text-indigo-400" : "text-zinc-700 dark:text-zinc-300"
               }`}
             >
-              {LABELS[t]}
+              {THEME_LABELS[t]}
             </button>
           ))}
         </div>
