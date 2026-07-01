@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Suspense } from "react";
 import { createClient } from "@/lib/supabase/server";
 import { getProfile, getNotifications } from "@/lib/api";
+import { getT } from "@/lib/i18n-server";
 import { BrandMark } from "@/components/ui/brand-mark";
 import { SearchBar } from "./search-bar";
 import { ThemeToggle } from "./theme-toggle";
@@ -31,13 +32,15 @@ export async function Header() {
     }
   }
 
+  const t = await getT();
+
   return (
     <header className="sticky top-0 z-20 border-b border-zinc-200 bg-white/80 backdrop-blur dark:border-zinc-800 dark:bg-black/80">
       {/* 좌/우를 같은 폭(flex-1)으로 두어 가운데 검색란이 페이지 정중앙에 오게 함 */}
       <div className="mx-auto flex w-full max-w-6xl items-center gap-4 px-4 py-2.5">
         {/* 좌: 브랜드 + 네비 */}
         <div className="flex flex-1 items-center gap-1">
-          <Link href="/" aria-label="홈">
+          <Link href="/" aria-label={t("홈")}>
             <BrandMark />
           </Link>
           <nav className="ml-1 hidden items-center gap-1 sm:flex">
@@ -47,7 +50,7 @@ export async function Header() {
                 href={n.href}
                 className="rounded-lg px-2.5 py-1.5 text-sm font-medium text-zinc-600 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-900"
               >
-                {n.label}
+                {t(n.label)}
               </Link>
             ))}
           </nav>
@@ -71,7 +74,7 @@ export async function Header() {
               href="/login"
               className="whitespace-nowrap rounded-lg bg-indigo-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-indigo-500"
             >
-              로그인 / 가입
+              {t("로그인 / 가입")}
             </Link>
           )}
         </div>

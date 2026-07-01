@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { getT } from "@/lib/i18n-server";
 
 // 실제 페이지는 추후 → 플레이스홀더(#)
 const POLICY = [
@@ -10,7 +11,9 @@ const INFO = [
   { label: "문의", href: "#" },
 ];
 
-export function Footer() {
+export async function Footer() {
+  const t = await getT();
+  const tr = (items: { label: string; href: string }[]) => items.map((i) => ({ ...i, label: t(i.label) }));
   return (
     <footer className="border-t border-zinc-200 dark:border-zinc-800">
       <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 px-4 py-8 sm:flex-row sm:justify-between">
@@ -29,8 +32,8 @@ export function Footer() {
           </a>
         </div>
         <div className="flex gap-12">
-          <FooterCol title="정책" links={POLICY} />
-          <FooterCol title="고객지원" links={INFO} />
+          <FooterCol title={t("정책")} links={tr(POLICY)} />
+          <FooterCol title={t("고객지원")} links={tr(INFO)} />
         </div>
       </div>
     </footer>
