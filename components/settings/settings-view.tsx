@@ -18,14 +18,18 @@ export function SettingsView({
   hasPassword,
   joinedAt,
   providers,
+  initialTab,
 }: {
   username: string;
   avatarUrl: string | null;
   hasPassword: boolean;
   joinedAt: string;
   providers: string[];
+  initialTab?: string;
 }) {
-  const [tab, setTab] = useState<Tab>("account");
+  const [tab, setTab] = useState<Tab>(
+    TABS.some((t) => t.key === initialTab) ? (initialTab as Tab) : "account",
+  );
 
   return (
     <div className="flex flex-col gap-6 sm:flex-row sm:gap-10">

@@ -23,3 +23,23 @@ export async function markNotificationsRead(): Promise<{ ok: boolean }> {
     return { ok: false };
   }
 }
+
+// 알림 전체 삭제
+export async function clearNotifications(): Promise<{ ok: boolean }> {
+  const supabase = await createClient();
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+  if (!session) return { ok: false };
+
+  try {
+    const res = await fetch(`${API_URL}/me/notifications`, {
+      method: "DELETE",
+      headers: { Authorization: `Bearer ${session.access_token}` },
+      cache: "no-store",
+    });
+    return { ok: res.ok };
+  } catch {
+    return { ok: false };
+  }
+}

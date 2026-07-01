@@ -3,7 +3,8 @@ import { createClient } from "@/lib/supabase/server";
 import { getProfile } from "@/lib/api";
 import { SettingsView } from "@/components/settings/settings-view";
 
-export default async function SettingsPage() {
+export default async function SettingsPage({ searchParams }: { searchParams: Promise<{ tab?: string }> }) {
+  const { tab } = await searchParams;
   const supabase = await createClient();
   const {
     data: { user },
@@ -28,6 +29,7 @@ export default async function SettingsPage() {
         hasPassword={hasPassword}
         joinedAt={profile.createdAt}
         providers={providers}
+        initialTab={tab}
       />
     </div>
   );

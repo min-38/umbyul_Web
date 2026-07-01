@@ -3,12 +3,13 @@
 import { useRef, useState } from "react";
 import Link from "next/link";
 import type { NotificationItem } from "@/lib/api";
-import { markNotificationsRead } from "@/app/actions/notifications";
+import { markNotificationsRead, clearNotifications } from "@/app/actions/notifications";
 import { useClickOutside } from "@/lib/use-click-outside";
 import { formatRelativeTime } from "@/lib/format";
 
 export function NotificationBell({ items, unreadCount }: { items: NotificationItem[]; unreadCount: number }) {
   const [open, setOpen] = useState(false);
+  const [list, setList] = useState(items);
   const [unread, setUnread] = useState(unreadCount);
   const ref = useRef<HTMLDivElement>(null);
   useClickOutside(ref, () => setOpen(false), open);
@@ -20,6 +21,12 @@ export function NotificationBell({ items, unreadCount }: { items: NotificationIt
       setUnread(0);
       markNotificationsRead();
     }
+  };
+
+  const clearAll = () => {
+    setList([]);
+    setUnread(0);
+    clearNotifications();
   };
 
   return (
@@ -42,16 +49,36 @@ export function NotificationBell({ items, unreadCount }: { items: NotificationIt
       </button>
 
       {open && (
-        <div className="absolute right-0 z-20 mt-1 max-h-96 w-80 overflow-y-auto rounded-lg border border-zinc-200 bg-white py-1 shadow-lg dark:border-zinc-800 dark:bg-zinc-950">
-          {items.length === 0 ? (
-            <p className="px-4 py-8 text-center text-sm text-zinc-400">알림이 없습니다.</p>
-          ) : (
-            <ul>
-              {items.map((n) => (
-                <NotifRow key={n.id} n={n} onClose={() => setOpen(false)} />
-              ))}
-            </ul>
-          )}
+        <div className="absolute right-0 z-20 mt-1 flex w-80 flex-col overflow-hidden rounded-lg border border-zinc-200 bg-white shadow-lg dark:border-zinc-800 dark:bg-zinc-950">
+          <div className="max-h-80 overflow-y-auto py-1">
+            {list.length === 0 ? (
+              <p className="px-4 py-8 text-center text-sm text-zinc-400">알림이 없습니다.</p>
+            ) : (
+              <ul>
+                {list.map((n) => (
+                  <NotifRow key={n.id} n={n} onClose={() => setOpen(false)} />
+                ))}
+              </ul>
+            )}
+          </div>
+
+          <div className="flex items-center justify-between border-t border-zinc-200 px-3 py-2 dark:border-zinc-800">
+            <Link
+              href="/settings?tab=notifications"
+              onClick={() => setOpen(false)}
+              className="text-xs text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-200"
+            >
+              알림 설정
+            </Link>
+            <button
+              type="button"
+              onClick={clearAll}
+              disabled={list.length === 0}
+              className="text-xs text-zinc-500 hover:text-red-500 disabled:opacity-40"
+            >
+              모두 지우기
+            </button>
+          </div>
         </div>
       )}
     </div>
@@ -59,10 +86,7 @@ export function NotificationBell({ items, unreadCount }: { items: NotificationIt
 }
 
 function NotifRow({ n, onClose }: { n: NotificationItem; onClose: () => void }) {
-  const text =
-    n.type === "follow"
-      ? "회원님을 팔로우했습니다"
-      : "회원님의 리뷰를 좋아합니다";
+  const text = n.type === "follow" ? "회원님을 팔로우했습니다" : "회원님의 리뷰를 좋아합니다";
 
   const body = (
     <div className={`flex items-center gap-2.5 px-3 py-2.5 ${n.read ? "" : "bg-indigo-50/60 dark:bg-indigo-950/30"}`}>
