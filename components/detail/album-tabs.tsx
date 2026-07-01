@@ -5,6 +5,7 @@ import Link from "next/link";
 import type { AlbumDetail } from "@/lib/api";
 import { formatDuration, formatTotalDuration, formatReleaseDate } from "@/lib/format";
 import { useT } from "@/components/i18n-provider";
+import { Stars } from "./stars";
 
 // 리뷰는 탭에서 빼서 페이지 하단 별도 섹션으로(트랙 페이지와 일관).
 type Tab = "tracklist" | "info";
@@ -49,7 +50,15 @@ export function AlbumTabs({ album }: { album: AlbumDetail }) {
                   <Link href={`/track/${tr.id}`} className="flex-1 truncate text-sm text-zinc-800 hover:underline dark:text-zinc-100">
                     {tr.name}
                   </Link>
-                  <span className="text-xs tabular-nums text-zinc-400">{formatDuration(tr.durationMs)}</span>
+                  {tr.rating?.average != null && (
+                    <span className="flex items-center gap-1">
+                      <Stars value={tr.rating.average} size={12} />
+                      <span className="text-xs font-semibold text-zinc-600 dark:text-zinc-300">
+                        {tr.rating.average.toFixed(1)}
+                      </span>
+                    </span>
+                  )}
+                  <span className="w-10 text-right text-xs tabular-nums text-zinc-400">{formatDuration(tr.durationMs)}</span>
                 </li>
               ))}
             </ol>
