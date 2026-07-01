@@ -92,6 +92,15 @@ export default async function ArtistPage({ params }: { params: Promise<{ id: str
                     {rv.username}
                   </Link>
                   <span className="text-xs text-zinc-400">·</span>
+                  <span
+                    className={`shrink-0 rounded px-1.5 py-0.5 text-[10px] font-medium ${
+                      rv.targetType === "track"
+                        ? "bg-indigo-100 text-indigo-700 dark:bg-indigo-950 dark:text-indigo-300"
+                        : "bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300"
+                    }`}
+                  >
+                    {rv.targetType === "track" ? t("곡") : t("앨범")}
+                  </span>
                   <Link
                     href={`/${rv.targetType}/${rv.targetSpotifyId}`}
                     className="truncate text-xs text-zinc-500 hover:underline"
