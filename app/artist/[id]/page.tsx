@@ -17,17 +17,11 @@ export default async function ArtistPage({ params }: { params: Promise<{ id: str
   const [artist, t, locale] = await Promise.all([getArtistDetail(id), getT(), getLocale()]);
   if (!artist) notFound();
 
-  // 파생 데이터: 스탯 / "커뮤니티가 사랑한" / 리뷰의 릴리스 이름 맵. (앱 토큰 제약으로 앨범 기준)
-  const rated = artist.albums.filter((a) => a.rating);
-  const totalRatings = rated.reduce((n, a) => n + (a.rating?.count ?? 0), 0);
-
+  // "커뮤니티가 사랑한": 앨범 카드(트랙 카드는 없음)라 앨범 기준. 스탯은 서버가 트랙 포함해 집계.
   const loved = artist.albums
     .filter((a) => a.rating && a.rating.count >= MIN_TOP)
     .sort((a, b) => b.rating!.average - a.rating!.average)
     .slice(0, 6);
-
-  const nameOf = new Map<string, string>();
-  artist.albums.forEach((a) => nameOf.set(a.spotifyId, a.name));
 
   return (
     <div className="mx-auto w-full max-w-5xl px-6 py-8">
@@ -42,9 +36,9 @@ export default async function ArtistPage({ params }: { params: Promise<{ id: str
         <div className="flex flex-col gap-2">
           <p className="text-xs font-medium uppercase tracking-wide text-zinc-400">{t("아티스트")}</p>
           <h1 className="text-3xl font-bold text-zinc-900 sm:text-4xl dark:text-zinc-50">{artist.name}</h1>
-          {totalRatings > 0 && (
+          {artist.totalRatings > 0 && (
             <p className="text-sm text-zinc-500">
-              {t("평가된 릴리스 {rated} · 총 평가 {total}", { rated: rated.length, total: totalRatings })}
+              {t("평가된 릴리스 {rated} · 총 평가 {total}", { rated: artist.ratedCount, total: artist.totalRatings })}
             </p>
           )}
           <div className="mt-1 flex items-center justify-center gap-4 sm:justify-start">
@@ -102,7 +96,7 @@ export default async function ArtistPage({ params }: { params: Promise<{ id: str
                     href={`/${rv.targetType}/${rv.targetSpotifyId}`}
                     className="truncate text-xs text-zinc-500 hover:underline"
                   >
-                    {nameOf.get(rv.targetSpotifyId) ?? ""}
+                    {rv.targetName}
                   </Link>
                   <span className="ml-auto flex items-center gap-1.5">
                     <Stars value={rv.score} size={14} />

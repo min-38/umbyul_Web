@@ -177,12 +177,15 @@ export type ArtistReview = {
   score: number;
   body: string;
   createdAt: string;
+  targetName: string;
 };
 export type ArtistDetail = {
   spotifyId: string;
   name: string;
   imageUrl: string | null;
   spotifyUrl: string;
+  ratedCount: number;
+  totalRatings: number;
   albums: ArtistAlbum[];
   recentReviews: ArtistReview[];
 };

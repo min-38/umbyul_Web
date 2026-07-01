@@ -8,6 +8,7 @@ import { ReviewList } from "@/components/detail/review-list";
 import { RateButton } from "@/components/detail/rate-button";
 import { MetaRow, SpotifyLink, Copyright } from "@/components/detail/detail-bits";
 import { ShareButton } from "@/components/detail/share-button";
+import { ArtistLinks } from "@/components/detail/artist-links";
 import { formatDuration, formatReleaseDate } from "@/lib/format";
 
 export default async function TrackPage({ params }: { params: Promise<{ id: string }> }) {
@@ -20,7 +21,6 @@ export default async function TrackPage({ params }: { params: Promise<{ id: stri
     data: { user },
   } = await supabase.auth.getUser();
 
-  const artistNames = track.artists.map((a) => a.name).join(", ");
   const mine = user ? track.reviews.find((r) => r.userId === user.id) : undefined;
   const t = await getT();
 
@@ -37,7 +37,7 @@ export default async function TrackPage({ params }: { params: Promise<{ id: stri
           <p className="text-xs font-medium uppercase tracking-wide text-zinc-400">{t("곡")}</p>
           <h1 className="text-3xl font-bold text-zinc-900 dark:text-zinc-50">{track.name}</h1>
           <p className="text-zinc-600 dark:text-zinc-300">
-            {artistNames}
+            <ArtistLinks artists={track.artists} />
             {track.album && (
               <>
                 {" · "}
