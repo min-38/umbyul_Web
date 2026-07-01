@@ -48,11 +48,13 @@ export async function Header() {
           ))}
         </nav>
 
-        <Suspense fallback={<div className="max-w-xl flex-1" />}>
-          <SearchBar />
-        </Suspense>
+        <div className="flex flex-1 justify-center">
+          <Suspense fallback={<div className="w-full max-w-xl" />}>
+            <SearchBar />
+          </Suspense>
+        </div>
 
-        <div className="ml-auto flex items-center gap-1">
+        <div className="flex items-center gap-1">
           <ThemeToggle />
           {user ? (
             <UserMenu username={profile?.username ?? "프로필"} avatarUrl={profile?.avatarUrl ?? null} />
