@@ -277,8 +277,10 @@ export const EN: Record<string, string> = {
   디스코그래피: "Discography",
   싱글: "Single",
   컴필레이션: "Compilation",
-  "커뮤니티가 사랑한": "Loved by the community",
+  "평가 좋은 트랙": "Top-rated tracks",
+  "평가 좋은 앨범": "Top-rated albums",
+  "아직 평가된 곡이 없습니다.": "No rated tracks yet.",
+  "아직 평가된 앨범이 없습니다.": "No rated albums yet.",
   "평가된 릴리스 {rated} · 총 평가 {total}": "{rated} releases rated · {total} ratings",
-  발매일순: "By release",
   "커뮤니티 최근 리뷰": "Recent community reviews",
 };

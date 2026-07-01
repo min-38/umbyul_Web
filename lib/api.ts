@@ -179,6 +179,7 @@ export type ArtistReview = {
   createdAt: string;
   targetName: string;
 };
+export type ArtistRatedTrack = { spotifyId: string; name: string; imageUrl: string | null; rating: RatingBadge };
 export type ArtistDetail = {
   spotifyId: string;
   name: string;
@@ -186,6 +187,7 @@ export type ArtistDetail = {
   spotifyUrl: string;
   ratedCount: number;
   totalRatings: number;
+  ratedTracks: ArtistRatedTrack[];
   albums: ArtistAlbum[];
   recentReviews: ArtistReview[];
 };

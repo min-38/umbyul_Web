@@ -4,24 +4,14 @@ import { getArtistDetail } from "@/lib/api";
 import { getT, getLocale } from "@/lib/i18n-server";
 import { formatRelativeTime } from "@/lib/format";
 import { Stars } from "@/components/detail/stars";
-import { ScoreBadge } from "@/components/detail/score-badge";
 import { SpotifyLink } from "@/components/detail/detail-bits";
 import { ShareButton } from "@/components/detail/share-button";
-import { ArtistDiscography } from "@/components/detail/artist-discography";
-
-// "커뮤니티가 사랑한"에 노출할 최소 평가 수(표본 1개 왜곡 방지). 평점 무결성 후속에서 조정 가능.
-const MIN_TOP = 3;
+import { ArtistTabs } from "@/components/detail/artist-tabs";
 
 export default async function ArtistPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const [artist, t, locale] = await Promise.all([getArtistDetail(id), getT(), getLocale()]);
   if (!artist) notFound();
-
-  // "커뮤니티가 사랑한": 앨범 카드(트랙 카드는 없음)라 앨범 기준. 스탯은 서버가 트랙 포함해 집계.
-  const loved = artist.albums
-    .filter((a) => a.rating && a.rating.count >= MIN_TOP)
-    .sort((a, b) => b.rating!.average - a.rating!.average)
-    .slice(0, 6);
 
   return (
     <div className="mx-auto w-full max-w-5xl px-6 py-8">
@@ -48,29 +38,10 @@ export default async function ArtistPage({ params }: { params: Promise<{ id: str
         </div>
       </div>
 
-      {/* 커뮤니티가 사랑한 (평가 N개 이상만) */}
-      {loved.length > 0 && (
-        <section className="mt-10">
-          <h2 className="mb-4 text-lg font-semibold text-zinc-900 dark:text-zinc-50">{t("커뮤니티가 사랑한")}</h2>
-          <div className="grid grid-cols-2 gap-x-4 gap-y-6 sm:grid-cols-3 md:grid-cols-6">
-            {loved.map((x) => (
-              <Link key={x.spotifyId} href={`/album/${x.spotifyId}`} className="flex flex-col gap-1.5">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={x.imageUrl ?? "/placeholder.svg"}
-                  alt=""
-                  className="aspect-square w-full rounded-lg bg-zinc-100 object-cover dark:bg-zinc-800"
-                />
-                <p className="truncate text-sm font-medium text-zinc-900 dark:text-zinc-50">{x.name}</p>
-                <ScoreBadge rating={x.rating} />
-              </Link>
-            ))}
-          </div>
-        </section>
+      {/* 탭: 평가 좋은 트랙 / 평가 좋은 앨범 / 디스코그래피 */}
+      {(artist.ratedTracks.length > 0 || artist.albums.length > 0) && (
+        <ArtistTabs ratedTracks={artist.ratedTracks} albums={artist.albums} />
       )}
-
-      {/* 디스코그래피 (정렬 토글) */}
-      {artist.albums.length > 0 && <ArtistDiscography albums={artist.albums} />}
 
       {/* 커뮤니티 최근 리뷰 */}
       {artist.recentReviews.length > 0 && (
