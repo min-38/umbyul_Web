@@ -202,6 +202,44 @@ export async function getArtistDetail(id: string): Promise<ArtistDetail | null> 
   return json.data as ArtistDetail;
 }
 
+// ── 홈 피드 (NON-43) ── 전부 DB 캐시 메타데이터라 Spotify 호출 없음.
+export type HomeReview = {
+  id: string;
+  userId: string;
+  username: string;
+  avatarUrl: string | null;
+  targetType: "track" | "album";
+  targetSpotifyId: string;
+  score: number;
+  body: string;
+  createdAt: string;
+  name: string | null;
+  artist: string | null;
+  imageUrl: string | null;
+};
+export type TrendingItem = {
+  targetType: "track" | "album";
+  spotifyId: string;
+  count: number;
+  average: number;
+  name: string | null;
+  artist: string | null;
+  imageUrl: string | null;
+};
+export type HomeData = { recentReviews: HomeReview[]; trending: TrendingItem[]; followFeed: HomeReview[] };
+
+/** 홈 피드 (공개, 로그인 시 팔로우 피드 포함). 실패 시 null(홈이 죽지 않게). */
+export async function getHome(): Promise<HomeData | null> {
+  try {
+    const res = await fetch(`${API_URL}/home`, { headers: await detailHeaders(), cache: "no-store" });
+    if (!res.ok) return null;
+    const json = await res.json();
+    return json.data as HomeData;
+  } catch {
+    return null;
+  }
+}
+
 // ── 유저 프로필 (NON-24) ──
 export type ProfileReview = {
   id: string;

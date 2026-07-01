@@ -34,6 +34,9 @@ export const EN: Record<string, string> = {
   // ── 푸터 ──
   정책: "Policy",
   고객지원: "Support",
+  "서비스 소개": "About Us",
+  "별점을 매길수록 별이 쌓여 반짝입니다 — 그래서 Glitter.":
+    "The more you rate, the more the stars pile up and glitter — that's Glitter.",
   이용약관: "Terms of Service",
   "개인정보 처리방침": "Privacy Policy",
   문의: "Contact",
@@ -284,4 +287,6 @@ export const EN: Record<string, string> = {
   "커뮤니티 최근 리뷰": "Recent community reviews",
   "음악 정보를 불러오지 못했습니다. 잠시 후 다시 시도해주세요.":
     "Couldn't load music info. Please try again shortly.",
+  "화제의 릴리스": "Trending releases",
+  "팔로우 피드": "From people you follow",
 };
