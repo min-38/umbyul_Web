@@ -3,7 +3,6 @@ import { Suspense } from "react";
 import { createClient } from "@/lib/supabase/server";
 import { getProfile, getNotifications } from "@/lib/api";
 import { getT } from "@/lib/i18n-server";
-import { BrandMark } from "@/components/ui/brand-mark";
 import { SearchBar } from "./search-bar";
 import { ThemeToggle } from "./theme-toggle";
 import { NotificationBell } from "./notification-bell";
@@ -40,18 +39,15 @@ export async function Header() {
       <div className="mx-auto flex w-full max-w-6xl items-center gap-4 px-4 py-2.5">
         {/* 좌: 브랜드 + 네비 */}
         <div className="flex flex-1 items-center gap-1">
-          <Link href="/" aria-label={t("홈")} className="flex items-center gap-2">
-            <BrandMark />
-            <span className="hidden text-lg font-bold tracking-tight text-zinc-900 sm:inline dark:text-zinc-50">
-              Glitter
-            </span>
+          <Link href="/" aria-label={t("홈")} className="shrink-0">
+            <span className="text-lg font-bold tracking-tight text-zinc-900 dark:text-zinc-50">Glitter</span>
           </Link>
-          <nav className="ml-1 hidden items-center gap-1 sm:flex">
+          <nav className="ml-2 hidden items-center gap-1 sm:flex">
             {NAV.map((n) => (
               <Link
                 key={n.label}
                 href={n.href}
-                className="rounded-lg px-2.5 py-1.5 text-sm font-medium text-zinc-600 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-900"
+                className="whitespace-nowrap rounded-lg px-2.5 py-1.5 text-sm font-medium text-zinc-600 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-900"
               >
                 {t(n.label)}
               </Link>
