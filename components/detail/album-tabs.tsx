@@ -31,6 +31,7 @@ export function AlbumTabs({ album }: { album: AlbumDetail }) {
             }`}
           >
             {t.label}
+            {t.key === "tracklist" && <span className="ml-1 text-zinc-400">({album.totalTracks})</span>}
           </button>
         ))}
       </div>
