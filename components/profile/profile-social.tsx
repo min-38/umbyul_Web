@@ -11,7 +11,7 @@ export function ProfileSocial({
   loggedIn,
   myUsername,
   followerCount,
-  followingCount,
+  followingCount: initialFollowingCount,
   isFollowing,
 }: {
   username: string;
@@ -25,6 +25,7 @@ export function ProfileSocial({
   const router = useRouter();
   const [following, setFollowing] = useState(isFollowing);
   const [followers, setFollowers] = useState(followerCount);
+  const [followingCount, setFollowingCount] = useState(initialFollowingCount);
   const [busy, setBusy] = useState(false);
   const [modal, setModal] = useState<null | "followers" | "following">(null);
 
@@ -74,6 +75,7 @@ export function ProfileSocial({
           kind={modal}
           loggedIn={loggedIn}
           myUsername={myUsername}
+          onFollowChange={isSelf ? (d) => setFollowingCount((c) => c + d) : undefined}
           onClose={() => setModal(null)}
         />
       )}

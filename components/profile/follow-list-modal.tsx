@@ -11,12 +11,14 @@ export function FollowListModal({
   kind,
   loggedIn,
   myUsername,
+  onFollowChange,
   onClose,
 }: {
   username: string;
   kind: "followers" | "following";
   loggedIn: boolean;
   myUsername: string | null;
+  onFollowChange?: (delta: number) => void; // 내가 목록에서 팔로우/언팔 → 내 팔로잉 수 변화
   onClose: () => void;
 }) {
   const [users, setUsers] = useState<FollowUser[] | null>(null);
@@ -41,7 +43,7 @@ export function FollowListModal({
         ) : (
           <ul className="flex flex-col gap-1 overflow-y-auto">
             {users.map((u) => (
-              <FollowRow key={u.username} user={u} loggedIn={loggedIn} myUsername={myUsername} onNavigate={onClose} />
+              <FollowRow key={u.username} user={u} loggedIn={loggedIn} myUsername={myUsername} onFollowChange={onFollowChange} onNavigate={onClose} />
             ))}
           </ul>
         )}
@@ -54,11 +56,13 @@ function FollowRow({
   user,
   loggedIn,
   myUsername,
+  onFollowChange,
   onNavigate,
 }: {
   user: FollowUser;
   loggedIn: boolean;
   myUsername: string | null;
+  onFollowChange?: (delta: number) => void;
   onNavigate: () => void;
 }) {
   const router = useRouter();
@@ -74,7 +78,10 @@ function FollowRow({
     setBusy(true);
     const r = following ? await unfollowUser(user.username) : await followUser(user.username);
     setBusy(false);
-    if (r.ok) setFollowing(!following);
+    if (r.ok) {
+      onFollowChange?.(following ? -1 : 1);
+      setFollowing(!following);
+    }
   };
 
   return (
