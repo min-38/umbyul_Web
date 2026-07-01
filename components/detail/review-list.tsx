@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import type { ReviewItem } from "@/lib/api";
 import { Stars } from "./stars";
 import { ReactionBar } from "./reaction-bar";
@@ -64,7 +65,9 @@ export function ReviewList({
                   r.username.charAt(0).toUpperCase()
                 )}
               </span>
-              <span className="text-sm font-medium text-zinc-800 dark:text-zinc-100">{r.username}</span>
+              <Link href={`/u/${r.username}`} className="text-sm font-medium text-zinc-800 hover:underline dark:text-zinc-100">
+                {r.username}
+              </Link>
               <span className="text-xs text-zinc-400">{formatRelativeTime(r.createdAt)}</span>
               <span className="ml-auto flex items-center gap-1.5">
                 <Stars value={r.score} size={14} />

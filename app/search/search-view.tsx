@@ -105,10 +105,10 @@ function ArtistCard({ a }: { a: ArtistResult }) {
 
 function UserCard({ u }: { u: UserResult }) {
   return (
-    <div className="flex flex-col items-center gap-1.5 text-center">
+    <Link href={`/u/${u.username}`} className="flex flex-col items-center gap-1.5 text-center">
       <Thumb url={u.avatarUrl} circle />
       <p className="w-full truncate text-sm font-medium text-black dark:text-zinc-50">{u.username}</p>
-    </div>
+    </Link>
   );
 }
 
