@@ -10,7 +10,7 @@ import { useClickOutside } from "@/lib/use-click-outside";
 const STATIC_ITEMS = [
   { label: "포인트 내역", href: "#" },
   { label: "업적", href: "#" },
-  { label: "설정", href: "#" },
+  { label: "설정", href: "/settings" },
 ];
 
 export function UserMenu({ username, avatarUrl }: { username: string; avatarUrl: string | null }) {

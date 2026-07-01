@@ -1,0 +1,25 @@
+import { redirect } from "next/navigation";
+import { createClient } from "@/lib/supabase/server";
+import { getProfile } from "@/lib/api";
+import { SettingsView } from "@/components/settings/settings-view";
+
+export default async function SettingsPage() {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) redirect("/login");
+
+  const profile = await getProfile();
+  if (!profile) redirect("/onboarding");
+
+  // email(비밀번호) 로그인 보유 여부 → 비밀번호 "변경" vs "설정"
+  const hasPassword = (user.identities ?? []).some((i) => i.provider === "email");
+
+  return (
+    <div className="mx-auto w-full max-w-3xl px-6 py-8">
+      <h1 className="mb-8 text-2xl font-bold text-zinc-900 dark:text-zinc-50">설정</h1>
+      <SettingsView username={profile.username} avatarUrl={profile.avatarUrl} hasPassword={hasPassword} />
+    </div>
+  );
+}
