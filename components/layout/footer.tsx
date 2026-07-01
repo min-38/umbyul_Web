@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { getT } from "@/lib/i18n-server";
+import { LocaleSwitcher } from "./locale-switcher";
 
 // 실제 페이지는 추후 → 플레이스홀더(#)
 const POLICY = [
@@ -30,6 +31,9 @@ export async function Footer() {
             <SpotifyLogo />
             Powered by Spotify
           </a>
+          <div className="mt-1">
+            <LocaleSwitcher />
+          </div>
         </div>
         <div className="flex gap-12">
           <FooterCol title={t("정책")} links={tr(POLICY)} />

@@ -10,6 +10,7 @@ export type Profile = {
   avatarUrl: string | null;
   isArtist: boolean;
   createdAt: string;
+  locale: "ko" | "en" | null;
 };
 
 /** 로그인 유저의 프로필 조회. 프로필 없으면(404) null, 비로그인도 null. */
