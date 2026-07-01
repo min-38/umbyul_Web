@@ -169,6 +169,15 @@ export type ArtistAlbum = {
   albumType: string;
   rating: RatingBadge | null;
 };
+export type ArtistReview = {
+  targetType: "track" | "album";
+  targetSpotifyId: string;
+  username: string;
+  avatarUrl: string | null;
+  score: number;
+  body: string;
+  createdAt: string;
+};
 export type ArtistDetail = {
   spotifyId: string;
   name: string;
@@ -178,6 +187,7 @@ export type ArtistDetail = {
   spotifyUrl: string;
   topTracks: ArtistTrack[];
   albums: ArtistAlbum[];
+  recentReviews: ArtistReview[];
 };
 
 /** 아티스트 상세 (공개). 없으면 null(404). */

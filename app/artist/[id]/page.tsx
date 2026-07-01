@@ -1,18 +1,37 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getArtistDetail, type RatingBadge } from "@/lib/api";
-import { getT } from "@/lib/i18n-server";
+import { getArtistDetail } from "@/lib/api";
+import { getT, getLocale } from "@/lib/i18n-server";
+import { formatRelativeTime } from "@/lib/format";
 import { Stars } from "@/components/detail/stars";
+import { ScoreBadge } from "@/components/detail/score-badge";
 import { SpotifyLink } from "@/components/detail/detail-bits";
 import { ShareButton } from "@/components/detail/share-button";
+import { ArtistDiscography } from "@/components/detail/artist-discography";
+
+// "커뮤니티가 사랑한"에 노출할 최소 평가 수(표본 1개 왜곡 방지). 평점 무결성 후속에서 조정 가능.
+const MIN_TOP = 3;
 
 export default async function ArtistPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const [artist, t] = await Promise.all([getArtistDetail(id), getT()]);
+  const [artist, t, locale] = await Promise.all([getArtistDetail(id), getT(), getLocale()]);
   if (!artist) notFound();
 
-  const albumTypeLabel = (type: string) =>
-    type === "single" ? t("싱글") : type === "compilation" ? t("컴필레이션") : t("앨범");
+  // 파생 데이터: 스탯 / "커뮤니티가 사랑한" / 리뷰의 릴리스 이름 맵.
+  const rated = [...artist.topTracks, ...artist.albums].filter((x) => x.rating);
+  const totalRatings = rated.reduce((n, x) => n + (x.rating?.count ?? 0), 0);
+
+  const loved = [
+    ...artist.topTracks.map((tr) => ({ type: "track" as const, spotifyId: tr.spotifyId, name: tr.name, imageUrl: tr.imageUrl, rating: tr.rating })),
+    ...artist.albums.map((a) => ({ type: "album" as const, spotifyId: a.spotifyId, name: a.name, imageUrl: a.imageUrl, rating: a.rating })),
+  ]
+    .filter((x) => x.rating && x.rating.count >= MIN_TOP)
+    .sort((a, b) => (b.rating!.average) - (a.rating!.average))
+    .slice(0, 6);
+
+  const nameOf = new Map<string, string>();
+  artist.topTracks.forEach((tr) => nameOf.set(tr.spotifyId, tr.name));
+  artist.albums.forEach((a) => nameOf.set(a.spotifyId, a.name));
 
   return (
     <div className="mx-auto w-full max-w-5xl px-6 py-8">
@@ -29,6 +48,9 @@ export default async function ArtistPage({ params }: { params: Promise<{ id: str
           <h1 className="text-3xl font-bold text-zinc-900 sm:text-4xl dark:text-zinc-50">{artist.name}</h1>
           <p className="text-sm text-zinc-500">
             {t("Spotify 팔로워 {count}", { count: artist.followers.toLocaleString() })}
+            {totalRatings > 0 && (
+              <> · {t("평가된 릴리스 {rated} · 총 평가 {total}", { rated: rated.length, total: totalRatings })}</>
+            )}
           </p>
           <div className="mt-1 flex items-center justify-center gap-4 sm:justify-start">
             <SpotifyLink url={artist.spotifyUrl} label={t("Spotify에서 열기")} />
@@ -37,7 +59,28 @@ export default async function ArtistPage({ params }: { params: Promise<{ id: str
         </div>
       </div>
 
-      {/* 인기 곡 */}
+      {/* 커뮤니티가 사랑한 (평가 N개 이상만) */}
+      {loved.length > 0 && (
+        <section className="mt-10">
+          <h2 className="mb-4 text-lg font-semibold text-zinc-900 dark:text-zinc-50">{t("커뮤니티가 사랑한")}</h2>
+          <div className="grid grid-cols-2 gap-x-4 gap-y-6 sm:grid-cols-3 md:grid-cols-6">
+            {loved.map((x) => (
+              <Link key={`${x.type}-${x.spotifyId}`} href={`/${x.type}/${x.spotifyId}`} className="flex flex-col gap-1.5">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={x.imageUrl ?? "/placeholder.svg"}
+                  alt=""
+                  className="aspect-square w-full rounded-lg bg-zinc-100 object-cover dark:bg-zinc-800"
+                />
+                <p className="truncate text-sm font-medium text-zinc-900 dark:text-zinc-50">{x.name}</p>
+                <ScoreBadge rating={x.rating} />
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* 인기 곡 (Spotify) */}
       {artist.topTracks.length > 0 && (
         <section className="mt-10">
           <h2 className="mb-4 text-lg font-semibold text-zinc-900 dark:text-zinc-50">{t("인기 곡")}</h2>
@@ -57,7 +100,7 @@ export default async function ArtistPage({ params }: { params: Promise<{ id: str
                   <span className="min-w-0 flex-1 truncate text-sm font-medium text-zinc-900 dark:text-zinc-50">
                     {tr.name}
                   </span>
-                  <Badge rating={tr.rating} />
+                  <ScoreBadge rating={tr.rating} />
                 </Link>
               </li>
             ))}
@@ -65,47 +108,47 @@ export default async function ArtistPage({ params }: { params: Promise<{ id: str
         </section>
       )}
 
-      {/* 디스코그래피 */}
-      {artist.albums.length > 0 && (
+      {/* 디스코그래피 (정렬 토글) */}
+      {artist.albums.length > 0 && <ArtistDiscography albums={artist.albums} />}
+
+      {/* 커뮤니티 최근 리뷰 */}
+      {artist.recentReviews.length > 0 && (
         <section className="mt-10">
-          <h2 className="mb-4 text-lg font-semibold text-zinc-900 dark:text-zinc-50">{t("디스코그래피")}</h2>
-          <div className="grid grid-cols-2 gap-x-4 gap-y-6 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
-            {artist.albums.map((a) => (
-              <Link key={a.spotifyId} href={`/album/${a.spotifyId}`} className="flex flex-col gap-1.5">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={a.imageUrl ?? "/placeholder.svg"}
-                  alt=""
-                  className="aspect-square w-full rounded-lg bg-zinc-100 object-cover dark:bg-zinc-800"
-                />
-                <div className="min-w-0">
-                  <p className="truncate text-sm font-medium text-zinc-900 dark:text-zinc-50">{a.name}</p>
-                  <p className="truncate text-xs text-zinc-400">
-                    {a.releaseDate?.slice(0, 4)} · {albumTypeLabel(a.albumType)}
-                  </p>
-                  {a.rating && (
-                    <span className="mt-1 flex">
-                      <Badge rating={a.rating} />
-                    </span>
-                  )}
+          <h2 className="mb-4 text-lg font-semibold text-zinc-900 dark:text-zinc-50">{t("커뮤니티 최근 리뷰")}</h2>
+          <ul className="flex flex-col divide-y divide-zinc-200 dark:divide-zinc-800">
+            {artist.recentReviews.map((rv, i) => (
+              <li key={i} className="flex flex-col gap-1.5 py-4">
+                <div className="flex items-center gap-2">
+                  <span className="flex h-7 w-7 items-center justify-center overflow-hidden rounded-full bg-zinc-200 text-xs font-medium text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300">
+                    {rv.avatarUrl ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img src={rv.avatarUrl} alt="" className="h-full w-full object-cover" />
+                    ) : (
+                      rv.username.charAt(0).toUpperCase()
+                    )}
+                  </span>
+                  <Link href={`/u/${rv.username}`} className="text-sm font-medium text-zinc-800 hover:underline dark:text-zinc-100">
+                    {rv.username}
+                  </Link>
+                  <span className="text-xs text-zinc-400">·</span>
+                  <Link
+                    href={`/${rv.targetType}/${rv.targetSpotifyId}`}
+                    className="truncate text-xs text-zinc-500 hover:underline"
+                  >
+                    {nameOf.get(rv.targetSpotifyId) ?? ""}
+                  </Link>
+                  <span className="ml-auto flex items-center gap-1.5">
+                    <Stars value={rv.score} size={14} />
+                    <span className="text-sm font-semibold text-zinc-700 dark:text-zinc-200">{rv.score.toFixed(1)}</span>
+                  </span>
                 </div>
-              </Link>
+                <p className="whitespace-pre-wrap text-sm leading-relaxed text-zinc-600 dark:text-zinc-300">{rv.body}</p>
+                <span className="text-xs text-zinc-400">{formatRelativeTime(rv.createdAt, locale)}</span>
+              </li>
             ))}
-          </div>
+          </ul>
         </section>
       )}
     </div>
-  );
-}
-
-// 평가가 있을 때만 별점 배지. 없으면 아무것도 렌더하지 않음(아티스트 종합점수는 만들지 않음).
-function Badge({ rating }: { rating: RatingBadge | null }) {
-  if (!rating) return null;
-  return (
-    <span className="flex shrink-0 items-center gap-1">
-      <Stars value={rating.average} size={12} />
-      <span className="text-xs font-semibold text-zinc-700 dark:text-zinc-200">{rating.average.toFixed(1)}</span>
-      <span className="text-xs text-zinc-400">({rating.count})</span>
-    </span>
   );
 }
