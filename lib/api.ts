@@ -157,6 +157,38 @@ export async function getAlbumDetail(id: string): Promise<AlbumDetail | null> {
   return json.data as AlbumDetail;
 }
 
+// ── 아티스트 상세 (NON-13) ──
+// 아티스트 종합점수는 없음. 릴리스별로 이미 존재하는 평가만 배지로 노출.
+export type RatingBadge = { average: number; count: number };
+export type ArtistTrack = { spotifyId: string; name: string; imageUrl: string | null; rating: RatingBadge | null };
+export type ArtistAlbum = {
+  spotifyId: string;
+  name: string;
+  imageUrl: string | null;
+  releaseDate: string | null;
+  albumType: string;
+  rating: RatingBadge | null;
+};
+export type ArtistDetail = {
+  spotifyId: string;
+  name: string;
+  imageUrl: string | null;
+  followers: number;
+  popularity: number;
+  spotifyUrl: string;
+  topTracks: ArtistTrack[];
+  albums: ArtistAlbum[];
+};
+
+/** 아티스트 상세 (공개). 없으면 null(404). */
+export async function getArtistDetail(id: string): Promise<ArtistDetail | null> {
+  const res = await fetch(`${API_URL}/artist/${encodeURIComponent(id)}`, { cache: "no-store" });
+  if (res.status === 404) return null;
+  if (!res.ok) throw new Error(`artist detail failed: ${res.status}`);
+  const json = await res.json();
+  return json.data as ArtistDetail;
+}
+
 // ── 유저 프로필 (NON-24) ──
 export type ProfileReview = {
   id: string;

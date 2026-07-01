@@ -97,10 +97,10 @@ function AlbumCard({ a }: { a: AlbumResult }) {
 
 function ArtistCard({ a }: { a: ArtistResult }) {
   return (
-    <div className="flex flex-col items-center gap-1.5 text-center">
+    <Link href={`/artist/${a.id}`} className="flex flex-col items-center gap-1.5 text-center">
       <Thumb url={a.imageUrl} circle />
       <p className="w-full truncate text-sm font-medium text-black dark:text-zinc-50">{a.name}</p>
-    </div>
+    </Link>
   );
 }
 
