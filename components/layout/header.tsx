@@ -40,7 +40,7 @@ export async function Header() {
         {/* 좌: 브랜드 + 네비 */}
         <div className="flex flex-1 items-center gap-1">
           <Link href="/" aria-label={t("홈")} className="shrink-0">
-            <span className="text-lg font-bold tracking-tight text-zinc-900 dark:text-zinc-50">Glitter</span>
+            <span className="glitter-text text-lg font-bold tracking-tight">Glitter</span>
           </Link>
           <nav className="ml-2 hidden items-center gap-1 sm:flex">
             {NAV.map((n) => (
