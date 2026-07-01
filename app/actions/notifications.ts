@@ -1,8 +1,33 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
+import { getNotifications } from "@/lib/api";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
+
+// 폴링용: 최신 알림 목록 + 안읽음 수
+export async function loadNotifications() {
+  return getNotifications();
+}
+
+// 개별 알림 삭제
+export async function deleteNotification(id: string): Promise<{ ok: boolean }> {
+  const supabase = await createClient();
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+  if (!session) return { ok: false };
+  try {
+    const res = await fetch(`${API_URL}/me/notifications/${encodeURIComponent(id)}`, {
+      method: "DELETE",
+      headers: { Authorization: `Bearer ${session.access_token}` },
+      cache: "no-store",
+    });
+    return { ok: res.ok };
+  } catch {
+    return { ok: false };
+  }
+}
 
 // 알림 전체 읽음 처리. (UI는 로컬로 안읽음 0 반영 → revalidate 불필요)
 export async function markNotificationsRead(): Promise<{ ok: boolean }> {
