@@ -57,9 +57,9 @@ export default async function AlbumPage({ params }: { params: Promise<{ id: stri
               />
             </span>
           </div>
-          <div className="flex items-center gap-4">
+          <div className="mt-1 flex items-center gap-4">
             <SpotifyLink url={album.spotifyUrl} label={t("Spotify에서 듣기")} />
-            <ShareButton path={`/album/${album.spotifyId}`} title={album.name} label />
+            <ShareButton path={`/album/${album.spotifyId}`} title={album.name} size={24} />
           </div>
         </div>
       </div>

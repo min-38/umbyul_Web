@@ -79,9 +79,9 @@ export default async function TrackPage({ params }: { params: Promise<{ id: stri
       />
       <Copyright text={track.copyright} />
 
-      <div className="flex items-center gap-4">
+      <div className="mt-4 flex items-center gap-4">
         <SpotifyLink url={track.spotifyUrl} label={t("Spotify에서 듣기")} />
-        <ShareButton path={`/track/${track.spotifyId}`} title={track.name} label />
+        <ShareButton path={`/track/${track.spotifyId}`} title={track.name} size={24} />
       </div>
 
       <section className="mt-10">
