@@ -53,6 +53,8 @@ export default async function AlbumPage({ params }: { params: Promise<{ id: stri
                 targetId={album.targetId}
                 spotifyId={album.spotifyId}
                 name={album.name}
+                artist={album.artists.map((a) => a.name).join(", ")}
+                imageUrl={album.imageUrl}
                 myScore={mine?.score ?? 0}
                 myReview={mine?.body ?? ""}
                 path={`/album/${album.spotifyId}`}

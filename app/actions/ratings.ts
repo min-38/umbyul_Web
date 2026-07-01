@@ -39,6 +39,10 @@ export async function saveRating(input: {
   score: number;
   review: string | null;
   path: string;
+  // 표시 메타데이터(피드를 Spotify 호출 없이 렌더하기 위해 함께 저장) — NON-43
+  name: string;
+  artist: string;
+  imageUrl: string | null;
 }): Promise<Result> {
   const r = await authedFetch("/me/ratings", {
     method: "POST",
@@ -48,6 +52,9 @@ export async function saveRating(input: {
       spotifyId: input.spotifyId,
       score: input.score,
       review: input.review,
+      name: input.name,
+      artist: input.artist,
+      imageUrl: input.imageUrl,
     }),
   });
   if (r.ok) revalidatePath(input.path);

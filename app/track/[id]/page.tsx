@@ -62,6 +62,8 @@ export default async function TrackPage({ params }: { params: Promise<{ id: stri
                 targetId={track.targetId}
                 spotifyId={track.spotifyId}
                 name={track.name}
+                artist={track.artists.map((a) => a.name).join(", ")}
+                imageUrl={track.album?.imageUrl ?? null}
                 myScore={mine?.score ?? 0}
                 myReview={mine?.body ?? ""}
                 path={`/track/${track.spotifyId}`}
