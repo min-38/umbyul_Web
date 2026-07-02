@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import type { ReviewComment } from "@/lib/api";
 import { loadComments, addComment, deleteComment } from "@/app/actions/comments";
+import { msg } from "@/lib/messages";
 import { formatRelativeTime } from "@/lib/format";
 import { useT, useLocale } from "@/components/i18n-provider";
 
@@ -24,6 +25,7 @@ export function ReviewComments({
   const [count, setCount] = useState(initialCount);
   const [body, setBody] = useState("");
   const [busy, setBusy] = useState(false);
+  const [err, setErr] = useState<string | null>(null);
 
   const toggle = async () => {
     const next = !open;
@@ -38,12 +40,15 @@ export function ReviewComments({
     const text = body.trim();
     if (!text || busy) return;
     setBusy(true);
+    setErr(null);
     const r = await addComment({ ratingId, body: text });
     setBusy(false);
     if (r.ok && r.comment) {
       setComments((c) => [...c, r.comment!]);
       setCount((n) => n + 1);
       setBody("");
+    } else {
+      setErr(msg(r.code));
     }
   };
 
@@ -122,7 +127,9 @@ export function ReviewComments({
                 {t("등록")}
               </button>
             </div>
-          ) : (
+          ) : null}
+          {err && <p className="text-xs text-red-600 dark:text-red-400">{err}</p>}
+          {!currentUserId && (
             <Link href="/login" className="text-xs text-indigo-600 hover:underline dark:text-indigo-400">
               {t("로그인하고 댓글 달기")}
             </Link>

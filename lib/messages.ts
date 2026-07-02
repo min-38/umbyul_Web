@@ -17,6 +17,9 @@ const KO: Record<string, string> = {
   RATING_NOT_FOUND: "평가를 찾을 수 없습니다.",
   // 반응/신고 (NON-23)
   INVALID_REACTION: "반응 값이 올바르지 않습니다.",
+  // 제재 집행 (NON-48)
+  ACCOUNT_SUSPENDED: "이용이 일시 정지되어 작성할 수 없습니다.",
+  ACCOUNT_BANNED: "계정이 영구 정지되어 작성할 수 없습니다.",
   // 계정 설정 (NON-30)
   NO_FILE: "파일을 선택해주세요.",
   FILE_TOO_LARGE: "파일이 너무 큽니다 (최대 5MB).",
