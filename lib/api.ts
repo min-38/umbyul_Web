@@ -75,6 +75,20 @@ export async function getLegalDoc(type: "terms" | "privacy", locale: string): Pr
   }
 }
 
+// 공개 FAQ. 게시 항목(요청 로케일, 없으면 en). 카테고리·순서 정렬. (NON-75)
+export type FaqItem = { category: string; question: string; answer: string };
+
+export async function getFaq(locale: string): Promise<FaqItem[]> {
+  try {
+    const res = await fetch(`${API_URL}/faq?locale=${encodeURIComponent(locale)}`, { cache: "no-store" });
+    if (!res.ok) return [];
+    const json = await res.json();
+    return (json.data?.items ?? []) as FaqItem[];
+  } catch {
+    return [];
+  }
+}
+
 // 평점/리뷰수는 NON-7/8 이후. 지금은 메타데이터만.
 export type TrackResult = {
   id: string;
