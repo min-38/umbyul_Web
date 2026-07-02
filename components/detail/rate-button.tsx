@@ -17,6 +17,7 @@ export function RateButton({
   myScore,
   myReview,
   path,
+  sanction = null,
 }: {
   loggedIn: boolean;
   targetType: "track" | "album";
@@ -28,6 +29,7 @@ export function RateButton({
   myScore: number;
   myReview: string;
   path: string;
+  sanction?: "suspended" | "banned" | null;
 }) {
   const [open, setOpen] = useState(false);
   const t = useT();
@@ -39,6 +41,15 @@ export function RateButton({
       <Link href="/login" className={cls}>
         {t("평가하기")}
       </Link>
+    );
+  }
+
+  // 정지/영구정지: 버튼 숨기고 안내(NON-61).
+  if (sanction) {
+    return (
+      <span className="inline-flex items-center rounded-lg bg-zinc-100 px-4 py-2 text-sm font-medium text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400">
+        {sanction === "banned" ? t("계정이 정지되어 평가할 수 없습니다.") : t("일시 정지되어 평가할 수 없습니다.")}
+      </span>
     );
   }
 

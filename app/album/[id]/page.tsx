@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { getAlbumDetail } from "@/lib/api";
+import { getAlbumDetail, getMySanction } from "@/lib/api";
 import { getT } from "@/lib/i18n-server";
 import { createClient } from "@/lib/supabase/server";
 import { Stars } from "@/components/detail/stars";
@@ -21,6 +21,8 @@ export default async function AlbumPage({ params }: { params: Promise<{ id: stri
   } = await supabase.auth.getUser();
 
   const mine = user ? album.reviews.find((r) => r.userId === user.id) : undefined;
+  const sanction = user ? await getMySanction() : null;
+  const rateSanction = sanction?.banned ? "banned" : sanction?.suspendedUntil ? "suspended" : null;
   const t = await getT();
 
   return (
@@ -58,6 +60,7 @@ export default async function AlbumPage({ params }: { params: Promise<{ id: stri
                 myScore={mine?.score ?? 0}
                 myReview={mine?.body ?? ""}
                 path={`/album/${album.spotifyId}`}
+                sanction={rateSanction}
               />
             </span>
           </div>

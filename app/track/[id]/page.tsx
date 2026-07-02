@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { getTrackDetail } from "@/lib/api";
+import { getTrackDetail, getMySanction } from "@/lib/api";
 import { getT } from "@/lib/i18n-server";
 import { createClient } from "@/lib/supabase/server";
 import { Stars } from "@/components/detail/stars";
@@ -22,6 +22,8 @@ export default async function TrackPage({ params }: { params: Promise<{ id: stri
   } = await supabase.auth.getUser();
 
   const mine = user ? track.reviews.find((r) => r.userId === user.id) : undefined;
+  const sanction = user ? await getMySanction() : null;
+  const rateSanction = sanction?.banned ? "banned" : sanction?.suspendedUntil ? "suspended" : null;
   const t = await getT();
 
   return (
@@ -67,6 +69,7 @@ export default async function TrackPage({ params }: { params: Promise<{ id: stri
                 myScore={mine?.score ?? 0}
                 myReview={mine?.body ?? ""}
                 path={`/track/${track.spotifyId}`}
+                sanction={rateSanction}
               />
             </span>
           </div>
