@@ -303,6 +303,32 @@ export type DiscoverItem = TrendingItem & { artists: ArtistRef[] | null };
 export type RisingWindows = { day: DiscoverItem[]; week: DiscoverItem[]; month: DiscoverItem[]; year: DiscoverItem[] };
 export type DiscoverData = { rising: RisingWindows; new: DiscoverItem[]; myRecent: DiscoverItem[] };
 
+// Chart(NON-82). 랭킹 아이템은 DiscoverItem 과 동일 형태.
+export type ChartType = "all" | "album" | "track";
+export type ChartSort = "most" | "top";
+export type ChartPeriod = "day" | "week" | "month" | "year";
+export type ChartGender = "all" | "male" | "female";
+export type ChartAge = "all" | "10" | "20" | "30" | "40" | "50";
+
+/** Chart (공개). 실패 시 빈 목록(페이지가 죽지 않게). */
+export async function getChart(
+  type: ChartType,
+  sort: ChartSort,
+  period: ChartPeriod,
+  gender: ChartGender,
+  age: ChartAge,
+): Promise<DiscoverItem[]> {
+  try {
+    const qs = new URLSearchParams({ type, sort, period, gender, age });
+    const res = await fetch(`${API_URL}/chart?${qs}`, { cache: "no-store" });
+    if (!res.ok) return [];
+    const json = await res.json();
+    return (json?.data?.items ?? []) as DiscoverItem[];
+  } catch {
+    return [];
+  }
+}
+
 /** Discover (공개, 로그인 시 내 최근 리뷰 포함). 실패·형태 불일치 시 빈 데이터(페이지가 죽지 않게). */
 export async function getDiscover(): Promise<DiscoverData> {
   const empty: DiscoverData = { rising: { day: [], week: [], month: [], year: [] }, new: [], myRecent: [] };
