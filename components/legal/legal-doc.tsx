@@ -19,7 +19,7 @@ export async function LegalDoc({ type }: { type: "terms" | "privacy" }) {
           <p className="mt-1 text-xs text-zinc-400">
             {doc.version ? <span className="font-mono">{doc.version}</span> : null}
             {doc.version ? " · " : ""}
-            {t("최종 수정일")}: {new Date(doc.updatedAt).toLocaleDateString(locale === "ko" ? "ko-KR" : "en-US", { dateStyle: "long" })}
+            {t("시행일")}: {new Date(doc.effectiveDate ?? doc.updatedAt).toLocaleDateString(locale === "ko" ? "ko-KR" : "en-US", { dateStyle: "long" })}
           </p>
           <article className="mt-6">
             <ReactMarkdown

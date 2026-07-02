@@ -88,6 +88,7 @@ export const EN: Record<string, string> = {
   "일시 정지되어 평가할 수 없습니다.": "You are suspended and cannot rate.",
   "계정이 정지되어 평가할 수 없습니다.": "Your account is suspended and cannot rate.",
   "최종 수정일": "Last updated",
+  "시행일": "Effective date",
   "문서를 준비 중입니다.": "This document is being prepared.",
   "불러오는 중…": "Loading…",
   "아직 없습니다.": "None yet.",
