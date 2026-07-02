@@ -8,11 +8,10 @@ import { ThemeToggle } from "./theme-toggle";
 import { NotificationBell } from "./notification-bell";
 import { UserMenu } from "./user-menu";
 
-// 해당 페이지는 추후 → 플레이스홀더(#)
+// 홈(피드)은 워드마크가 담당. Discover=신규·급상승 허브, Chart=랭킹.
 const NAV = [
-  { label: "신규", href: "#" },
-  { label: "급상승", href: "#" },
-  { label: "차트", href: "#" },
+  { label: "Discover", href: "/discover" },
+  { label: "Chart", href: "/chart" },
 ];
 
 export async function Header() {
