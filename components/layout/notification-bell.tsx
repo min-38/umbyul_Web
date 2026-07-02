@@ -129,7 +129,16 @@ export function NotificationBell({ items, unreadCount }: { items: NotificationIt
           }`}
         >
           <span className="truncate">
-            <span className="font-semibold">{toast.actorUsername}</span>{t(suffix(toast))}
+            {toast.type === "warning" ? (
+              <>
+                <span className="font-semibold">{t("경고를 받았습니다.")}</span>
+                {toast.detail ? ` ${toast.detail}` : ""}
+              </>
+            ) : (
+              <>
+                <span className="font-semibold">{toast.actorUsername}</span>{t(suffix(toast))}
+              </>
+            )}
           </span>
           <button
             type="button"
@@ -196,19 +205,36 @@ function NotifRow({
   const nameCls = n.read ? "text-zinc-400 dark:text-zinc-500" : "font-medium text-zinc-900 dark:text-zinc-50";
   const textCls = n.read ? "text-zinc-400 dark:text-zinc-500" : "text-zinc-700 dark:text-zinc-200";
 
+  const isWarning = n.type === "warning";
   const inner = (
     <div className="flex items-center gap-2.5">
-      <span className={`flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-full bg-zinc-200 text-xs font-medium text-zinc-500 dark:bg-zinc-800 dark:text-zinc-300 ${n.read ? "opacity-60" : ""}`}>
-        {n.actorAvatarUrl ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img src={n.actorAvatarUrl} alt="" className="h-full w-full object-cover" />
-        ) : (
-          n.actorUsername.charAt(0).toUpperCase()
-        )}
-      </span>
+      {isWarning ? (
+        <span className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-amber-100 text-sm text-amber-700 dark:bg-amber-950 dark:text-amber-300 ${n.read ? "opacity-60" : ""}`}>
+          ⚠
+        </span>
+      ) : (
+        <span className={`flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-full bg-zinc-200 text-xs font-medium text-zinc-500 dark:bg-zinc-800 dark:text-zinc-300 ${n.read ? "opacity-60" : ""}`}>
+          {n.actorAvatarUrl ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={n.actorAvatarUrl} alt="" className="h-full w-full object-cover" />
+          ) : (
+            n.actorUsername.charAt(0).toUpperCase()
+          )}
+        </span>
+      )}
       <p className={`min-w-0 flex-1 text-sm ${textCls}`}>
-        <span className={nameCls}>{n.actorUsername}</span>{t(suffix(n))}
-        <span className="ml-1 text-xs text-zinc-400">{formatRelativeTime(n.createdAt, locale)}</span>
+        {isWarning ? (
+          <>
+            <span className={nameCls}>{t("경고를 받았습니다.")}</span>
+            <span className="ml-1 text-xs text-zinc-400">{formatRelativeTime(n.createdAt, locale)}</span>
+            {n.detail ? <span className="mt-0.5 block">{t("사유")}: {n.detail}</span> : null}
+          </>
+        ) : (
+          <>
+            <span className={nameCls}>{n.actorUsername}</span>{t(suffix(n))}
+            <span className="ml-1 text-xs text-zinc-400">{formatRelativeTime(n.createdAt, locale)}</span>
+          </>
+        )}
       </p>
     </div>
   );
