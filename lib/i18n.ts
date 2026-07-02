@@ -43,8 +43,8 @@ export const EN: Record<string, string> = {
 
   // ── 랜딩 ──
   "음악을 듣고, 평가하고, 기록하세요.": "Listen. Rate. Remember.",
-  "좋아하는 앨범과 곡을 0.5점 단위로 평가하고, 리뷰를 남기고, 취향이 맞는 사람을 팔로우하세요.":
-    "Rate albums and tracks in half-star steps, write reviews, and follow people who share your taste.",
+  "좋아하는 앨범과 곡을 평가하고, 리뷰를 남기고, 취향이 맞는 사람을 팔로우하세요.":
+    "Rate albums and tracks, write reviews, and follow people who share your taste.",
   둘러보기: "Explore",
   시작하기: "Get started",
   "0.5점 단위 별점": "Half-star ratings",
@@ -94,6 +94,12 @@ export const EN: Record<string, string> = {
   검색: "Search",
   "검색 결과가 없습니다.": "No results found.",
   "등록된 질문이 없습니다.": "No questions yet.",
+  "들은 음악을, 나만의 기록으로.": "Turn what you hear into your own record.",
+  "Glitter는 음악 감상을 기록하고 나누는 서비스입니다. 방대한 음악 카탈로그 위에서, 당신의 별점과 리뷰가 쌓여 취향의 지도가 됩니다.":
+    "Glitter is a place to log and share what you listen to. On top of a vast music catalog, your ratings and reviews build a map of your taste.",
+  "무엇을 할 수 있나요": "What you can do",
+  "이름의 의미": "Behind the name",
+  "지금 첫 별점을 남겨보세요.": "Leave your first rating.",
   "문의하기": "Contact us",
   카테고리: "Category",
   제목: "Title",
