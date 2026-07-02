@@ -28,6 +28,10 @@ const KO: Record<string, string> = {
   UPLOAD_FAILED: "업로드에 실패했습니다. 잠시 후 다시 시도해주세요.",
   INVALID_REASON: "신고 사유를 선택해주세요.",
   DETAIL_TOO_LONG: "상세 내용이 너무 깁니다.",
+  // 문의 (NON-78)
+  INVALID_EMAIL: "이메일 형식을 확인하세요.",
+  INVALID_TITLE: "제목을 입력하세요.",
+  INVALID_CONTENT: "내용을 입력하세요.",
   UNKNOWN: "문제가 발생했습니다. 잠시 후 다시 시도해주세요.",
 };
 
