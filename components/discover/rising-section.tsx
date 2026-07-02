@@ -3,7 +3,8 @@
 import { useState } from "react";
 import { useT } from "@/components/i18n-provider";
 import type { RisingWindows } from "@/lib/api";
-import { CoverRow, type CoverItem } from "./cover-row";
+import { toCover } from "@/lib/discover-cover";
+import { CoverRow } from "./cover-row";
 
 const WINDOWS = ["day", "week", "month", "year"] as const;
 type Win = (typeof WINDOWS)[number];
@@ -14,13 +15,7 @@ const LABEL_KEY: Record<Win, string> = { day: "일", week: "주", month: "월", 
 export function RisingSection({ rising }: { rising: RisingWindows }) {
   const t = useT();
   const [win, setWin] = useState<Win>("week");
-  const items: CoverItem[] = rising[win].map((x) => ({
-    key: `${x.targetType}-${x.spotifyId}`,
-    href: `/${x.targetType}/${x.spotifyId}`,
-    imageUrl: x.imageUrl,
-    name: x.name,
-    artist: x.artist,
-  }));
+  const items = rising[win].map(toCover);
 
   return (
     <section>

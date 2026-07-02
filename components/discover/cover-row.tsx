@@ -2,17 +2,10 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import type { CoverItem } from "@/lib/discover-cover";
 
 // Discover 커버 카드 한 줄(가로 스크롤). 스크롤바 숨김 + 넘길 게 있을 때만 좌우 화살표.
-// 리뷰 텍스트 없이 커버만 — 클릭하면 상세로.
-export type CoverItem = {
-  key: string;
-  href: string;
-  imageUrl: string | null;
-  name: string | null;
-  artist: string | null;
-};
-
+// 이미지·제목은 대상 상세로, 아티스트 이름은(artistHref 있으면) 아티스트 페이지로.
 export function CoverRow({ items, empty }: { items: CoverItem[]; empty: string }) {
   const ref = useRef<HTMLDivElement>(null);
   const [canLeft, setCanLeft] = useState(false);
@@ -46,21 +39,45 @@ export function CoverRow({ items, empty }: { items: CoverItem[]; empty: string }
   }
 
   return (
-    <div className="group relative">
+    <div className="relative">
       <div ref={ref} onScroll={update} className="no-scrollbar flex snap-x gap-4 overflow-x-auto pb-3">
         {items.map((x) => (
-          <Link key={x.key} href={x.href} className="flex w-36 shrink-0 snap-start flex-col gap-1.5 sm:w-40">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={x.imageUrl ?? "/placeholder.svg"}
-              alt=""
-              className="aspect-square w-full rounded-lg bg-zinc-100 object-cover dark:bg-zinc-800"
-            />
+          <div key={x.key} className="flex w-36 shrink-0 snap-start flex-col gap-1.5 sm:w-40">
+            <Link href={x.href}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={x.imageUrl ?? "/placeholder.svg"}
+                alt=""
+                className="aspect-square w-full rounded-lg bg-zinc-100 object-cover dark:bg-zinc-800"
+              />
+            </Link>
             <div className="min-w-0">
-              <p className="truncate text-sm font-medium text-zinc-900 dark:text-zinc-50">{x.name ?? ""}</p>
-              <p className="truncate text-xs text-zinc-400">{x.artist ?? ""}</p>
+              <Link
+                href={x.href}
+                className="block truncate text-sm font-medium text-zinc-900 hover:underline dark:text-zinc-50"
+              >
+                {x.name ?? ""}
+              </Link>
+              {x.artists.length > 0 ? (
+                <p className="truncate text-xs text-zinc-400">
+                  {x.artists.map((a, i) => (
+                    <span key={i}>
+                      {i > 0 ? ", " : ""}
+                      {a.href ? (
+                        <Link href={a.href} className="hover:text-zinc-600 hover:underline dark:hover:text-zinc-300">
+                          {a.name}
+                        </Link>
+                      ) : (
+                        a.name
+                      )}
+                    </span>
+                  ))}
+                </p>
+              ) : (
+                <p className="truncate text-xs text-zinc-400">{x.artist ?? ""}</p>
+              )}
             </div>
-          </Link>
+          </div>
         ))}
       </div>
 

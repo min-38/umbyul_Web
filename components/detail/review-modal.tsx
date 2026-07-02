@@ -12,6 +12,7 @@ export function ReviewModal({
   spotifyId,
   name,
   artist,
+  artists,
   imageUrl,
   initialScore,
   initialReview,
@@ -23,6 +24,7 @@ export function ReviewModal({
   spotifyId: string;
   name: string;
   artist: string;
+  artists: { id: string; name: string }[];
   imageUrl: string | null;
   initialScore: number;
   initialReview: string;
@@ -43,7 +45,7 @@ export function ReviewModal({
     }
     setBusy(true);
     setError(null);
-    const r = await saveRating({ targetType, targetId, spotifyId, score, review: review.trim() || null, path, name, artist, imageUrl });
+    const r = await saveRating({ targetType, targetId, spotifyId, score, review: review.trim() || null, path, name, artist, artists, imageUrl });
     setBusy(false);
     if (r.ok) onClose();
     else setError(msg(r.code));

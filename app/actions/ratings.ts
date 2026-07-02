@@ -43,6 +43,7 @@ export async function saveRating(input: {
   name: string;
   artist: string;
   imageUrl: string | null;
+  artists: { id: string; name: string }[]; // 개별 아티스트 링크용 (NON-85)
 }): Promise<Result> {
   const r = await authedFetch("/me/ratings", {
     method: "POST",
@@ -55,6 +56,7 @@ export async function saveRating(input: {
       name: input.name,
       artist: input.artist,
       imageUrl: input.imageUrl,
+      artists: input.artists,
     }),
   });
   if (r.ok) revalidatePath(input.path);

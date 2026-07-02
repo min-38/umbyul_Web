@@ -298,14 +298,14 @@ export async function getHome(): Promise<HomeData | null> {
   }
 }
 
-// Discover(NON-81). Rising(4구간 앨범/곡) + New(새 리뷰) + Recent(내 리뷰).
-export type DiscoverItem = TrendingItem;
+// Discover(NON-81/85). 전부 대상 커버(DiscoverItem). artistId 있으면 아티스트 링크(NON-85).
+export type DiscoverItem = TrendingItem & { artists: ArtistRef[] | null };
 export type RisingWindows = { day: DiscoverItem[]; week: DiscoverItem[]; month: DiscoverItem[]; year: DiscoverItem[] };
-export type DiscoverData = { rising: RisingWindows; newReviews: HomeReview[]; myRecent: HomeReview[] };
+export type DiscoverData = { rising: RisingWindows; new: DiscoverItem[]; myRecent: DiscoverItem[] };
 
 /** Discover (공개, 로그인 시 내 최근 리뷰 포함). 실패·형태 불일치 시 빈 데이터(페이지가 죽지 않게). */
 export async function getDiscover(): Promise<DiscoverData> {
-  const empty: DiscoverData = { rising: { day: [], week: [], month: [], year: [] }, newReviews: [], myRecent: [] };
+  const empty: DiscoverData = { rising: { day: [], week: [], month: [], year: [] }, new: [], myRecent: [] };
   try {
     const res = await fetch(`${API_URL}/discover`, { headers: await detailHeaders(), cache: "no-store" });
     if (!res.ok) return empty;
@@ -314,7 +314,7 @@ export async function getDiscover(): Promise<DiscoverData> {
     const r = (d.rising ?? {}) as Partial<RisingWindows>;
     return {
       rising: { day: r.day ?? [], week: r.week ?? [], month: r.month ?? [], year: r.year ?? [] },
-      newReviews: d.newReviews ?? [],
+      new: d.new ?? [],
       myRecent: d.myRecent ?? [],
     };
   } catch {

@@ -13,6 +13,7 @@ export function RateButton({
   spotifyId,
   name,
   artist,
+  artists,
   imageUrl,
   myScore,
   myReview,
@@ -25,6 +26,7 @@ export function RateButton({
   spotifyId: string;
   name: string;
   artist: string;
+  artists: { id: string; name: string }[];
   imageUrl: string | null;
   myScore: number;
   myReview: string;
@@ -67,6 +69,7 @@ export function RateButton({
           spotifyId={spotifyId}
           name={name}
           artist={artist}
+          artists={artists}
           imageUrl={imageUrl}
           initialScore={myScore}
           initialReview={myReview}

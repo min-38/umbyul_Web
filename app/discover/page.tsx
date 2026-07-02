@@ -1,28 +1,15 @@
-import { getDiscover, type HomeReview } from "@/lib/api";
+import { getDiscover } from "@/lib/api";
+import { toCover } from "@/lib/discover-cover";
 import { getT } from "@/lib/i18n-server";
 import { RisingSection } from "@/components/discover/rising-section";
-import { CoverRow, type CoverItem } from "@/components/discover/cover-row";
+import { CoverRow } from "@/components/discover/cover-row";
 
-// 리뷰 목록 → 대상 커버(중복 제거, 최대 15). 후기는 상세로 들어가서 확인.
-function toCovers(reviews: HomeReview[]): CoverItem[] {
-  const seen = new Set<string>();
-  const out: CoverItem[] = [];
-  for (const rv of reviews) {
-    const href = `/${rv.targetType}/${rv.targetSpotifyId}`;
-    if (seen.has(href)) continue;
-    seen.add(href);
-    out.push({ key: href, href, imageUrl: rv.imageUrl, name: rv.name, artist: rv.artist });
-    if (out.length >= 15) break;
-  }
-  return out;
-}
-
-// Discover(NON-81) — 앨범 커버 가로 스크롤 섹션: Rising · New · Recent.
+// Discover(NON-81/85) — 앨범 커버 가로 스크롤 섹션: Rising · New · Recent.
 // Recommend(NON-83)·Genre(NON-84)는 데이터·설계 확보 후.
 export default async function DiscoverPage() {
-  const [{ rising, newReviews, myRecent }, t] = await Promise.all([getDiscover(), getT()]);
-  const newCovers = toCovers(newReviews);
-  const myCovers = toCovers(myRecent);
+  const [{ rising, new: newItems, myRecent }, t] = await Promise.all([getDiscover(), getT()]);
+  const newCovers = newItems.map(toCover);
+  const myCovers = myRecent.map(toCover);
   const empty = t("아직 없습니다.");
 
   return (
