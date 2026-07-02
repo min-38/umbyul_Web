@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import type { ReviewItem } from "@/lib/api";
 import { Stars } from "./stars";
@@ -24,8 +24,21 @@ export function ReviewList({
   shareBasePath: string;
 }) {
   const [sort, setSort] = useState<Sort>("latest");
+  const [highlightId, setHighlightId] = useState<string | null>(null);
   const t = useT();
   const locale = useLocale();
+
+  // 알림 딥링크(#review-<id>)로 진입 시 해당 리뷰로 스크롤 + 잠깐 하이라이트(NON-60).
+  useEffect(() => {
+    if (!window.location.hash.startsWith("#review-")) return;
+    const id = window.location.hash.slice("#review-".length);
+    const el = document.getElementById(`review-${id}`);
+    if (!el) return;
+    el.scrollIntoView({ behavior: "smooth", block: "center" });
+    setHighlightId(id);
+    const timer = setTimeout(() => setHighlightId(null), 2500);
+    return () => clearTimeout(timer);
+  }, []);
 
   if (reviews.length === 0) {
     return (
@@ -62,7 +75,13 @@ export function ReviewList({
 
       <ul className="flex flex-col divide-y divide-zinc-200 dark:divide-zinc-800">
         {sorted.map((r) => (
-          <li key={r.id} id={`review-${r.id}`} className="flex flex-col gap-2 py-4 scroll-mt-20">
+          <li
+            key={r.id}
+            id={`review-${r.id}`}
+            className={`flex flex-col gap-2 py-4 scroll-mt-20 -mx-2 rounded-lg px-2 transition-colors duration-500 ${
+              highlightId === r.id ? "bg-amber-100 dark:bg-amber-950/40" : ""
+            }`}
+          >
             <div className="flex items-center gap-2">
               <span className="flex h-7 w-7 items-center justify-center overflow-hidden rounded-full bg-zinc-200 text-xs font-medium text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300">
                 {r.avatarUrl ? (
