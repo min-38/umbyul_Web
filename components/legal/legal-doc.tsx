@@ -17,6 +17,8 @@ export async function LegalDoc({ type }: { type: "terms" | "privacy" }) {
       {doc ? (
         <>
           <p className="mt-1 text-xs text-zinc-400">
+            {doc.version ? <span className="font-mono">{doc.version}</span> : null}
+            {doc.version ? " · " : ""}
             {t("최종 수정일")}: {new Date(doc.updatedAt).toLocaleDateString(locale === "ko" ? "ko-KR" : "en-US", { dateStyle: "long" })}
           </p>
           <article className="mt-6">

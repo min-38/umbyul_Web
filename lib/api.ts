@@ -55,7 +55,7 @@ export async function getMySanction(): Promise<MySanction | null> {
 }
 
 // 약관/개인정보 게시본 조회. 요청 로케일 없으면 서버가 en 폴백. 미게시면 null. (NON-66)
-export type LegalDoc = { type: string; locale: string; content: string; updatedAt: string };
+export type LegalDoc = { type: string; locale: string; content: string; updatedAt: string; version: string | null };
 
 export async function getLegalDoc(type: "terms" | "privacy", locale: string): Promise<LegalDoc | null> {
   try {
