@@ -80,6 +80,7 @@ export const EN: Record<string, string> = {
   "받은 좋아요 {count}": "{count} likes received",
   "아직 작성한 리뷰가 없습니다.": "No reviews yet.",
   "(알 수 없는 항목)": "(Unknown item)",
+  "관리자에 의해 삭제되었습니다.": "Removed by an administrator.",
   "불러오는 중…": "Loading…",
   "아직 없습니다.": "None yet.",
   평점순: "By rating",

@@ -56,6 +56,21 @@ export function ProfileReviews({ reviews }: { reviews: ProfileReview[] }) {
 
       <ul className="flex flex-col divide-y divide-zinc-200 dark:divide-zinc-800">
         {sorted.map((r) => {
+          if (r.deleted) {
+            return (
+              <li key={r.id}>
+                <div className="flex items-center gap-3 py-3 opacity-60">
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-md bg-zinc-100 text-zinc-400 dark:bg-zinc-900">
+                    ✕
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-sm text-zinc-500">{t("관리자에 의해 삭제되었습니다.")}</p>
+                    <p className="truncate text-xs text-zinc-400">{formatRelativeTime(r.createdAt, locale)}</p>
+                  </div>
+                </div>
+              </li>
+            );
+          }
           const href = r.spotifyId ? `/${r.targetType}/${r.spotifyId}` : null;
           const row = (
             <div className="flex items-center gap-3 py-3">

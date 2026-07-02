@@ -252,6 +252,7 @@ export type ProfileReview = {
   name: string | null;
   artist: string | null;
   imageUrl: string | null;
+  deleted: boolean;
 };
 export type UserProfile = {
   username: string;
