@@ -29,8 +29,9 @@ export function LocaleSwitcher() {
       onChange={(e) => onChange(e.target.value as Locale)}
       className="rounded-lg border border-zinc-300 bg-white px-2 py-1 text-xs text-zinc-600 disabled:opacity-70 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300"
     >
-      <option value="ko">{t("한국어")}</option>
-      <option value="en">{t("English")}</option>
+      {/* 언어 이름은 원문(네이티브) 유지 — 번역하지 않음 */}
+      <option value="ko">한국어</option>
+      <option value="en">English</option>
     </select>
   );
 }

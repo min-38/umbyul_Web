@@ -63,8 +63,6 @@ export const EN: Record<string, string> = {
   화면: "Display",
   연동: "Integrations",
   언어: "Language",
-  한국어: "Korean",
-  English: "English",
   테마: "Theme",
   라이트: "Light",
   다크: "Dark",

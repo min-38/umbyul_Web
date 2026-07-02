@@ -70,8 +70,9 @@ export function DisplaySettings() {
           onChange={(e) => chooseLocale(e.target.value as Locale)}
           className="w-full max-w-xs rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 disabled:opacity-70 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100"
         >
-          <option value="ko">{t("한국어")}</option>
-          <option value="en">{t("English")}</option>
+          {/* 언어 이름은 원문(네이티브) 유지 — 번역하지 않음 */}
+          <option value="ko">한국어</option>
+          <option value="en">English</option>
         </select>
       </section>
     </div>
