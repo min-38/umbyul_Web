@@ -31,6 +31,28 @@ export async function getProfile(): Promise<Profile | null> {
   return json.data as Profile;
 }
 
+// 내 제재 상태(정지/영구정지). 제재 없으면 banned=false·suspendedUntil=null. (NON-55)
+export type MySanction = { banned: boolean; suspendedUntil: string | null; reason: string | null };
+
+export async function getMySanction(): Promise<MySanction | null> {
+  const supabase = await createClient();
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+  if (!session) return null;
+  try {
+    const res = await fetch(`${API_URL}/me/sanction`, {
+      headers: { Authorization: `Bearer ${session.access_token}` },
+      cache: "no-store",
+    });
+    if (!res.ok) return null;
+    const json = await res.json();
+    return json.data as MySanction;
+  } catch {
+    return null;
+  }
+}
+
 // 평점/리뷰수는 NON-7/8 이후. 지금은 메타데이터만.
 export type TrackResult = {
   id: string;

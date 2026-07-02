@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
+import { SanctionBanner } from "@/components/layout/sanction-banner";
 import { I18nProvider } from "@/components/i18n-provider";
 import { getLocale, getT } from "@/lib/i18n-server";
 
@@ -44,6 +45,7 @@ export default async function RootLayout({
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
         <I18nProvider locale={locale}>
           <Header />
+          <SanctionBanner />
           <main className="flex flex-1 flex-col">{children}</main>
           <Footer />
         </I18nProvider>
