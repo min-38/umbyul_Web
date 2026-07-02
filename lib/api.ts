@@ -54,6 +54,20 @@ export async function getMySanction(): Promise<MySanction | null> {
   }
 }
 
+// 약관/개인정보 게시본 조회. 요청 로케일 없으면 서버가 en 폴백. 미게시면 null. (NON-66)
+export type LegalDoc = { type: string; locale: string; content: string; updatedAt: string };
+
+export async function getLegalDoc(type: "terms" | "privacy", locale: string): Promise<LegalDoc | null> {
+  try {
+    const res = await fetch(`${API_URL}/legal/${type}?locale=${encodeURIComponent(locale)}`, { cache: "no-store" });
+    if (!res.ok) return null;
+    const json = await res.json();
+    return json.data as LegalDoc;
+  } catch {
+    return null;
+  }
+}
+
 // 평점/리뷰수는 NON-7/8 이후. 지금은 메타데이터만.
 export type TrackResult = {
   id: string;

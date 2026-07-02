@@ -2,10 +2,9 @@ import Link from "next/link";
 import { getT } from "@/lib/i18n-server";
 import { LocaleSwitcher } from "./locale-switcher";
 
-// 실제 페이지는 추후 → 플레이스홀더(#)
 const POLICY = [
-  { label: "이용약관", href: "#" },
-  { label: "개인정보 처리방침", href: "#" },
+  { label: "이용약관", href: "/terms" },
+  { label: "개인정보 처리방침", href: "/privacy" },
 ];
 const INFO = [
   { label: "서비스 소개", href: "/about" },

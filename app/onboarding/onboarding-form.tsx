@@ -255,7 +255,7 @@ export function OnboardingForm({ needsConsent }: { needsConsent: boolean }) {
               />
               <span>
                 {agreeBefore}
-                <Link href="#" className="underline">
+                <Link href="/terms" target="_blank" className="underline">
                   {t("이용약관")}
                 </Link>
                 {agreeAfter} <span className="text-red-500">*</span>
@@ -270,7 +270,7 @@ export function OnboardingForm({ needsConsent }: { needsConsent: boolean }) {
               />
               <span>
                 {agreeBefore}
-                <Link href="#" className="underline">
+                <Link href="/privacy" target="_blank" className="underline">
                   {t("개인정보 처리방침")}
                 </Link>
                 {agreeAfter} <span className="text-red-500">*</span>
