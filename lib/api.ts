@@ -31,8 +31,14 @@ export async function getProfile(): Promise<Profile | null> {
   return json.data as Profile;
 }
 
-// 내 제재 상태(정지/영구정지). 제재 없으면 banned=false·suspendedUntil=null. (NON-55)
-export type MySanction = { banned: boolean; suspendedUntil: string | null; reason: string | null };
+// 내 제재 상태(정지/영구정지) + 미확인 경고. 제재 없으면 banned=false·suspendedUntil=null. (NON-55/57)
+export type MyWarning = { id: string; reason: string | null; createdAt: string };
+export type MySanction = {
+  banned: boolean;
+  suspendedUntil: string | null;
+  reason: string | null;
+  warnings: MyWarning[];
+};
 
 export async function getMySanction(): Promise<MySanction | null> {
   const supabase = await createClient();

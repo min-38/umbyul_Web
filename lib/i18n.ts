@@ -84,6 +84,7 @@ export const EN: Record<string, string> = {
   "계정이 영구 정지되어 작성이 제한됩니다.": "Your account is permanently suspended; posting is disabled.",
   "{until}까지 이용이 정지되어 작성이 제한됩니다.": "You are suspended until {until}; posting is disabled.",
   "사유": "Reason",
+  "경고를 받았습니다.": "You have received a warning.",
   "불러오는 중…": "Loading…",
   "아직 없습니다.": "None yet.",
   평점순: "By rating",
