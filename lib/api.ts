@@ -298,6 +298,30 @@ export async function getHome(): Promise<HomeData | null> {
   }
 }
 
+// Discover(NON-81). Rising(4구간 앨범/곡) + New(새 리뷰) + Recent(내 리뷰).
+export type DiscoverItem = TrendingItem;
+export type RisingWindows = { day: DiscoverItem[]; week: DiscoverItem[]; month: DiscoverItem[]; year: DiscoverItem[] };
+export type DiscoverData = { rising: RisingWindows; newReviews: HomeReview[]; myRecent: HomeReview[] };
+
+/** Discover (공개, 로그인 시 내 최근 리뷰 포함). 실패·형태 불일치 시 빈 데이터(페이지가 죽지 않게). */
+export async function getDiscover(): Promise<DiscoverData> {
+  const empty: DiscoverData = { rising: { day: [], week: [], month: [], year: [] }, newReviews: [], myRecent: [] };
+  try {
+    const res = await fetch(`${API_URL}/discover`, { headers: await detailHeaders(), cache: "no-store" });
+    if (!res.ok) return empty;
+    const json = await res.json();
+    const d = (json?.data ?? {}) as Partial<DiscoverData>;
+    const r = (d.rising ?? {}) as Partial<RisingWindows>;
+    return {
+      rising: { day: r.day ?? [], week: r.week ?? [], month: r.month ?? [], year: r.year ?? [] },
+      newReviews: d.newReviews ?? [],
+      myRecent: d.myRecent ?? [],
+    };
+  } catch {
+    return empty;
+  }
+}
+
 // ── 유저 프로필 (NON-24) ──
 export type ProfileReview = {
   id: string;

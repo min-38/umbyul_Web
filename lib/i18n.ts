@@ -99,6 +99,8 @@ export const EN: Record<string, string> = {
     "Glitter is a place to log and share what you listen to. On top of a vast music catalog, your ratings and reviews build a map of your taste.",
   "무엇을 할 수 있나요": "What you can do",
   "곧 제공됩니다.": "Coming soon.",
+  주: "Week",
+  최근: "Recent",
   "이름의 의미": "Behind the name",
   "지금 첫 별점을 남겨보세요.": "Leave your first rating.",
   "문의하기": "Contact us",

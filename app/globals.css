@@ -40,6 +40,15 @@ body {
   -webkit-text-fill-color: transparent;
 }
 
+/* 가로 스크롤 행 스크롤바 숨김(Discover 커버 행 등). */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
 /* 우주 배경(About): 깊은 보라-남색 심연 + 성운 얼룩(워드마크와 같은 팔레트).
    항상 어둡게 — 라이트/다크 무관하게 몰입형 히어로. */
 .cosmic-bg {
