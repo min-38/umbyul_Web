@@ -31,14 +31,9 @@ export async function getProfile(): Promise<Profile | null> {
   return json.data as Profile;
 }
 
-// 내 제재 상태(정지/영구정지) + 미확인 경고. 제재 없으면 banned=false·suspendedUntil=null. (NON-55/57)
-export type MyWarning = { id: string; reason: string | null; createdAt: string };
-export type MySanction = {
-  banned: boolean;
-  suspendedUntil: string | null;
-  reason: string | null;
-  warnings: MyWarning[];
-};
+// 내 제재 상태(정지/영구정지). 제재 없으면 banned=false·suspendedUntil=null. (NON-55)
+// 경고는 알림으로 전달(NON-58).
+export type MySanction = { banned: boolean; suspendedUntil: string | null; reason: string | null };
 
 export async function getMySanction(): Promise<MySanction | null> {
   const supabase = await createClient();
@@ -325,12 +320,13 @@ export const getFollowing = (username: string) => fetchFollowList(username, "fol
 // ── 알림 (NON-26) ──
 export type NotificationItem = {
   id: string;
-  type: "follow" | "review_like";
+  type: "follow" | "review_like" | "warning";
   actorUsername: string;
   actorAvatarUrl: string | null;
   createdAt: string;
   read: boolean;
   link: string | null;
+  detail: string | null;
 };
 export type NotificationList = { items: NotificationItem[]; unreadCount: number };
 
