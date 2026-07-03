@@ -329,6 +329,18 @@ export const EN: Record<string, string> = {
   "회원 탈퇴": "Delete account",
   "계정과 모든 데이터가 영구 삭제됩니다.": "Your account and all data will be permanently deleted.",
   "처리 중…": "Processing…",
+  // 이메일 변경 · 데이터 내보내기 (NON-111)
+  "이메일 변경": "Change email",
+  "새 이메일로 확인 메일을 보냈습니다. 링크를 눌러야 변경이 완료됩니다.":
+    "A confirmation email was sent to the new address. Click the link to finish the change.",
+  "변경하려면 새 이메일로 온 확인 링크를 눌러야 합니다.":
+    "To change it, click the confirmation link sent to your new email.",
+  "데이터 내보내기": "Export data",
+  "내 프로필·평가·팔로우·댓글을 JSON 파일로 내려받습니다.":
+    "Download your profile, ratings, follows, and comments as a JSON file.",
+  "JSON 내보내기": "Export JSON",
+  "내보내는 중…": "Exporting…",
+  "내보내기 파일을 저장했습니다.": "Your export file has been saved.",
 
   // ── 설정: 알림 ──
   "전체 알림": "All notifications",

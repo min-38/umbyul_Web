@@ -2,7 +2,7 @@
 
 import { useRef, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
-import { updateUsername, uploadAvatar, deleteAccount } from "@/app/actions/account";
+import { updateUsername, uploadAvatar, deleteAccount, exportMyData } from "@/app/actions/account";
 import { msg } from "@/lib/messages";
 import { isUsername } from "@/lib/validation";
 import { useT, useLocale } from "@/components/i18n-provider";
@@ -17,12 +17,14 @@ const PROVIDER_LABELS: Record<string, string> = {
 
 export function AccountSettings({
   initialUsername,
+  initialEmail,
   initialAvatarUrl,
   hasPassword,
   joinedAt,
   providers,
 }: {
   initialUsername: string;
+  initialEmail: string;
   initialAvatarUrl: string | null;
   hasPassword: boolean;
   joinedAt: string;
@@ -88,6 +90,43 @@ export function AccountSettings({
     setPw("");
     setPw2("");
     setPwNote({ ok: true, text: hasPassword ? t("변경되었습니다.") : t("설정되었습니다.") });
+  };
+
+  // 이메일 변경 — Supabase가 새 주소로 확인 메일 발송(링크 눌러야 확정)
+  const [email, setEmail] = useState(initialEmail);
+  const [emailBusy, setEmailBusy] = useState(false);
+  const [emailNote, setEmailNote] = useState<Note>(null);
+
+  const saveEmail = async () => {
+    const next = email.trim();
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(next)) return setEmailNote({ ok: false, text: t("이메일 형식을 확인하세요.") });
+    if (next === initialEmail) return;
+    setEmailBusy(true);
+    setEmailNote(null);
+    const { error } = await createClient().auth.updateUser({ email: next });
+    setEmailBusy(false);
+    if (error) return setEmailNote({ ok: false, text: error.message });
+    setEmailNote({ ok: true, text: t("새 이메일로 확인 메일을 보냈습니다. 링크를 눌러야 변경이 완료됩니다.") });
+  };
+
+  // 데이터 내보내기 — JSON 다운로드
+  const [exportBusy, setExportBusy] = useState(false);
+  const [exportNote, setExportNote] = useState<Note>(null);
+
+  const doExport = async () => {
+    setExportBusy(true);
+    setExportNote(null);
+    const r = await exportMyData();
+    setExportBusy(false);
+    if (!r.ok || !r.data) return setExportNote({ ok: false, text: msg(r.code, locale) });
+    const blob = new Blob([JSON.stringify(r.data, null, 2)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `glitter-${initialUsername}-${new Date().toISOString().slice(0, 10)}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+    setExportNote({ ok: true, text: t("내보내기 파일을 저장했습니다.") });
   };
 
   // 탈퇴
@@ -211,6 +250,42 @@ export function AccountSettings({
           </button>
         </div>
         <NoteText note={pwNote} />
+      </Section>
+
+      {/* 이메일 변경 */}
+      <Section title={t("이메일 변경")}>
+        <div className="flex gap-2">
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="w-full max-w-xs rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 focus:border-zinc-500 focus:outline-none dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100"
+          />
+          <button
+            type="button"
+            onClick={saveEmail}
+            disabled={emailBusy || email.trim() === initialEmail}
+            className="shrink-0 rounded-lg bg-zinc-900 px-4 py-2 text-sm font-medium text-white hover:bg-zinc-700 disabled:opacity-50 dark:bg-zinc-100 dark:text-black dark:hover:bg-zinc-200"
+          >
+            {emailBusy ? t("처리 중…") : t("변경")}
+          </button>
+        </div>
+        <p className="mt-1 text-xs text-zinc-400">{t("변경하려면 새 이메일로 온 확인 링크를 눌러야 합니다.")}</p>
+        <NoteText note={emailNote} />
+      </Section>
+
+      {/* 데이터 내보내기 */}
+      <Section title={t("데이터 내보내기")}>
+        <p className="mb-2 text-xs text-zinc-400">{t("내 프로필·평가·팔로우·댓글을 JSON 파일로 내려받습니다.")}</p>
+        <button
+          type="button"
+          onClick={doExport}
+          disabled={exportBusy}
+          className="w-fit rounded-lg border border-zinc-300 px-4 py-2 text-sm font-medium text-zinc-700 hover:bg-zinc-100 disabled:opacity-50 dark:border-zinc-700 dark:text-zinc-200 dark:hover:bg-zinc-900"
+        >
+          {exportBusy ? t("내보내는 중…") : t("JSON 내보내기")}
+        </button>
+        <NoteText note={exportNote} />
       </Section>
 
       {/* 탈퇴 */}

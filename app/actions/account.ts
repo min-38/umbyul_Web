@@ -29,6 +29,26 @@ export async function updateUsername(username: string): Promise<Result & { usern
   }
 }
 
+// 내 데이터 내보내기 (NON-111) — /me/export JSON. 클라가 파일로 저장.
+export async function exportMyData(): Promise<{ ok: boolean; code: string; data: unknown }> {
+  const supabase = await createClient();
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+  if (!session) return { ok: false, code: "UNAUTHORIZED", data: null };
+
+  try {
+    const res = await fetch(`${API_URL}/me/export`, {
+      headers: { Authorization: `Bearer ${session.access_token}` },
+      cache: "no-store",
+    });
+    const json = await res.json().catch(() => null);
+    return { ok: res.ok, code: json?.code ?? (res.ok ? "OK" : "UNKNOWN"), data: json?.data ?? null };
+  } catch {
+    return { ok: false, code: "DB_UNAVAILABLE", data: null };
+  }
+}
+
 export async function uploadAvatar(formData: FormData): Promise<Result & { avatarUrl?: string }> {
   const supabase = await createClient();
   const {

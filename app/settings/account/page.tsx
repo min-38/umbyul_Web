@@ -17,6 +17,7 @@ export default async function AccountTabPage() {
   return (
     <AccountSettings
       initialUsername={profile.username}
+      initialEmail={user.email ?? ""}
       initialAvatarUrl={profile.avatarUrl}
       hasPassword={hasPassword}
       joinedAt={profile.createdAt}
