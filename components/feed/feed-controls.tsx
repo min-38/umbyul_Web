@@ -56,15 +56,13 @@ export function FeedControls({
     ratio: t("좋아요 비율 높은 순"),
     rising: t("급상승"),
   };
-  const selectCls =
-    "cursor-pointer rounded-full bg-zinc-100 px-3 py-1.5 text-sm font-medium text-zinc-700 dark:bg-zinc-800 dark:text-zinc-200";
 
   return (
     <div className="flex flex-wrap items-center justify-between gap-2">
-      <select value={scope} onChange={(e) => go({ scope: e.target.value })} className={selectCls} aria-label={t("전체")}>
+      <PillSelect value={scope} onChange={(e) => go({ scope: e.target.value })} ariaLabel={t("전체")}>
         <option value="all">{t("전체")}</option>
         {loggedIn && <option value="following">{t("팔로잉")}</option>}
-      </select>
+      </PillSelect>
 
       <div className="flex items-center gap-2">
         <SortDropdown
@@ -73,11 +71,51 @@ export function FeedControls({
           options={SORTS.map((s) => ({ value: s, label: sortLabel[s] }))}
           onSelect={(s) => go({ sort: s })}
         />
-        <select value={view} onChange={(e) => go({ view: e.target.value })} className={selectCls} aria-label={t("보기")}>
+        <PillSelect value={view} onChange={(e) => go({ view: e.target.value })} ariaLabel={t("보기")}>
           <option value="card">{t("카드형")}</option>
           <option value="compact">{t("축약형")}</option>
-        </select>
+        </PillSelect>
       </div>
+    </div>
+  );
+}
+
+// 정렬 드롭다운과 톤을 맞춘 알약형 select(네이티브 화살표 제거 + 커스텀 셰브런).
+function PillSelect({
+  value,
+  onChange,
+  ariaLabel,
+  children,
+}: {
+  value: string;
+  onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
+  ariaLabel: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="relative">
+      <select
+        value={value}
+        onChange={onChange}
+        aria-label={ariaLabel}
+        className="cursor-pointer appearance-none rounded-full bg-zinc-100 py-1.5 pl-3 pr-8 text-sm font-medium text-zinc-700 focus:outline-none dark:bg-zinc-800 dark:text-zinc-200"
+      >
+        {children}
+      </select>
+      <svg
+        className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-zinc-500"
+        width="14"
+        height="14"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        aria-hidden="true"
+      >
+        <path d="m6 9 6 6 6-6" />
+      </svg>
     </div>
   );
 }
