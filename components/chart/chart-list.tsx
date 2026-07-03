@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { coverThumb } from "@/lib/image";
 import { Stars } from "@/components/detail/stars";
+import { TargetBadge } from "@/components/ui/target-badge";
 import { toCover } from "@/lib/discover-cover";
 import type { DiscoverItem } from "@/lib/api";
 
@@ -31,15 +32,7 @@ export function ChartList({
             </Link>
             <div className="min-w-0 flex-1">
               <div className="flex items-center gap-1.5">
-                <span
-                  className={`shrink-0 rounded px-1.5 py-0.5 text-[10px] font-medium ${
-                    x.targetType === "track"
-                      ? "bg-indigo-100 text-indigo-700 dark:bg-indigo-950 dark:text-indigo-300"
-                      : "bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300"
-                  }`}
-                >
-                  {x.targetType === "track" ? trackLabel : albumLabel}
-                </span>
+                <TargetBadge type={x.targetType} label={x.targetType === "track" ? trackLabel : albumLabel} />
                 <Link
                   href={c.href}
                   className="truncate text-sm font-medium text-zinc-900 hover:underline dark:text-zinc-50"
