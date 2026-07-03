@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { submitReport } from "@/app/actions/social";
 import { msg } from "@/lib/messages";
-import { useT } from "@/components/i18n-provider";
+import { useT, useLocale } from "@/components/i18n-provider";
 
 const REASONS = [
   { value: "not_music", label: "음악과 무관한 내용" },
@@ -16,6 +16,7 @@ const REASONS = [
 export function ReportControl({ ratingId, loggedIn }: { ratingId: string; loggedIn: boolean }) {
   const router = useRouter();
   const t = useT();
+  const locale = useLocale();
   const [open, setOpen] = useState(false);
   const [reason, setReason] = useState("");
   const [detail, setDetail] = useState("");
@@ -46,7 +47,7 @@ export function ReportControl({ ratingId, loggedIn }: { ratingId: string; logged
     const r = await submitReport({ targetType: "rating", targetId: ratingId, reason, detail: detail.trim() || null });
     setBusy(false);
     if (r.ok) setDone(true);
-    else setError(msg(r.code));
+    else setError(msg(r.code, locale));
   };
 
   return (

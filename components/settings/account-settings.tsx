@@ -50,7 +50,7 @@ export function AccountSettings({
       setAvatarUrl(r.avatarUrl);
       setAvatarNote({ ok: true, text: t("변경되었습니다.") });
     } else {
-      setAvatarNote({ ok: false, text: msg(r.code) });
+      setAvatarNote({ ok: false, text: msg(r.code, locale) });
     }
   };
 
@@ -68,7 +68,7 @@ export function AccountSettings({
     setNickNote(null);
     const r = await updateUsername(username);
     setNickBusy(false);
-    setNickNote(r.ok ? { ok: true, text: t("변경되었습니다.") } : { ok: false, text: msg(r.code) });
+    setNickNote(r.ok ? { ok: true, text: t("변경되었습니다.") } : { ok: false, text: msg(r.code, locale) });
   };
 
   // 비밀번호
@@ -99,7 +99,7 @@ export function AccountSettings({
     if (r.ok) window.location.href = "/";
     else {
       setDelBusy(false);
-      alert(msg(r.code));
+      alert(msg(r.code, locale));
     }
   };
 

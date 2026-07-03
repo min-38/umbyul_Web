@@ -1,5 +1,6 @@
 // 서버는 머신리더블 code 만 보낸다. 표시 문구는 여기서 locale 별로 매핑한다.
-// (지금은 ko 만. 추후 i18n 라이브러리로 승격하면서 en 등 추가.)
+import type { Locale } from "./i18n";
+
 const KO: Record<string, string> = {
   USERNAME_TAKEN: "이미 사용 중인 username입니다.",
   INVALID_USERNAME: "username 형식을 확인하세요.",
@@ -36,7 +37,39 @@ const KO: Record<string, string> = {
   UNKNOWN: "문제가 발생했습니다. 잠시 후 다시 시도해주세요.",
 };
 
-/** 서버 응답 code 를 표시 문구로. 미지의 code 는 UNKNOWN 으로 폴백. */
-export function msg(code?: string | null): string {
-  return (code && KO[code]) || KO.UNKNOWN;
+const EN: Record<string, string> = {
+  USERNAME_TAKEN: "That username is already taken.",
+  INVALID_USERNAME: "Check the username format.",
+  INVALID_COUNTRY: "Invalid country value.",
+  PROFILE_NOT_FOUND: "Profile not found.",
+  DB_NOT_CONFIGURED: "Server configuration error. Please try again shortly.",
+  DB_UNAVAILABLE: "Can't reach the server. Please try again shortly.",
+  UNAUTHORIZED: "Please log in.",
+  INVALID_SCORE: "Rating must be 0.5–5.0 in half-star steps.",
+  INVALID_TARGET: "Invalid target.",
+  INVALID_TARGET_TYPE: "Invalid target type.",
+  REVIEW_TOO_LONG: "Your review is too long.",
+  REVIEW_TOO_SHORT: "Reviews must be at least 10 characters.",
+  PROFILE_REQUIRED: "You need to set up your profile first.",
+  RATING_NOT_FOUND: "Rating not found.",
+  INVALID_REACTION: "Invalid reaction value.",
+  ACCOUNT_SUSPENDED: "Your account is suspended; you can't post.",
+  ACCOUNT_BANNED: "Your account is permanently suspended; you can't post.",
+  NO_FILE: "Please choose a file.",
+  FILE_TOO_LARGE: "File is too large (max 5MB).",
+  INVALID_FILE_TYPE: "Only jpg, png, webp images are allowed.",
+  STORAGE_NOT_CONFIGURED: "Image upload is misconfigured.",
+  UPLOAD_FAILED: "Upload failed. Please try again shortly.",
+  INVALID_REASON: "Please select a report reason.",
+  DETAIL_TOO_LONG: "The details are too long.",
+  INVALID_EMAIL: "Please check the email format.",
+  INVALID_TITLE: "Please enter a title.",
+  INVALID_CONTENT: "Please enter your message.",
+  UNKNOWN: "Something went wrong. Please try again shortly.",
+};
+
+/** 서버 응답 code 를 로케일별 표시 문구로. 미지의 code 는 UNKNOWN 으로 폴백. */
+export function msg(code?: string | null, locale: Locale = "ko"): string {
+  const dict = locale === "en" ? EN : KO;
+  return (code && dict[code]) || dict.UNKNOWN;
 }

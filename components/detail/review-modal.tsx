@@ -4,7 +4,7 @@ import { useState } from "react";
 import { StarInput } from "./star-input";
 import { saveRating, deleteRating } from "@/app/actions/ratings";
 import { msg } from "@/lib/messages";
-import { useT } from "@/components/i18n-provider";
+import { useT, useLocale } from "@/components/i18n-provider";
 
 export function ReviewModal({
   targetType,
@@ -33,6 +33,7 @@ export function ReviewModal({
 }) {
   const editing = initialScore > 0;
   const t = useT();
+  const locale = useLocale();
   const [score, setScore] = useState(initialScore);
   const [review, setReview] = useState(initialReview);
   const [busy, setBusy] = useState(false);
@@ -52,7 +53,7 @@ export function ReviewModal({
     const r = await saveRating({ targetType, targetId, spotifyId, score, review: review.trim(), path, name, artist, artists, imageUrl });
     setBusy(false);
     if (r.ok) onClose();
-    else setError(msg(r.code));
+    else setError(msg(r.code, locale));
   };
 
   const remove = async () => {
@@ -62,7 +63,7 @@ export function ReviewModal({
     const r = await deleteRating({ targetType, targetId, path });
     setBusy(false);
     if (r.ok) onClose();
-    else setError(msg(r.code));
+    else setError(msg(r.code, locale));
   };
 
   return (

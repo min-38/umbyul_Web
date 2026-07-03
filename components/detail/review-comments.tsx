@@ -48,7 +48,7 @@ export function ReviewComments({
       setCount((n) => n + 1);
       setBody("");
     } else {
-      setErr(msg(r.code));
+      setErr(msg(r.code, locale));
     }
   };
 

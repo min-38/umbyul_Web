@@ -3,11 +3,12 @@
 import { useState } from "react";
 import { submitInquiry } from "@/app/actions/inquiry";
 import { msg } from "@/lib/messages";
-import { useT } from "@/components/i18n-provider";
+import { useT, useLocale } from "@/components/i18n-provider";
 
 // 공개 문의 폼(NON-78). 카테고리·이메일·제목·내용 + honeypot. 답변은 관리자가 이메일로 직접.
 export function ContactForm() {
   const t = useT();
+  const locale = useLocale();
   const cats = [t("계정"), t("평가·리뷰"), t("신고"), t("버그"), t("기타")];
 
   const [category, setCategory] = useState(cats[0]);
@@ -29,7 +30,7 @@ export function ContactForm() {
     const r = await submitInquiry({ category, email: email.trim(), title: title.trim(), content: content.trim(), website });
     setBusy(false);
     if (r.ok) setDone(true);
-    else setErr(msg(r.code));
+    else setErr(msg(r.code, locale));
   };
 
   const inputCls =

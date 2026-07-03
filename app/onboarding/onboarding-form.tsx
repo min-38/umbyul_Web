@@ -153,7 +153,7 @@ export function OnboardingForm({ needsConsent }: { needsConsent: boolean }) {
       setError(t("만 14세 이상만 가입할 수 있습니다."));
       return;
     }
-    setError(msg(code));
+    setError(msg(code, locale));
   };
 
   const selectClass = `${inputBase} ${borderClass("idle")}`;
