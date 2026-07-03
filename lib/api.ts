@@ -286,6 +286,40 @@ export type TrendingItem = {
 };
 export type HomeData = { recentReviews: HomeReview[]; trending: TrendingItem[]; followFeed: HomeReview[] };
 
+// 홈 피드 v2(NON-88). Reddit식 정렬 + 반응 집계.
+export type FeedSort = "hot" | "newest" | "likes" | "ratio" | "rising";
+export type FeedScope = "all" | "following";
+export type FeedItem = {
+  id: string;
+  userId: string;
+  username: string;
+  avatarUrl: string | null;
+  targetType: "track" | "album";
+  targetSpotifyId: string;
+  score: number;
+  body: string;
+  createdAt: string;
+  name: string | null;
+  artist: string | null;
+  imageUrl: string | null;
+  artists: ArtistRef[] | null;
+  likes: number;
+  dislikes: number;
+};
+
+/** 홈 피드 v2 (공개, following은 로그인 필요). 실패 시 빈 목록. */
+export async function getFeed(sort: FeedSort, scope: FeedScope): Promise<FeedItem[]> {
+  try {
+    const qs = new URLSearchParams({ sort, scope });
+    const res = await fetch(`${API_URL}/feed?${qs}`, { headers: await detailHeaders(), cache: "no-store" });
+    if (!res.ok) return [];
+    const json = await res.json();
+    return (json?.data?.items ?? []) as FeedItem[];
+  } catch {
+    return [];
+  }
+}
+
 /** 홈 피드 (공개, 로그인 시 팔로우 피드 포함). 실패 시 null(홈이 죽지 않게). */
 export async function getHome(): Promise<HomeData | null> {
   try {
