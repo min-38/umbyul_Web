@@ -309,9 +309,9 @@ export type FeedItem = {
 };
 
 /** 홈 피드 v2 (공개, following은 로그인 필요). 실패 시 빈 목록. */
-export async function getFeed(sort: FeedSort, scope: FeedScope): Promise<FeedItem[]> {
+export async function getFeed(sort: FeedSort, scope: FeedScope, offset = 0, limit = 50): Promise<FeedItem[]> {
   try {
-    const qs = new URLSearchParams({ sort, scope });
+    const qs = new URLSearchParams({ sort, scope, offset: String(offset), limit: String(limit) });
     const res = await fetch(`${API_URL}/feed?${qs}`, { headers: await detailHeaders(), cache: "no-store" });
     if (!res.ok) return [];
     const json = await res.json();
@@ -354,9 +354,10 @@ export async function getArtistChart(
   period: ChartPeriod,
   gender: ChartGender,
   age: ChartAge,
+  limit = 50,
 ): Promise<ArtistRankItem[]> {
   try {
-    const qs = new URLSearchParams({ type: "artist", sort, period, gender, age });
+    const qs = new URLSearchParams({ type: "artist", sort, period, gender, age, limit: String(limit) });
     const res = await fetch(`${API_URL}/chart?${qs}`, { cache: "no-store" });
     if (!res.ok) return [];
     const json = await res.json();
@@ -371,9 +372,9 @@ export type ChartUserSort = "reviews" | "likes" | "followers";
 export type UserRankItem = { userId: string; username: string; avatarUrl: string | null; count: number };
 
 /** 유저 차트 (공개). 실패 시 빈 목록. */
-export async function getUserChart(sort: ChartUserSort, period: ChartPeriod): Promise<UserRankItem[]> {
+export async function getUserChart(sort: ChartUserSort, period: ChartPeriod, limit = 50): Promise<UserRankItem[]> {
   try {
-    const qs = new URLSearchParams({ sort, period });
+    const qs = new URLSearchParams({ sort, period, limit: String(limit) });
     const res = await fetch(`${API_URL}/chart/users?${qs}`, { cache: "no-store" });
     if (!res.ok) return [];
     const json = await res.json();
@@ -390,9 +391,10 @@ export async function getChart(
   period: ChartPeriod,
   gender: ChartGender,
   age: ChartAge,
+  limit = 50,
 ): Promise<DiscoverItem[]> {
   try {
-    const qs = new URLSearchParams({ type, sort, period, gender, age });
+    const qs = new URLSearchParams({ type, sort, period, gender, age, limit: String(limit) });
     const res = await fetch(`${API_URL}/chart?${qs}`, { cache: "no-store" });
     if (!res.ok) return [];
     const json = await res.json();

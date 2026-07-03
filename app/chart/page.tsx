@@ -32,12 +32,20 @@ const TYPE_ON: Record<MusicType, string> = {
 };
 const INACTIVE = "bg-zinc-100 text-zinc-600 hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700";
 
+const PAGE = 50; // 더 보기 증가 단위(서버 기본·최대 50~200과 정합)
+// 표시 개수 파싱: 50 단위, 최대 200(서버 clamp와 동일). 잘못된 값은 기본 50.
+function toLimit(v?: string): number {
+  const n = Number(v);
+  return Number.isFinite(n) && n >= PAGE ? Math.min(n, 200) : PAGE;
+}
+
 // Chart(NON-82/86/87/117) — 좌:음악 / 우:유저 2단(모바일 스택). 기간(D/W/M/Y)은 컬럼별 독립.
 export default async function ChartPage({
   searchParams,
 }: {
   searchParams: Promise<{
-    type?: string; sort?: string; usort?: string; period?: string; uperiod?: string; gender?: string; age?: string;
+    type?: string; sort?: string; usort?: string; period?: string; uperiod?: string;
+    gender?: string; age?: string; mlimit?: string; ulimit?: string;
   }>;
 }) {
   const sp = await searchParams;
@@ -49,13 +57,15 @@ export default async function ChartPage({
   const uperiod = PERIODS.includes(sp.uperiod as ChartPeriod) ? (sp.uperiod as ChartPeriod) : "week"; // 유저 기간
   const gender = GENDERS.includes(sp.gender as ChartGender) ? (sp.gender as ChartGender) : "all";
   const age = AGES.includes(sp.age as ChartAge) ? (sp.age as ChartAge) : "all";
+  const mlimit = toLimit(sp.mlimit); // 음악 표시 개수(더 보기로 증가)
+  const ulimit = toLimit(sp.ulimit); // 유저 표시 개수
 
   const t = await getT();
-  // 두 컬럼(음악·유저) 동시 조회 — 각자 기간 사용.
+  // 두 컬럼(음악·유저) 동시 조회 — 각자 기간·개수 사용.
   const [items, artists, users] = await Promise.all([
-    isArtist ? Promise.resolve([]) : getChart(type, musicSort, period, gender, age),
-    isArtist ? getArtistChart(musicSort, period, gender, age) : Promise.resolve([]),
-    getUserChart(userSort, uperiod),
+    isArtist ? Promise.resolve([]) : getChart(type, musicSort, period, gender, age, mlimit),
+    isArtist ? getArtistChart(musicSort, period, gender, age, mlimit) : Promise.resolve([]),
+    getUserChart(userSort, uperiod, ulimit),
   ]);
 
   const typeLabel: Record<MusicType, string> = {
@@ -79,6 +89,22 @@ export default async function ChartPage({
       gender: o.gender ?? gender,
       age: o.age ?? age,
     })}`;
+
+  // 더 보기: 현재 필터를 유지하며 해당 컬럼의 표시 개수만 +PAGE. 필터 변경 시엔 기본값으로 리셋(hrefFor가 limit 미포함).
+  const moreHref = (which: "mlimit" | "ulimit", next: number) =>
+    `/chart?${new URLSearchParams({
+      type, sort: musicSort, usort: userSort, period, uperiod, gender, age,
+      mlimit: String(which === "mlimit" ? next : mlimit),
+      ulimit: String(which === "ulimit" ? next : ulimit),
+    })}`;
+
+  const moreLink = (href: string) => (
+    <div className="mt-3 text-center">
+      <Link href={href} scroll={false} className="inline-block rounded-full border border-zinc-300 px-5 py-2 text-sm font-medium text-zinc-600 hover:bg-zinc-100 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800">
+        {t("더 보기")}
+      </Link>
+    </div>
+  );
 
   const empty = (
     <p className="rounded-xl border border-dashed border-zinc-300 px-6 py-10 text-center text-sm text-zinc-500 dark:border-zinc-700">
@@ -125,13 +151,19 @@ export default async function ChartPage({
             </Row>
           </div>
           <div className="border-b border-zinc-200 pb-2 dark:border-zinc-800">{periodSeg(period, "period")}</div>
-          {isArtist
-            ? artists.length === 0
-              ? empty
-              : <ArtistChartList items={artists} />
-            : items.length === 0
-              ? empty
-              : <ChartList items={items} trackLabel={t("곡")} albumLabel={t("앨범")} />}
+          {isArtist ? (
+            artists.length === 0 ? empty : (
+              <>
+                <ArtistChartList items={artists} />
+                {artists.length >= mlimit && moreLink(moreHref("mlimit", mlimit + PAGE))}
+              </>
+            )
+          ) : items.length === 0 ? empty : (
+            <>
+              <ChartList items={items} trackLabel={t("곡")} albumLabel={t("앨범")} />
+              {items.length >= mlimit && moreLink(moreHref("mlimit", mlimit + PAGE))}
+            </>
+          )}
         </section>
 
         {/* ── 우: 유저 차트 ── */}
@@ -143,7 +175,12 @@ export default async function ChartPage({
             </Row>
           </div>
           <div className="border-b border-zinc-200 pb-2 dark:border-zinc-800">{periodSeg(uperiod, "uperiod")}</div>
-          {users.length === 0 ? empty : <UserChartList items={users} metricLabel={userSortLabel[userSort]} />}
+          {users.length === 0 ? empty : (
+            <>
+              <UserChartList items={users} metricLabel={userSortLabel[userSort]} />
+              {users.length >= ulimit && moreLink(moreHref("ulimit", ulimit + PAGE))}
+            </>
+          )}
         </section>
       </div>
     </div>

@@ -6,20 +6,24 @@ import { Stars } from "@/components/detail/stars";
 import { ReactionBar } from "@/components/detail/reaction-bar";
 import { ReportDialog } from "@/components/detail/report-control";
 import { MeatballMenu } from "@/components/ui/meatball-menu";
-import { dismissReview } from "@/app/actions/social";
+import { dismissReview, loadMoreFeed } from "@/app/actions/social";
 import { useT } from "@/components/i18n-provider";
 import { formatRelativeTime } from "@/lib/format";
 import { coverThumb } from "@/lib/image";
-import type { FeedItem } from "@/lib/api";
+import type { FeedItem, FeedSort, FeedScope } from "@/lib/api";
 import type { Locale } from "@/lib/i18n";
 
+const PAGE_SIZE = 50;
+
 // 홈 피드(NON-88) 렌더. view=card 카드형 / compact 축약형.
-// 카드마다 반응(ReactionBar) + ⋯메뉴(관심 없음·신고) — NON-114.
+// 카드마다 반응(ReactionBar) + ⋯메뉴(관심 없음·신고) — NON-114. 더 보기 페이지네이션 — NON-107.
 export function FeedList({
-  items,
+  items: initialItems,
   view,
   locale,
   loggedIn,
+  sort,
+  scope,
   trackLabel,
   albumLabel,
 }: {
@@ -27,12 +31,25 @@ export function FeedList({
   view: "card" | "compact";
   locale: Locale;
   loggedIn: boolean;
+  sort: FeedSort;
+  scope: FeedScope;
   trackLabel: string;
   albumLabel: string;
 }) {
   const t = useT();
+  const [items, setItems] = useState<FeedItem[]>(initialItems);
   const [dismissed, setDismissed] = useState<Set<string>>(new Set());
   const [reportId, setReportId] = useState<string | null>(null);
+  const [hasMore, setHasMore] = useState(initialItems.length >= PAGE_SIZE);
+  const [loadingMore, setLoadingMore] = useState(false);
+
+  const loadMore = async () => {
+    setLoadingMore(true);
+    const more = await loadMoreFeed(sort, scope, items.length);
+    setItems((prev) => [...prev, ...more]);
+    setHasMore(more.length >= PAGE_SIZE);
+    setLoadingMore(false);
+  };
 
   const hide = (id: string) => setDismissed((s) => new Set(s).add(id));
   const unhide = (id: string) =>
@@ -74,6 +91,19 @@ export function FeedList({
       onClose={() => setReportId(null)}
     />
   );
+
+  const moreButton = hasMore ? (
+    <div className="mt-4 text-center">
+      <button
+        type="button"
+        onClick={loadMore}
+        disabled={loadingMore}
+        className="rounded-full border border-zinc-300 px-5 py-2 text-sm font-medium text-zinc-600 hover:bg-zinc-100 disabled:opacity-50 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800"
+      >
+        {loadingMore ? t("불러오는 중…") : t("더 보기")}
+      </button>
+    </div>
+  ) : null;
 
   if (view === "compact") {
     return (
@@ -120,6 +150,7 @@ export function FeedList({
             </li>
           ))}
         </ul>
+        {moreButton}
         {reportDialog}
       </>
     );
@@ -189,6 +220,7 @@ export function FeedList({
           </article>
         ))}
       </div>
+      {moreButton}
       {reportDialog}
     </>
   );

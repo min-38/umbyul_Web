@@ -1,8 +1,8 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
-import type { Reaction } from "@/lib/api";
-import { getFollowers, getFollowing } from "@/lib/api";
+import type { Reaction, FeedSort, FeedScope } from "@/lib/api";
+import { getFollowers, getFollowing, getFeed } from "@/lib/api";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -78,6 +78,11 @@ export async function blockUser(username: string) {
 export async function unblockUser(username: string) {
   const r = await authedRequest<null>("DELETE", `/me/blocks?username=${encodeURIComponent(username)}`);
   return { ok: r.ok, code: r.code };
+}
+
+// 피드 더 보기 (NON-107) — 클라가 offset 늘려 호출, 다음 페이지 append.
+export async function loadMoreFeed(sort: FeedSort, scope: FeedScope, offset: number) {
+  return getFeed(sort, scope, offset, 50);
 }
 
 // 팔로워/팔로잉 목록 (모달에서 클라가 호출)
