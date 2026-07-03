@@ -3,6 +3,7 @@ import { getUserProfile, getProfile } from "@/lib/api";
 import { getT } from "@/lib/i18n-server";
 import { ProfileReviews } from "@/components/profile/profile-reviews";
 import { ProfileSocial } from "@/components/profile/profile-social";
+import { ReportControl } from "@/components/detail/report-control";
 
 export default async function ProfilePage({ params }: { params: Promise<{ username: string }> }) {
   const { username } = await params;
@@ -34,6 +35,11 @@ export default async function ProfilePage({ params }: { params: Promise<{ userna
             followingCount={profile.followingCount}
             isFollowing={profile.isFollowing}
           />
+          {!isSelf && (
+            <div>
+              <ReportControl targetType="user" targetId={profile.id} loggedIn={loggedIn} />
+            </div>
+          )}
         </div>
       </div>
 

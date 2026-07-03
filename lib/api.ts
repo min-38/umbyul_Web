@@ -435,6 +435,7 @@ export type ProfileReview = {
   deleted: boolean;
 };
 export type UserProfile = {
+  id: string;
   username: string;
   avatarUrl: string | null;
   joinedAt: string;

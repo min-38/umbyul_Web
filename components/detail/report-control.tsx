@@ -7,13 +7,21 @@ import { msg } from "@/lib/messages";
 import { useT, useLocale } from "@/components/i18n-provider";
 
 const REASONS = [
-  { value: "not_music", label: "음악과 무관한 내용" },
-  { value: "abuse", label: "악플·욕설" },
-  { value: "inappropriate_profile", label: "부적절한 이름·프로필 사진" },
-  { value: "other", label: "기타" },
-];
+  { value: "not_music", label: "음악과 무관한 내용", for: ["rating"] },
+  { value: "inappropriate_profile", label: "부적절한 이름·프로필 사진", for: ["user"] },
+  { value: "abuse", label: "악플·욕설", for: ["rating", "user"] },
+  { value: "other", label: "기타", for: ["rating", "user"] },
+] as const;
 
-export function ReportControl({ ratingId, loggedIn }: { ratingId: string; loggedIn: boolean }) {
+export function ReportControl({
+  targetType = "rating",
+  targetId,
+  loggedIn,
+}: {
+  targetType?: "rating" | "user";
+  targetId: string;
+  loggedIn: boolean;
+}) {
   const router = useRouter();
   const t = useT();
   const locale = useLocale();
@@ -44,7 +52,7 @@ export function ReportControl({ ratingId, loggedIn }: { ratingId: string; logged
     }
     setBusy(true);
     setError(null);
-    const r = await submitReport({ targetType: "rating", targetId: ratingId, reason, detail: detail.trim() || null });
+    const r = await submitReport({ targetType, targetId, reason, detail: detail.trim() || null });
     setBusy(false);
     if (r.ok) setDone(true);
     else setError(msg(r.code, locale));
@@ -74,11 +82,13 @@ export function ReportControl({ ratingId, loggedIn }: { ratingId: string; logged
               </div>
             ) : (
               <>
-                <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">{t("리뷰 신고")}</h2>
+                <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">
+                  {targetType === "user" ? t("유저 신고") : t("리뷰 신고")}
+                </h2>
                 <p className="mt-0.5 text-xs text-zinc-500">{t("신고 내용은 운영자가 검토합니다.")}</p>
 
                 <fieldset className="mt-4 flex flex-col gap-2">
-                  {REASONS.map((r) => (
+                  {REASONS.filter((r) => (r.for as readonly string[]).includes(targetType)).map((r) => (
                     <label key={r.value} className="flex cursor-pointer items-center gap-2 text-sm text-zinc-700 dark:text-zinc-200">
                       <input
                         type="radio"

@@ -205,6 +205,7 @@ export const EN: Record<string, string> = {
   "신고가 접수되었습니다.": "Your report has been submitted.",
   닫기: "Close",
   "리뷰 신고": "Report review",
+  "유저 신고": "Report user",
   "신고 내용은 운영자가 검토합니다.": "Reports are reviewed by our moderators.",
   "상세 내용 (선택)": "Details (optional)",
   "접수 중…": "Submitting…",

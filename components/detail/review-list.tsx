@@ -114,7 +114,7 @@ export function ReviewList({
                 path={`${shareBasePath}#review-${r.id}`}
                 title={t("{username}님의 리뷰", { username: r.username })}
               />
-              {r.userId !== currentUserId && <ReportControl ratingId={r.id} loggedIn={currentUserId !== null} />}
+              {r.userId !== currentUserId && <ReportControl targetId={r.id} loggedIn={currentUserId !== null} />}
             </div>
             {COMMENTS_ENABLED && (
               <ReviewComments ratingId={r.id} initialCount={r.commentCount} currentUserId={currentUserId} />
