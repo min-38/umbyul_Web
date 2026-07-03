@@ -106,6 +106,7 @@ export const EN: Record<string, string> = {
   "최고 평가": "Top rated",
   대상: "Type",
   정렬: "Sort",
+  좋아요: "Likes",
   성별: "Gender",
   나이대: "Age",
   "10대": "10s",
