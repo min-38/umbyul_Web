@@ -446,6 +446,7 @@ export type UserProfile = {
   followingCount: number;
   isFollowing: boolean;
   reviews: ProfileReview[];
+  blocked: boolean; // 내가 이 유저를 차단함(NON-115) — 리뷰/통계 숨김 상태.
 };
 
 /** 공개 유저 프로필 (비로그인 열람). 로그인 시 토큰 실어 isFollowing 포함. 없으면 null(404). */

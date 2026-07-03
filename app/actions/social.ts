@@ -69,6 +69,17 @@ export async function unfollowUser(username: string) {
   return { ok: r.ok, code: r.code };
 }
 
+// 유저 차단/해제 (상호, NON-115)
+export async function blockUser(username: string) {
+  const r = await authedRequest<null>("POST", "/me/blocks", { username });
+  return { ok: r.ok, code: r.code };
+}
+
+export async function unblockUser(username: string) {
+  const r = await authedRequest<null>("DELETE", `/me/blocks?username=${encodeURIComponent(username)}`);
+  return { ok: r.ok, code: r.code };
+}
+
 // 팔로워/팔로잉 목록 (모달에서 클라가 호출)
 export async function loadFollowers(username: string) {
   return getFollowers(username);
