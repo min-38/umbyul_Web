@@ -35,7 +35,7 @@ export default async function AlbumPage({ params }: { params: Promise<{ id: stri
           className="h-44 w-44 shrink-0 rounded-xl bg-zinc-100 object-cover dark:bg-zinc-900"
         />
         <div className="flex flex-1 flex-col gap-3">
-          <p className="text-xs font-medium uppercase tracking-wide text-zinc-400">{t("앨범")}</p>
+          <span className="self-start rounded px-2 py-0.5 text-xs font-medium bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300">{t("앨범")}</span>
           <h1 className="text-3xl font-bold text-zinc-900 dark:text-zinc-50">{album.name}</h1>
           <p className="text-zinc-600 dark:text-zinc-300">
             <ArtistLinks artists={album.artists} />

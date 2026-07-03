@@ -36,7 +36,7 @@ export default async function TrackPage({ params }: { params: Promise<{ id: stri
           className="h-44 w-44 shrink-0 rounded-xl bg-zinc-100 object-cover dark:bg-zinc-900"
         />
         <div className="flex flex-1 flex-col gap-3">
-          <p className="text-xs font-medium uppercase tracking-wide text-zinc-400">{t("곡")}</p>
+          <span className="self-start rounded px-2 py-0.5 text-xs font-medium bg-indigo-100 text-indigo-700 dark:bg-indigo-950 dark:text-indigo-300">{t("곡")}</span>
           <h1 className="text-3xl font-bold text-zinc-900 dark:text-zinc-50">{track.name}</h1>
           <p className="text-zinc-600 dark:text-zinc-300">
             <ArtistLinks artists={track.artists} />
