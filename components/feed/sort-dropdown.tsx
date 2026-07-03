@@ -1,17 +1,18 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import Link from "next/link";
 
-// 홈 피드 정렬 드롭다운(NON-88). 바깥 클릭·Esc 로 닫힘.
+// 홈 피드 정렬 드롭다운(NON-88/90). 바깥 클릭·Esc 로 닫힘. 선택 시 onSelect 콜백.
 export function SortDropdown({
   options,
   current,
   title,
+  onSelect,
 }: {
-  options: { value: string; label: string; href: string }[];
+  options: { value: string; label: string }[];
   current: string;
   title: string;
+  onSelect: (value: string) => void;
 }) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -61,18 +62,21 @@ export function SortDropdown({
         <div className="absolute right-0 z-20 mt-1 w-52 rounded-xl border border-zinc-200 bg-white p-2 shadow-lg dark:border-zinc-800 dark:bg-zinc-900">
           <p className="px-2 py-1 text-xs font-semibold text-zinc-400">{title}</p>
           {options.map((o) => (
-            <Link
+            <button
               key={o.value}
-              href={o.href}
-              onClick={() => setOpen(false)}
-              className={`block rounded-lg px-2 py-1.5 text-sm ${
+              type="button"
+              onClick={() => {
+                onSelect(o.value);
+                setOpen(false);
+              }}
+              className={`block w-full rounded-lg px-2 py-1.5 text-left text-sm ${
                 o.value === current
                   ? "bg-indigo-50 font-medium text-indigo-700 dark:bg-indigo-950 dark:text-indigo-300"
                   : "text-zinc-700 hover:bg-zinc-100 dark:text-zinc-200 dark:hover:bg-zinc-800"
               }`}
             >
               {o.label}
-            </Link>
+            </button>
           ))}
         </div>
       )}

@@ -32,7 +32,7 @@ export default async function ChartPage({
   const type = TYPES.includes(sp.type as ChartType) ? (sp.type as ChartType) : "all";
   const isUser = type === "user";
   const isArtist = type === "artist";
-  const musicSort = SORTS.includes(sp.sort as ChartSort) ? (sp.sort as ChartSort) : "top";
+  const musicSort = SORTS.includes(sp.sort as ChartSort) ? (sp.sort as ChartSort) : "most";
   const userSort = USER_SORTS.includes(sp.sort as ChartUserSort) ? (sp.sort as ChartUserSort) : "reviews";
   const period = PERIODS.includes(sp.period as ChartPeriod) ? (sp.period as ChartPeriod) : "year";
   const gender = GENDERS.includes(sp.gender as ChartGender) ? (sp.gender as ChartGender) : "all";
