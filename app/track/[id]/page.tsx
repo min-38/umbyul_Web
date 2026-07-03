@@ -26,6 +26,7 @@ import { ReviewList } from "@/components/detail/review-list";
 import { RateButton } from "@/components/detail/rate-button";
 import { MetaRow, SpotifyLink, Copyright } from "@/components/detail/detail-bits";
 import { MusicBrainzLink } from "@/components/detail/musicbrainz-link";
+import { GenreTags } from "@/components/detail/genre-tags";
 import { ShareButton } from "@/components/detail/share-button";
 import { ArtistLinks } from "@/components/detail/artist-links";
 import { formatDuration, formatReleaseDate } from "@/lib/format";
@@ -108,6 +109,11 @@ export default async function TrackPage({ params }: { params: Promise<{ id: stri
         ]}
       />
       <Copyright text={track.copyright} />
+
+      <div className="mt-5">
+        <h2 className="mb-2 text-xs font-semibold text-zinc-400">{t("장르")}</h2>
+        <GenreTags targetType="track" id={track.spotifyId} loggedIn={!!user} />
+      </div>
 
       <section className="mt-10">
         <h2 className="mb-4 text-lg font-semibold text-zinc-900 dark:text-zinc-50">

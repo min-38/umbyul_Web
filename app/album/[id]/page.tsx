@@ -92,7 +92,7 @@ export default async function AlbumPage({ params }: { params: Promise<{ id: stri
         </div>
       </div>
 
-      <AlbumTabs album={album} />
+      <AlbumTabs album={album} loggedIn={!!user} />
 
       <section className="mt-10">
         <h2 className="mb-4 text-lg font-semibold text-zinc-900 dark:text-zinc-50">

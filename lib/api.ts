@@ -215,6 +215,37 @@ export async function getAlbumDetail(id: string): Promise<AlbumDetail | null> {
   return json.data as AlbumDetail;
 }
 
+// ── 유저 장르 태깅 (NON-122) — 커뮤니티 큐레이트. 목록·집계 공개, 태깅은 로그인. ──
+export type Genre = { id: number; slug: string; name: string; parentId: number | null; sortOrder: number };
+export type GenreCount = { id: number; name: string; parentName: string | null; count: number };
+export type GenresFor = { top: GenreCount[]; mine: number[] };
+
+/** 큐레이트 장르 목록(공개). 실패 시 빈 목록. */
+export async function getGenres(): Promise<Genre[]> {
+  try {
+    const res = await fetch(`${API_URL}/genres`, { cache: "no-store" });
+    if (!res.ok) return [];
+    const json = await res.json();
+    return (json?.data ?? []) as Genre[];
+  } catch {
+    return [];
+  }
+}
+
+/** 대상의 상위 장르(투표수) + 로그인 시 내 선택. 토큰 있으면 실어 보냄(mine 포함). */
+export async function getGenresFor(type: "track" | "album", id: string): Promise<GenresFor> {
+  const empty: GenresFor = { top: [], mine: [] };
+  try {
+    const qs = new URLSearchParams({ type, id });
+    const res = await fetch(`${API_URL}/genres/for?${qs}`, { headers: await detailHeaders(), cache: "no-store" });
+    if (!res.ok) return empty;
+    const json = await res.json();
+    return (json?.data ?? empty) as GenresFor;
+  } catch {
+    return empty;
+  }
+}
+
 // ── 아티스트 상세 (NON-13) ──
 // 아티스트 종합점수는 없음. 릴리스별로 이미 존재하는 평가만 배지로 노출.
 // 앱 토큰 제약(실측): followers·popularity·top-tracks 불가 → 앨범(디스코그래피) 중심.

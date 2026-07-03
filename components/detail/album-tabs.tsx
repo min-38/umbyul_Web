@@ -6,6 +6,7 @@ import type { AlbumDetail } from "@/lib/api";
 import { formatDuration, formatTotalDuration, formatReleaseDate } from "@/lib/format";
 import { useT } from "@/components/i18n-provider";
 import { Stars } from "./stars";
+import { GenreTags } from "./genre-tags";
 
 // 리뷰는 탭에서 빼서 페이지 하단 별도 섹션으로(트랙 페이지와 일관).
 type Tab = "tracklist" | "info";
@@ -15,7 +16,7 @@ const TABS: { key: Tab; label: string }[] = [
   { key: "info", label: "정보" },
 ];
 
-export function AlbumTabs({ album }: { album: AlbumDetail }) {
+export function AlbumTabs({ album, loggedIn }: { album: AlbumDetail; loggedIn: boolean }) {
   const [tab, setTab] = useState<Tab>("tracklist");
   const t = useT();
 
@@ -84,6 +85,10 @@ export function AlbumTabs({ album }: { album: AlbumDetail }) {
             <div className="flex flex-col gap-1">
               <dt className="text-xs text-zinc-400">{t("저작권")}</dt>
               <dd className="text-sm leading-relaxed text-zinc-600 dark:text-zinc-300">{album.copyright ?? "-"}</dd>
+            </div>
+            <div className="flex flex-col gap-1">
+              <dt className="text-xs text-zinc-400">{t("장르")}</dt>
+              <dd><GenreTags targetType="album" id={album.spotifyId} loggedIn={loggedIn} /></dd>
             </div>
           </dl>
         )}

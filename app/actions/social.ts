@@ -80,6 +80,11 @@ export async function unblockUser(username: string) {
   return { ok: r.ok, code: r.code };
 }
 
+// 유저 장르 태깅 토글 (NON-122). 로그인 필요. { tagged } 반환(클라 낙관적 반영).
+export async function toggleGenreTag(input: { targetType: "track" | "album"; spotifyId: string; genreId: number }) {
+  return authedRequest<{ tagged: boolean }>("POST", "/me/genre-tags", input);
+}
+
 // 피드 더 보기 (NON-107) — 클라가 offset 늘려 호출, 다음 페이지 append.
 export async function loadMoreFeed(sort: FeedSort, scope: FeedScope, offset: number) {
   return getFeed(sort, scope, offset, 50);

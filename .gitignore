@@ -24,6 +24,9 @@
 .DS_Store
 *.pem
 
+# Claude Code preview 도구 로컬 설정 — 커밋 금지
+.claude/
+
 # debug
 npm-debug.log*
 yarn-debug.log*
