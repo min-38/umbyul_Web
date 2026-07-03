@@ -1,6 +1,24 @@
+import { cache } from "react";
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getAlbumDetail, getMySanction } from "@/lib/api";
 import { getT } from "@/lib/i18n-server";
+
+// generateMetadata 와 페이지가 같은 요청에서 한 번만 fetch 하도록 dedupe.
+const getAlbum = cache(getAlbumDetail);
+
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
+  const { id } = await params;
+  const [album, t] = await Promise.all([getAlbum(id), getT()]);
+  if (!album) return {};
+  const artists = album.artists.map((a) => a.name).join(", ");
+  const title = `${album.name} · ${artists} | Glitter`;
+  return {
+    title,
+    description: `${album.name} — ${artists}. ${t("Glitter에서 평가하고 리뷰하세요.")}`,
+    openGraph: { title, images: album.imageUrl ? [album.imageUrl] : [] },
+  };
+}
 import { createClient } from "@/lib/supabase/server";
 import { Stars } from "@/components/detail/stars";
 import { RateButton } from "@/components/detail/rate-button";
@@ -12,7 +30,7 @@ import { ReviewList } from "@/components/detail/review-list";
 
 export default async function AlbumPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const album = await getAlbumDetail(id);
+  const album = await getAlbum(id);
   if (!album) notFound();
 
   const supabase = await createClient();

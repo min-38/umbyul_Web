@@ -1,3 +1,5 @@
+import { cache } from "react";
+import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getArtistDetail } from "@/lib/api";
@@ -8,9 +10,23 @@ import { SpotifyLink } from "@/components/detail/detail-bits";
 import { ShareButton } from "@/components/detail/share-button";
 import { ArtistTabs } from "@/components/detail/artist-tabs";
 
+const getArtist = cache(getArtistDetail);
+
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
+  const { id } = await params;
+  const [artist, t] = await Promise.all([getArtist(id), getT()]);
+  if (!artist) return {};
+  const title = `${artist.name} | Glitter`;
+  return {
+    title,
+    description: `${artist.name} — ${t("Glitter에서 평가하고 리뷰하세요.")}`,
+    openGraph: { title, images: artist.imageUrl ? [artist.imageUrl] : [] },
+  };
+}
+
 export default async function ArtistPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const [artist, t, locale] = await Promise.all([getArtistDetail(id), getT(), getLocale()]);
+  const [artist, t, locale] = await Promise.all([getArtist(id), getT(), getLocale()]);
   if (!artist) notFound();
 
   return (

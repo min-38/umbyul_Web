@@ -1,7 +1,25 @@
+import { cache } from "react";
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { getTrackDetail, getMySanction } from "@/lib/api";
 import { getT } from "@/lib/i18n-server";
+
+const getTrack = cache(getTrackDetail);
+
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
+  const { id } = await params;
+  const [track, t] = await Promise.all([getTrack(id), getT()]);
+  if (!track) return {};
+  const artists = track.artists.map((a) => a.name).join(", ");
+  const title = `${track.name} · ${artists} | Glitter`;
+  const image = track.album?.imageUrl ?? null;
+  return {
+    title,
+    description: `${track.name} — ${artists}. ${t("Glitter에서 평가하고 리뷰하세요.")}`,
+    openGraph: { title, images: image ? [image] : [] },
+  };
+}
 import { createClient } from "@/lib/supabase/server";
 import { Stars } from "@/components/detail/stars";
 import { ReviewList } from "@/components/detail/review-list";
@@ -13,7 +31,7 @@ import { formatDuration, formatReleaseDate } from "@/lib/format";
 
 export default async function TrackPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const track = await getTrackDetail(id);
+  const track = await getTrack(id);
   if (!track) notFound();
 
   const supabase = await createClient();
