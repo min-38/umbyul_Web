@@ -19,6 +19,9 @@ const KO: Record<string, string> = {
   RATING_NOT_FOUND: "평가를 찾을 수 없습니다.",
   // 반응/신고 (NON-23)
   INVALID_REACTION: "반응 값이 올바르지 않습니다.",
+  // 차단 (NON-115)
+  BLOCKED: "차단한 사용자입니다.",
+  CANNOT_BLOCK_SELF: "자기 자신은 차단할 수 없습니다.",
   // 제재 집행 (NON-48)
   ACCOUNT_SUSPENDED: "이용이 일시 정지되어 작성할 수 없습니다.",
   ACCOUNT_BANNED: "계정이 영구 정지되어 작성할 수 없습니다.",
@@ -54,6 +57,8 @@ const EN: Record<string, string> = {
   PROFILE_REQUIRED: "You need to set up your profile first.",
   RATING_NOT_FOUND: "Rating not found.",
   INVALID_REACTION: "Invalid reaction value.",
+  BLOCKED: "You've blocked this user.",
+  CANNOT_BLOCK_SELF: "You can't block yourself.",
   ACCOUNT_SUSPENDED: "Your account is suspended; you can't post.",
   ACCOUNT_BANNED: "Your account is permanently suspended; you can't post.",
   NO_FILE: "Please choose a file.",

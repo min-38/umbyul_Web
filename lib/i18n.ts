@@ -211,6 +211,9 @@ export const EN: Record<string, string> = {
   "접수 중…": "Submitting…",
   "관심 없음": "Not interested",
   더보기: "More",
+  차단: "Block",
+  "차단 해제": "Unblock",
+  "차단한 사용자입니다. 리뷰를 보려면 차단을 해제하세요.": "You've blocked this user. Unblock to see their reviews.",
 
   // ── 알림 ──
   "님이 회원님을 팔로우했습니다": " followed you",

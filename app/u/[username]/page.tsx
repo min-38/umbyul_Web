@@ -3,7 +3,7 @@ import { getUserProfile, getProfile } from "@/lib/api";
 import { getT } from "@/lib/i18n-server";
 import { ProfileReviews } from "@/components/profile/profile-reviews";
 import { ProfileSocial } from "@/components/profile/profile-social";
-import { ReportControl } from "@/components/detail/report-control";
+import { ProfileMenu } from "@/components/profile/profile-menu";
 
 export default async function ProfilePage({ params }: { params: Promise<{ username: string }> }) {
   const { username } = await params;
@@ -24,8 +24,13 @@ export default async function ProfilePage({ params }: { params: Promise<{ userna
             profile.username.charAt(0).toUpperCase()
           )}
         </span>
-        <div className="flex flex-col gap-3">
-          <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-50">{profile.username}</h1>
+        <div className="flex flex-1 flex-col gap-3">
+          <div className="flex items-start justify-between gap-2">
+            <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-50">{profile.username}</h1>
+            {!isSelf && (
+              <ProfileMenu username={profile.username} targetId={profile.id} loggedIn={loggedIn} blocked={profile.blocked} />
+            )}
+          </div>
           <ProfileSocial
             username={profile.username}
             isSelf={isSelf}
@@ -35,23 +40,24 @@ export default async function ProfilePage({ params }: { params: Promise<{ userna
             followingCount={profile.followingCount}
             isFollowing={profile.isFollowing}
           />
-          {!isSelf && (
-            <div>
-              <ReportControl targetType="user" targetId={profile.id} loggedIn={loggedIn} />
-            </div>
-          )}
         </div>
       </div>
 
-      <section className="mt-10">
-        <div className="mb-4 flex items-baseline gap-3">
-          <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">
-            {t("작성한 리뷰")}<span className="text-zinc-400">({profile.reviewCount.toLocaleString()})</span>
-          </h2>
-          <span className="text-sm text-zinc-400">{t("받은 좋아요 {count}", { count: profile.totalLikes.toLocaleString() })}</span>
-        </div>
-        <ProfileReviews reviews={profile.reviews} />
-      </section>
+      {profile.blocked ? (
+        <p className="mt-10 rounded-xl border border-dashed border-zinc-300 px-6 py-16 text-center text-sm text-zinc-500 dark:border-zinc-700">
+          {t("차단한 사용자입니다. 리뷰를 보려면 차단을 해제하세요.")}
+        </p>
+      ) : (
+        <section className="mt-10">
+          <div className="mb-4 flex items-baseline gap-3">
+            <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">
+              {t("작성한 리뷰")}<span className="text-zinc-400">({profile.reviewCount.toLocaleString()})</span>
+            </h2>
+            <span className="text-sm text-zinc-400">{t("받은 좋아요 {count}", { count: profile.totalLikes.toLocaleString() })}</span>
+          </div>
+          <ProfileReviews reviews={profile.reviews} />
+        </section>
+      )}
     </div>
   );
 }
