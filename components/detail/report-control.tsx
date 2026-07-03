@@ -8,7 +8,7 @@ import { useT, useLocale } from "@/components/i18n-provider";
 
 const REASONS = [
   { value: "not_music", label: "음악과 무관한 내용", for: ["rating"] },
-  { value: "inappropriate_profile", label: "부적절한 이름·프로필 사진", for: ["user"] },
+  { value: "inappropriate_profile", label: "부적절한 이름·프로필 사진", for: ["rating", "user"] },
   { value: "abuse", label: "악플·욕설", for: ["rating", "user"] },
   { value: "other", label: "기타", for: ["rating", "user"] },
 ] as const;
