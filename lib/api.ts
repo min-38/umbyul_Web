@@ -304,11 +304,32 @@ export type RisingWindows = { day: DiscoverItem[]; week: DiscoverItem[]; month: 
 export type DiscoverData = { rising: RisingWindows; new: DiscoverItem[]; myRecent: DiscoverItem[] };
 
 // Chart(NON-82). 랭킹 아이템은 DiscoverItem 과 동일 형태.
-export type ChartType = "all" | "album" | "track" | "user";
+export type ChartType = "all" | "album" | "track" | "artist" | "user";
 export type ChartSort = "most" | "top";
 export type ChartPeriod = "day" | "week" | "month" | "year";
 export type ChartGender = "all" | "male" | "female";
 export type ChartAge = "all" | "10" | "20" | "30" | "40" | "50";
+
+// 아티스트 차트(NON-87). 앨범/곡 평가를 아티스트별 집계. 커버 없음.
+export type ArtistRankItem = { artistId: string; artistName: string | null; count: number; average: number };
+
+/** 아티스트 차트 (공개). `/chart?type=artist`. 실패 시 빈 목록. */
+export async function getArtistChart(
+  sort: ChartSort,
+  period: ChartPeriod,
+  gender: ChartGender,
+  age: ChartAge,
+): Promise<ArtistRankItem[]> {
+  try {
+    const qs = new URLSearchParams({ type: "artist", sort, period, gender, age });
+    const res = await fetch(`${API_URL}/chart?${qs}`, { cache: "no-store" });
+    if (!res.ok) return [];
+    const json = await res.json();
+    return (json?.data?.items ?? []) as ArtistRankItem[];
+  } catch {
+    return [];
+  }
+}
 
 // 유저 차트(NON-86). 리뷰어 랭킹 3축.
 export type ChartUserSort = "reviews" | "likes" | "followers";

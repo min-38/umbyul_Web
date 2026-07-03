@@ -2,6 +2,7 @@ import Link from "next/link";
 import {
   getChart,
   getUserChart,
+  getArtistChart,
   type ChartType,
   type ChartSort,
   type ChartPeriod,
@@ -12,8 +13,9 @@ import {
 import { getT } from "@/lib/i18n-server";
 import { ChartList } from "@/components/chart/chart-list";
 import { UserChartList } from "@/components/chart/user-chart-list";
+import { ArtistChartList } from "@/components/chart/artist-chart-list";
 
-const TYPES: ChartType[] = ["all", "album", "track", "user"];
+const TYPES: ChartType[] = ["all", "album", "track", "artist", "user"];
 const SORTS: ChartSort[] = ["most", "top"];
 const USER_SORTS: ChartUserSort[] = ["reviews", "likes", "followers"];
 const PERIODS: ChartPeriod[] = ["day", "week", "month", "year"];
@@ -29,6 +31,7 @@ export default async function ChartPage({
   const sp = await searchParams;
   const type = TYPES.includes(sp.type as ChartType) ? (sp.type as ChartType) : "all";
   const isUser = type === "user";
+  const isArtist = type === "artist";
   const musicSort = SORTS.includes(sp.sort as ChartSort) ? (sp.sort as ChartSort) : "top";
   const userSort = USER_SORTS.includes(sp.sort as ChartUserSort) ? (sp.sort as ChartUserSort) : "reviews";
   const period = PERIODS.includes(sp.period as ChartPeriod) ? (sp.period as ChartPeriod) : "year";
@@ -36,10 +39,13 @@ export default async function ChartPage({
   const age = AGES.includes(sp.age as ChartAge) ? (sp.age as ChartAge) : "all";
 
   const t = await getT();
-  const items = isUser ? [] : await getChart(type, musicSort, period, gender, age);
+  const items = isUser || isArtist ? [] : await getChart(type, musicSort, period, gender, age);
   const users = isUser ? await getUserChart(userSort, period) : [];
+  const artists = isArtist ? await getArtistChart(musicSort, period, gender, age) : [];
 
-  const typeLabel: Record<ChartType, string> = { all: t("전체"), album: t("앨범"), track: t("곡"), user: t("유저") };
+  const typeLabel: Record<ChartType, string> = {
+    all: t("전체"), album: t("앨범"), track: t("곡"), artist: t("아티스트"), user: t("유저"),
+  };
   const sortLabel: Record<ChartSort, string> = { most: t("최다 리뷰"), top: t("최고 평가") };
   const userSortLabel: Record<ChartUserSort, string> = { reviews: t("리뷰"), likes: t("좋아요"), followers: t("팔로워") };
   const periodLabel: Record<ChartPeriod, string> = { day: "D", week: "W", month: "M", year: "Y" };
@@ -95,13 +101,15 @@ export default async function ChartPage({
         <Seg options={PERIODS.map((v) => ({ label: periodLabel[v], href: hrefFor({ period: v }), active: v === period }))} />
       </div>
 
-      {isUser
-        ? users.length === 0
-          ? empty
-          : <UserChartList items={users} metricLabel={userSortLabel[userSort]} />
-        : items.length === 0
-          ? empty
-          : <ChartList items={items} trackLabel={t("곡")} albumLabel={t("앨범")} />}
+      {isUser ? (
+        users.length === 0 ? empty : <UserChartList items={users} metricLabel={userSortLabel[userSort]} />
+      ) : isArtist ? (
+        artists.length === 0 ? empty : <ArtistChartList items={artists} />
+      ) : items.length === 0 ? (
+        empty
+      ) : (
+        <ChartList items={items} trackLabel={t("곡")} albumLabel={t("앨범")} />
+      )}
     </div>
   );
 }
