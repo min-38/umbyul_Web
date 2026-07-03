@@ -164,6 +164,7 @@ export const EN: Record<string, string> = {
   발매일: "Release date",
   "트랙 수": "Tracks",
   저작권: "Copyright",
+  "MusicBrainz에서 보기": "View on MusicBrainz",
   길이: "Length",
   "아직 리뷰가 없습니다. 첫 평가를 남겨보세요.": "No reviews yet. Be the first to rate.",
   인기순: "Popular",

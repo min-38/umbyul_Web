@@ -25,6 +25,7 @@ import { Stars } from "@/components/detail/stars";
 import { ReviewList } from "@/components/detail/review-list";
 import { RateButton } from "@/components/detail/rate-button";
 import { MetaRow, SpotifyLink, Copyright } from "@/components/detail/detail-bits";
+import { MusicBrainzLink } from "@/components/detail/musicbrainz-link";
 import { ShareButton } from "@/components/detail/share-button";
 import { ArtistLinks } from "@/components/detail/artist-links";
 import { formatDuration, formatReleaseDate } from "@/lib/format";
@@ -94,6 +95,7 @@ export default async function TrackPage({ params }: { params: Promise<{ id: stri
           </div>
           <div className="mt-1 flex items-center gap-4">
             <SpotifyLink url={track.spotifyUrl} label={t("Spotify에서 듣기")} />
+            <MusicBrainzLink isrc={track.isrc} label={t("MusicBrainz에서 보기")} />
             <ShareButton path={`/track/${track.spotifyId}`} title={track.name} size={24} />
           </div>
         </div>
