@@ -12,8 +12,17 @@ function Star({ fill, size }: { fill: number; size: number }) {
         <path d={PATH} />
       </svg>
       <span className="absolute inset-0 overflow-hidden" style={{ width: `${fill * 100}%` }}>
-        <svg width={size} height={size} viewBox="0 0 24 24" className="fill-amber-400">
-          <path d={PATH} />
+        {/* 우주(성운) 그라데이션 채움 (NON-91) */}
+        <svg width={size} height={size} viewBox="0 0 24 24" aria-hidden="true">
+          <defs>
+            <linearGradient id="glitterInputGrad" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stopColor="#c084fc" />
+              <stop offset="0.35" stopColor="#6366f1" />
+              <stop offset="0.7" stopColor="#f472b6" />
+              <stop offset="1" stopColor="#38bdf8" />
+            </linearGradient>
+          </defs>
+          <path d={PATH} fill="url(#glitterInputGrad)" />
         </svg>
       </span>
     </span>

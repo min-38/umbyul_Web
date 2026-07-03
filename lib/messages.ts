@@ -13,6 +13,7 @@ const KO: Record<string, string> = {
   INVALID_TARGET: "대상이 올바르지 않습니다.",
   INVALID_TARGET_TYPE: "대상 종류가 올바르지 않습니다.",
   REVIEW_TOO_LONG: "리뷰가 너무 깁니다.",
+  REVIEW_TOO_SHORT: "리뷰는 최소 10자 이상이어야 합니다.",
   PROFILE_REQUIRED: "프로필 설정이 필요합니다.",
   RATING_NOT_FOUND: "평가를 찾을 수 없습니다.",
   // 반응/신고 (NON-23)

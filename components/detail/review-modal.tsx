@@ -43,9 +43,13 @@ export function ReviewModal({
       setError(t("별점을 선택해주세요."));
       return;
     }
+    if (review.trim().length < 10) {
+      setError(t("리뷰는 최소 10자 이상 작성해주세요."));
+      return;
+    }
     setBusy(true);
     setError(null);
-    const r = await saveRating({ targetType, targetId, spotifyId, score, review: review.trim() || null, path, name, artist, artists, imageUrl });
+    const r = await saveRating({ targetType, targetId, spotifyId, score, review: review.trim(), path, name, artist, artists, imageUrl });
     setBusy(false);
     if (r.ok) onClose();
     else setError(msg(r.code));
@@ -80,11 +84,18 @@ export function ReviewModal({
         <textarea
           value={review}
           onChange={(e) => setReview(e.target.value)}
-          placeholder={t("리뷰를 남겨보세요 (선택)")}
+          placeholder={t("리뷰를 남겨주세요 (최소 10자)")}
           rows={5}
           maxLength={5000}
           className="mt-4 w-full resize-none rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 placeholder:text-zinc-400 focus:border-zinc-500 focus:outline-none dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100"
         />
+
+        {/* 리뷰 작성 가이드 (NON-91) */}
+        <ul className="mt-2 space-y-0.5 text-xs leading-relaxed text-zinc-400">
+          <li>· {t("최소 10자 이상 작성해주세요.")}</li>
+          <li>· {t("욕설·비방은 금지됩니다. 비판은 좋지만 비난은 안 됩니다.")}</li>
+          <li>· {t("부적절한 리뷰는 신고 없이도 관리자가 삭제하고 제재할 수 있습니다.")}</li>
+        </ul>
 
         {error && <p className="mt-2 text-sm text-red-500">{error}</p>}
 
@@ -111,7 +122,7 @@ export function ReviewModal({
             type="button"
             onClick={submit}
             disabled={busy}
-            className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-500 disabled:opacity-50"
+            className="rounded-lg bg-gradient-to-r from-violet-600 via-indigo-600 to-blue-600 px-4 py-2 text-sm font-medium text-white transition hover:brightness-110 disabled:opacity-50"
           >
             {busy ? t("저장 중…") : editing ? t("수정") : t("등록")}
           </button>

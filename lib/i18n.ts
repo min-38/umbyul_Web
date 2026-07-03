@@ -177,6 +177,13 @@ export const EN: Record<string, string> = {
   "별점을 선택해주세요.": "Please select a rating.",
   "평가를 삭제할까요?": "Delete this rating?",
   "리뷰를 남겨보세요 (선택)": "Write a review (optional)",
+  "리뷰를 남겨주세요 (최소 10자)": "Write a review (min 10 characters)",
+  "리뷰는 최소 10자 이상 작성해주세요.": "Reviews must be at least 10 characters.",
+  "최소 10자 이상 작성해주세요.": "Write at least 10 characters.",
+  "욕설·비방은 금지됩니다. 비판은 좋지만 비난은 안 됩니다.":
+    "No profanity or slander. Criticism is welcome, personal attacks are not.",
+  "부적절한 리뷰는 신고 없이도 관리자가 삭제하고 제재할 수 있습니다.":
+    "Inappropriate reviews may be removed and sanctioned by an admin without a report.",
   삭제: "Delete",
   취소: "Cancel",
   "저장 중…": "Saving…",
