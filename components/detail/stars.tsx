@@ -1,21 +1,46 @@
 // 읽기 전용 별점 표시. value(0~5)를 받아 5개 별을 채움(소수=부분 채움).
-// 채움색 = 우주(코스믹) 그라데이션 — Glitter 워드마크·About 배경 팔레트(퍼플→인디고→블루). NON-89
+// 채움 = 우주(성운) 그라데이션 + 흰색 별점(dots). About us 배경 팔레트(라일락·인디고·핑크·시안). NON-89
 const STAR = "M12 2.5l2.9 6 6.6.9-4.8 4.6 1.2 6.5L12 17.8 6.1 20.5l1.2-6.5L2.5 9.4l6.6-.9z";
+const IDX = [0, 1, 2, 3, 4];
 
-function StarsRow({ size, fillClass, gradient }: { size: number; fillClass?: string; gradient?: boolean }) {
+// 별 안에 뿌릴 흰 점(글리터). 좌표는 5칸(0~120) x 24 기준.
+const DOTS: [number, number, number, number][] = [
+  [10, 6, 0.9, 1], [21, 15, 0.6, 0.8], [34, 9, 1, 0.95], [45, 17, 0.7, 0.7],
+  [58, 7, 0.9, 1], [67, 14, 0.6, 0.85], [80, 10, 1, 0.95], [91, 16, 0.7, 0.7],
+  [104, 8, 0.9, 1], [113, 15, 0.6, 0.85], [16, 19, 0.5, 0.7], [73, 5, 0.8, 0.9],
+];
+
+function FilledStars({ size }: { size: number }) {
   return (
-    <svg width={size * 5} height={size} viewBox="0 0 120 24" className={fillClass} aria-hidden="true">
-      {gradient && (
-        <defs>
-          <linearGradient id="glitterStarFill" x1="0" y1="0" x2="120" y2="0" gradientUnits="userSpaceOnUse">
-            <stop offset="0%" stopColor="#a855f7" />
-            <stop offset="50%" stopColor="#6366f1" />
-            <stop offset="100%" stopColor="#38bdf8" />
-          </linearGradient>
-        </defs>
-      )}
-      {[0, 1, 2, 3, 4].map((i) => (
-        <path key={i} transform={`translate(${i * 24},0)`} d={STAR} fill={gradient ? "url(#glitterStarFill)" : undefined} />
+    <svg width={size * 5} height={size} viewBox="0 0 120 24" aria-hidden="true">
+      <defs>
+        <linearGradient id="glitterStarGrad" x1="0" y1="0" x2="120" y2="24" gradientUnits="userSpaceOnUse">
+          <stop offset="0" stopColor="#c084fc" />
+          <stop offset="0.35" stopColor="#6366f1" />
+          <stop offset="0.7" stopColor="#f472b6" />
+          <stop offset="1" stopColor="#38bdf8" />
+        </linearGradient>
+        <clipPath id="glitterStarClip">
+          {IDX.map((i) => (
+            <path key={i} transform={`translate(${i * 24},0)`} d={STAR} />
+          ))}
+        </clipPath>
+      </defs>
+      <g clipPath="url(#glitterStarClip)">
+        <rect x="0" y="0" width="120" height="24" fill="url(#glitterStarGrad)" />
+        {DOTS.map(([x, y, r, o], i) => (
+          <circle key={i} cx={x} cy={y} r={r} fill="#fff" opacity={o} />
+        ))}
+      </g>
+    </svg>
+  );
+}
+
+function EmptyStars({ size }: { size: number }) {
+  return (
+    <svg width={size * 5} height={size} viewBox="0 0 120 24" className="fill-zinc-300 dark:fill-zinc-700" aria-hidden="true">
+      {IDX.map((i) => (
+        <path key={i} transform={`translate(${i * 24},0)`} d={STAR} />
       ))}
     </svg>
   );
@@ -32,10 +57,10 @@ export function Stars({ value, size = 16 }: { value: number; size?: number }) {
       aria-label={`${value} / 5`}
     >
       <span className="absolute inset-0">
-        <StarsRow size={size} fillClass="fill-zinc-300 dark:fill-zinc-700" />
+        <EmptyStars size={size} />
       </span>
       <span className="absolute inset-0 overflow-hidden" style={{ width: `${pct}%` }}>
-        <StarsRow size={size} gradient />
+        <FilledStars size={size} />
       </span>
     </span>
   );
