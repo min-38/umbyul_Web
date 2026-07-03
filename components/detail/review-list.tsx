@@ -14,6 +14,9 @@ import { useT, useLocale } from "@/components/i18n-provider";
 // 인기순 = 순좋아요(좋아요-싫어요) 내림차순. 최신순 = 작성시간.
 type Sort = "latest" | "popular";
 
+// 리뷰 댓글 기능 숨김(NON-112). 코드·API는 보존, 렌더만 게이팅. 재활성화 시 true.
+const COMMENTS_ENABLED = false;
+
 export function ReviewList({
   reviews,
   currentUserId,
@@ -113,7 +116,9 @@ export function ReviewList({
               />
               {r.userId !== currentUserId && <ReportControl ratingId={r.id} loggedIn={currentUserId !== null} />}
             </div>
-            <ReviewComments ratingId={r.id} initialCount={r.commentCount} currentUserId={currentUserId} />
+            {COMMENTS_ENABLED && (
+              <ReviewComments ratingId={r.id} initialCount={r.commentCount} currentUserId={currentUserId} />
+            )}
           </li>
         ))}
       </ul>
