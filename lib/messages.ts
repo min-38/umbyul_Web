@@ -34,6 +34,7 @@ const KO: Record<string, string> = {
   INVALID_EMAIL: "이메일 형식을 확인하세요.",
   INVALID_TITLE: "제목을 입력하세요.",
   INVALID_CONTENT: "내용을 입력하세요.",
+  RATE_LIMITED: "요청이 너무 많습니다. 잠시 후 다시 시도해주세요.",
   UNKNOWN: "문제가 발생했습니다. 잠시 후 다시 시도해주세요.",
 };
 
@@ -65,6 +66,7 @@ const EN: Record<string, string> = {
   INVALID_EMAIL: "Please check the email format.",
   INVALID_TITLE: "Please enter a title.",
   INVALID_CONTENT: "Please enter your message.",
+  RATE_LIMITED: "Too many requests. Please try again shortly.",
   UNKNOWN: "Something went wrong. Please try again shortly.",
 };
 
