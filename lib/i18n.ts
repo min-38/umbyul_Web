@@ -214,6 +214,9 @@ export const EN: Record<string, string> = {
   차단: "Block",
   "차단 해제": "Unblock",
   "차단한 사용자입니다. 리뷰를 보려면 차단을 해제하세요.": "You've blocked this user. Unblock to see their reviews.",
+  "차단 관리": "Blocked users",
+  "차단한 유저는 서로의 리뷰·프로필이 보이지 않습니다.": "You and blocked users can't see each other's reviews or profiles.",
+  "차단한 유저가 없습니다.": "You haven't blocked anyone.",
 
   // ── 알림 ──
   "님이 회원님을 팔로우했습니다": " followed you",

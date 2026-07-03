@@ -511,6 +511,30 @@ export async function getNotifications(): Promise<NotificationList> {
   }
 }
 
+// 차단 관리 (NON-119) — 내가 차단한 유저 목록.
+export type BlockedUser = { username: string; avatarUrl: string | null; createdAt: string };
+
+/** 내가 차단한 유저 목록 (로그인). 오류 시 빈 목록. */
+export async function getBlockedUsers(): Promise<BlockedUser[]> {
+  const supabase = await createClient();
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+  if (!session) return [];
+
+  try {
+    const res = await fetch(`${API_URL}/me/blocks`, {
+      headers: { Authorization: `Bearer ${session.access_token}` },
+      cache: "no-store",
+    });
+    if (!res.ok) return [];
+    const json = await res.json();
+    return (json.data ?? []) as BlockedUser[];
+  } catch {
+    return [];
+  }
+}
+
 export type NotificationPrefs = { master: boolean; follow: boolean; reviewLike: boolean };
 
 /** 알림 설정 조회 (로그인). 없으면/오류 시 기본 on. */

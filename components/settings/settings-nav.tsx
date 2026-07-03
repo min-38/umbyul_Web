@@ -8,6 +8,7 @@ const TABS = [
   { href: "/settings/account", label: "계정" },
   { href: "/settings/notifications", label: "알림" },
   { href: "/settings/display", label: "화면" },
+  { href: "/settings/blocks", label: "차단" },
   { href: "/settings/integrations", label: "연동" },
 ];
 
