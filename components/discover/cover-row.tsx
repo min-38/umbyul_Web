@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { coverThumb } from "@/lib/image";
 import type { CoverItem } from "@/lib/discover-cover";
 
 // Discover 커버 카드 한 줄(가로 스크롤). 스크롤바 숨김 + 넘길 게 있을 때만 좌우 화살표.
@@ -46,7 +47,7 @@ export function CoverRow({ items, empty }: { items: CoverItem[]; empty: string }
             <Link href={x.href} aria-label={x.name ?? ""}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src={x.imageUrl ?? "/placeholder.svg"}
+                src={coverThumb(x.imageUrl, "md") ?? "/placeholder.svg"}
                 alt=""
                 className="aspect-square w-full rounded-lg bg-zinc-100 object-cover dark:bg-zinc-800"
               />

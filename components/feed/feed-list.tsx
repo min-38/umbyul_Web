@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Stars } from "@/components/detail/stars";
 import { formatRelativeTime } from "@/lib/format";
+import { coverThumb } from "@/lib/image";
 import type { FeedItem } from "@/lib/api";
 import type { Locale } from "@/lib/i18n";
 
@@ -29,7 +30,7 @@ export function FeedList({
               aria-label={it.name ?? (it.targetType === "track" ? trackLabel : albumLabel)}
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={it.imageUrl ?? "/placeholder.svg"} alt="" className="h-12 w-12 rounded bg-zinc-100 object-cover dark:bg-zinc-800" />
+              <img src={coverThumb(it.imageUrl, "sm") ?? "/placeholder.svg"} alt="" className="h-12 w-12 rounded bg-zinc-100 object-cover dark:bg-zinc-800" />
             </Link>
             <div className="min-w-0 flex-1">
               <div className="flex items-center gap-1.5">
@@ -95,7 +96,7 @@ export function FeedList({
               aria-label={it.name ?? (it.targetType === "track" ? trackLabel : albumLabel)}
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={it.imageUrl ?? "/placeholder.svg"} alt="" className="h-20 w-20 rounded-lg bg-zinc-100 object-cover dark:bg-zinc-800" />
+              <img src={coverThumb(it.imageUrl, "md") ?? "/placeholder.svg"} alt="" className="h-20 w-20 rounded-lg bg-zinc-100 object-cover dark:bg-zinc-800" />
             </Link>
             <div className="min-w-0 flex-1">
               <div className="flex items-center gap-1.5">

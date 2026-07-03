@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { coverThumb } from "@/lib/image";
 import { Stars } from "@/components/detail/stars";
 import { toCover } from "@/lib/discover-cover";
 import type { DiscoverItem } from "@/lib/api";
@@ -23,7 +24,7 @@ export function ChartList({
             <Link href={c.href} className="shrink-0" aria-label={c.name ?? ""}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src={c.imageUrl ?? "/placeholder.svg"}
+                src={coverThumb(c.imageUrl, "sm") ?? "/placeholder.svg"}
                 alt=""
                 className="h-12 w-12 rounded-md bg-zinc-100 object-cover dark:bg-zinc-800"
               />
