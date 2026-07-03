@@ -24,13 +24,7 @@ export function ReportControl({
 }) {
   const router = useRouter();
   const t = useT();
-  const locale = useLocale();
   const [open, setOpen] = useState(false);
-  const [reason, setReason] = useState("");
-  const [detail, setDetail] = useState("");
-  const [busy, setBusy] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [done, setDone] = useState(false);
 
   const openModal = () => {
     if (!loggedIn) {
@@ -40,9 +34,39 @@ export function ReportControl({
     setOpen(true);
   };
 
+  return (
+    <>
+      <button type="button" onClick={openModal} className="text-xs text-zinc-400 hover:text-red-500">
+        {t("신고")}
+      </button>
+      <ReportDialog targetType={targetType} targetId={targetId} open={open} onClose={() => setOpen(false)} />
+    </>
+  );
+}
+
+// 신고 모달(제어형). 메뉴(⋯) 등에서 열림 상태를 직접 관리해 재사용한다.
+export function ReportDialog({
+  targetType = "rating",
+  targetId,
+  open,
+  onClose,
+}: {
+  targetType?: "rating" | "user";
+  targetId: string;
+  open: boolean;
+  onClose: () => void;
+}) {
+  const t = useT();
+  const locale = useLocale();
+  const [reason, setReason] = useState("");
+  const [detail, setDetail] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [done, setDone] = useState(false);
+
   const close = () => {
-    setOpen(false);
     setError(null);
+    onClose();
   };
 
   const submit = async () => {
@@ -60,9 +84,6 @@ export function ReportControl({
 
   return (
     <>
-      <button type="button" onClick={openModal} className="text-xs text-zinc-400 hover:text-red-500">
-        {t("신고")}
-      </button>
       {open && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" onClick={close}>
           <div

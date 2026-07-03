@@ -209,6 +209,8 @@ export const EN: Record<string, string> = {
   "신고 내용은 운영자가 검토합니다.": "Reports are reviewed by our moderators.",
   "상세 내용 (선택)": "Details (optional)",
   "접수 중…": "Submitting…",
+  "관심 없음": "Not interested",
+  더보기: "More",
 
   // ── 알림 ──
   "님이 회원님을 팔로우했습니다": " followed you",

@@ -42,6 +42,12 @@ export async function toggleReaction(input: { ratingId: string; value: Reaction 
   return authedRequest<ReactionState>("POST", "/me/reactions", input);
 }
 
+// "관심 없음" — 이 리뷰를 내 피드에서 숨김(NON-114). 성공 시 클라가 카드 제거.
+export async function dismissReview(ratingId: string) {
+  const r = await authedRequest<null>("POST", "/me/feed/dismiss", { ratingId });
+  return { ok: r.ok, code: r.code };
+}
+
 export async function submitReport(input: {
   targetType: "rating" | "user";
   targetId: string;

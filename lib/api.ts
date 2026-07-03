@@ -305,6 +305,7 @@ export type FeedItem = {
   artists: ArtistRef[] | null;
   likes: number;
   dislikes: number;
+  myReaction: Reaction | null;
 };
 
 /** 홈 피드 v2 (공개, following은 로그인 필요). 실패 시 빈 목록. */
