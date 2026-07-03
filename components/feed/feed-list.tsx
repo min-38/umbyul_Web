@@ -23,7 +23,11 @@ export function FeedList({
       <ul className="flex flex-col divide-y divide-zinc-200 dark:divide-zinc-800">
         {items.map((it) => (
           <li key={it.id} className="flex gap-3 py-3">
-            <Link href={targetHref(it)} className="shrink-0">
+            <Link
+              href={targetHref(it)}
+              className="shrink-0"
+              aria-label={it.name ?? (it.targetType === "track" ? trackLabel : albumLabel)}
+            >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={it.imageUrl ?? "/placeholder.svg"} alt="" className="h-12 w-12 rounded bg-zinc-100 object-cover dark:bg-zinc-800" />
             </Link>
@@ -50,7 +54,7 @@ export function FeedList({
               <p className="text-xs text-zinc-400">
                 <Link href={`/u/${it.username}`} className="hover:underline">{it.username}</Link>
                 {" · "}
-                {formatRelativeTime(it.createdAt, locale)}
+                <span suppressHydrationWarning>{formatRelativeTime(it.createdAt, locale)}</span>
               </p>
               <p className="mt-0.5 line-clamp-2 whitespace-pre-wrap text-sm leading-snug text-zinc-600 dark:text-zinc-300">{it.body}</p>
               <div className="mt-1">
@@ -80,12 +84,16 @@ export function FeedList({
               </span>
               <span className="text-sm font-medium text-zinc-800 hover:underline dark:text-zinc-100">{it.username}</span>
             </Link>
-            <span className="text-xs text-zinc-400">· {formatRelativeTime(it.createdAt, locale)}</span>
+            <span className="text-xs text-zinc-400">· <span suppressHydrationWarning>{formatRelativeTime(it.createdAt, locale)}</span></span>
           </div>
 
           {/* 대상: 커버 + 배지/이름/아티스트 + 별점 */}
           <div className="flex gap-3">
-            <Link href={targetHref(it)} className="shrink-0">
+            <Link
+              href={targetHref(it)}
+              className="shrink-0"
+              aria-label={it.name ?? (it.targetType === "track" ? trackLabel : albumLabel)}
+            >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={it.imageUrl ?? "/placeholder.svg"} alt="" className="h-20 w-20 rounded-lg bg-zinc-100 object-cover dark:bg-zinc-800" />
             </Link>

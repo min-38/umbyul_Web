@@ -43,7 +43,7 @@ export function CoverRow({ items, empty }: { items: CoverItem[]; empty: string }
       <div ref={ref} onScroll={update} className="no-scrollbar flex snap-x gap-4 overflow-x-auto pb-3">
         {items.map((x) => (
           <div key={x.key} className="flex w-36 shrink-0 snap-start flex-col gap-1.5 sm:w-40">
-            <Link href={x.href}>
+            <Link href={x.href} aria-label={x.name ?? ""}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={x.imageUrl ?? "/placeholder.svg"}

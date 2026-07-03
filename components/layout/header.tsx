@@ -38,7 +38,7 @@ export async function Header() {
       <div className="mx-auto flex w-full max-w-6xl items-center gap-4 px-4 py-2.5">
         {/* 좌: 브랜드 + 네비 */}
         <div className="flex flex-1 items-center gap-1">
-          <Link href="/" aria-label={t("홈")} className="shrink-0">
+          <Link href="/" className="shrink-0">
             <span className="glitter-text text-lg font-bold tracking-tight">Glitter</span>
           </Link>
           <nav className="ml-2 hidden items-center gap-1 sm:flex">

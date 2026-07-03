@@ -20,7 +20,7 @@ export function ChartList({
         return (
           <li key={c.key} className="flex items-center gap-3 py-3">
             <span className="w-6 shrink-0 text-right text-sm font-semibold tabular-nums text-zinc-400">{i + 1}</span>
-            <Link href={c.href} className="shrink-0">
+            <Link href={c.href} className="shrink-0" aria-label={c.name ?? ""}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={c.imageUrl ?? "/placeholder.svg"}
