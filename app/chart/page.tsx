@@ -23,47 +23,39 @@ const PERIODS: ChartPeriod[] = ["day", "week", "month", "year"];
 const GENDERS: ChartGender[] = ["all", "male", "female"];
 const AGES: ChartAge[] = ["all", "10", "20", "30", "40", "50"];
 
-// 대상 토글 색상(피드/차트 배지와 통일) — 활성 진한 톤 / 비활성 연한 톤.
-const TYPE_STYLE: Record<MusicType, { on: string; off: string }> = {
-  all: {
-    on: "bg-zinc-800 text-white dark:bg-zinc-100 dark:text-zinc-900",
-    off: "bg-zinc-100 text-zinc-600 hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700",
-  },
-  track: {
-    on: "bg-indigo-600 text-white",
-    off: "bg-indigo-50 text-indigo-700 hover:bg-indigo-100 dark:bg-indigo-950 dark:text-indigo-300 dark:hover:bg-indigo-900",
-  },
-  album: {
-    on: "bg-emerald-600 text-white",
-    off: "bg-emerald-50 text-emerald-700 hover:bg-emerald-100 dark:bg-emerald-950 dark:text-emerald-300 dark:hover:bg-emerald-900",
-  },
-  artist: {
-    on: "bg-amber-500 text-white",
-    off: "bg-amber-50 text-amber-700 hover:bg-amber-100 dark:bg-amber-950 dark:text-amber-300 dark:hover:bg-amber-900",
-  },
+// 대상 토글 활성 색(비활성은 전부 회색 — INACTIVE). Track=인디고/Album=에메랄드/Artist=앰버/All=중립.
+const TYPE_ON: Record<MusicType, string> = {
+  all: "bg-zinc-800 text-white dark:bg-zinc-100 dark:text-zinc-900",
+  track: "bg-indigo-600 text-white",
+  album: "bg-emerald-600 text-white",
+  artist: "bg-amber-500 text-white",
 };
+const INACTIVE = "bg-zinc-100 text-zinc-600 hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700";
 
-// Chart(NON-82/86/87/117) — 좌:음악 / 우:유저 2단(모바일 스택). 컨트롤은 링크(searchParams)로 SSR. 기간 공유.
+// Chart(NON-82/86/87/117) — 좌:음악 / 우:유저 2단(모바일 스택). 기간(D/W/M/Y)은 컬럼별 독립.
 export default async function ChartPage({
   searchParams,
 }: {
-  searchParams: Promise<{ type?: string; sort?: string; usort?: string; period?: string; gender?: string; age?: string }>;
+  searchParams: Promise<{
+    type?: string; sort?: string; usort?: string; period?: string; uperiod?: string; gender?: string; age?: string;
+  }>;
 }) {
   const sp = await searchParams;
   const type = TYPES.includes(sp.type as MusicType) ? (sp.type as MusicType) : "all";
   const isArtist = type === "artist";
   const musicSort = SORTS.includes(sp.sort as ChartSort) ? (sp.sort as ChartSort) : "most";
   const userSort = USER_SORTS.includes(sp.usort as ChartUserSort) ? (sp.usort as ChartUserSort) : "reviews";
-  const period = PERIODS.includes(sp.period as ChartPeriod) ? (sp.period as ChartPeriod) : "week"; // 기본 주별
+  const period = PERIODS.includes(sp.period as ChartPeriod) ? (sp.period as ChartPeriod) : "week"; // 음악 기간
+  const uperiod = PERIODS.includes(sp.uperiod as ChartPeriod) ? (sp.uperiod as ChartPeriod) : "week"; // 유저 기간
   const gender = GENDERS.includes(sp.gender as ChartGender) ? (sp.gender as ChartGender) : "all";
   const age = AGES.includes(sp.age as ChartAge) ? (sp.age as ChartAge) : "all";
 
   const t = await getT();
-  // 두 컬럼(음악·유저) 동시 조회.
+  // 두 컬럼(음악·유저) 동시 조회 — 각자 기간 사용.
   const [items, artists, users] = await Promise.all([
     isArtist ? Promise.resolve([]) : getChart(type, musicSort, period, gender, age),
     isArtist ? getArtistChart(musicSort, period, gender, age) : Promise.resolve([]),
-    getUserChart(userSort, period),
+    getUserChart(userSort, uperiod),
   ]);
 
   const typeLabel: Record<MusicType, string> = {
@@ -77,12 +69,13 @@ export default async function ChartPage({
     all: t("전체"), "10": t("10대"), "20": t("20대"), "30": t("30대"), "40": t("40대"), "50": t("50대+"),
   };
 
-  const hrefFor = (o: Partial<Record<"type" | "sort" | "usort" | "period" | "gender" | "age", string>>) =>
+  const hrefFor = (o: Partial<Record<"type" | "sort" | "usort" | "period" | "uperiod" | "gender" | "age", string>>) =>
     `/chart?${new URLSearchParams({
       type: o.type ?? type,
       sort: o.sort ?? musicSort,
       usort: o.usort ?? userSort,
       period: o.period ?? period,
+      uperiod: o.uperiod ?? uperiod,
       gender: o.gender ?? gender,
       age: o.age ?? age,
     })}`;
@@ -93,17 +86,20 @@ export default async function ChartPage({
     </p>
   );
 
+  const periodSeg = (current: ChartPeriod, key: "period" | "uperiod") => (
+    <div className="flex justify-end">
+      <Seg options={PERIODS.map((v) => ({ label: periodLabel[v], href: hrefFor({ [key]: v }), active: v === current }))} />
+    </div>
+  );
+
   return (
     <div className="mx-auto flex w-full max-w-6xl flex-col gap-5 px-6 py-8">
-      {/* 헤더 + 공유 기간(D/W/M/Y) */}
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <h1 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">Chart</h1>
-        <Seg options={PERIODS.map((v) => ({ label: periodLabel[v], href: hrefFor({ period: v }), active: v === period }))} />
-      </div>
+      <h1 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">Chart</h1>
 
       <div className="grid gap-8 md:grid-cols-2">
-        {/* ── 좌: 음악 ── */}
+        {/* ── 좌: 음악 차트 ── */}
         <section className="flex flex-col gap-4">
+          <ColumnHeader accent="text-indigo-500" title={t("음악 차트")} subtitle={t("곡·앨범·아티스트 랭킹")} icon={<MusicIcon />} />
           <div className="flex flex-col gap-2">
             <Row label={t("대상")}>
               <div className="flex flex-wrap gap-1">
@@ -111,9 +107,7 @@ export default async function ChartPage({
                   <Link
                     key={v}
                     href={hrefFor({ type: v })}
-                    className={`rounded-lg px-3 py-1.5 text-sm font-medium transition ${
-                      v === type ? TYPE_STYLE[v].on : TYPE_STYLE[v].off
-                    }`}
+                    className={`rounded-lg px-3 py-1.5 text-sm font-medium transition ${v === type ? TYPE_ON[v] : INACTIVE}`}
                   >
                     {typeLabel[v]}
                   </Link>
@@ -130,7 +124,7 @@ export default async function ChartPage({
               <Seg options={AGES.map((v) => ({ label: ageLabel[v], href: hrefFor({ age: v }), active: v === age }))} />
             </Row>
           </div>
-          <div className="border-b border-zinc-200 dark:border-zinc-800" />
+          <div className="border-b border-zinc-200 pb-2 dark:border-zinc-800">{periodSeg(period, "period")}</div>
           {isArtist
             ? artists.length === 0
               ? empty
@@ -140,19 +134,35 @@ export default async function ChartPage({
               : <ChartList items={items} trackLabel={t("곡")} albumLabel={t("앨범")} />}
         </section>
 
-        {/* ── 우: 유저 ── */}
+        {/* ── 우: 유저 차트 ── */}
         <section className="flex flex-col gap-4">
+          <ColumnHeader accent="text-rose-500" title={t("유저 차트")} subtitle={t("리뷰어 랭킹")} icon={<UserIcon />} />
           <div className="flex flex-col gap-2">
-            <Row label={t("대상")}>
-              <span className="rounded-lg bg-rose-500 px-3 py-1.5 text-sm font-medium text-white">{t("유저")}</span>
-            </Row>
             <Row label={t("정렬")}>
               <Seg options={USER_SORTS.map((v) => ({ label: userSortLabel[v], href: hrefFor({ usort: v }), active: v === userSort }))} />
             </Row>
           </div>
-          <div className="border-b border-zinc-200 dark:border-zinc-800" />
+          <div className="border-b border-zinc-200 pb-2 dark:border-zinc-800">{periodSeg(uperiod, "uperiod")}</div>
           {users.length === 0 ? empty : <UserChartList items={users} metricLabel={userSortLabel[userSort]} />}
         </section>
+      </div>
+    </div>
+  );
+}
+
+function ColumnHeader({
+  title, subtitle, icon, accent,
+}: {
+  title: string; subtitle: string; icon: React.ReactNode; accent: string;
+}) {
+  return (
+    <div className="flex items-center gap-2.5">
+      <span className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-zinc-100 dark:bg-zinc-800 ${accent}`}>
+        {icon}
+      </span>
+      <div className="flex flex-col">
+        <h2 className="text-lg font-bold text-zinc-900 dark:text-zinc-50">{title}</h2>
+        <span className="text-xs text-zinc-400">{subtitle}</span>
       </div>
     </div>
   );
@@ -175,14 +185,31 @@ function Seg({ options }: { options: { label: string; href: string; active: bool
           key={o.label}
           href={o.href}
           className={`rounded-lg px-3 py-1.5 text-sm font-medium transition ${
-            o.active
-              ? "bg-indigo-600 text-white"
-              : "bg-zinc-100 text-zinc-600 hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700"
+            o.active ? "bg-indigo-600 text-white" : INACTIVE
           }`}
         >
           {o.label}
         </Link>
       ))}
     </div>
+  );
+}
+
+function MusicIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M9 18V5l12-2v13" />
+      <circle cx="6" cy="18" r="3" />
+      <circle cx="18" cy="16" r="3" />
+    </svg>
+  );
+}
+
+function UserIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
+      <circle cx="12" cy="7" r="4" />
+    </svg>
   );
 }
