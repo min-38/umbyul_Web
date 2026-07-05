@@ -9,14 +9,18 @@ import { type Locale, translate } from "@/lib/i18n";
 export async function getLocale(): Promise<Locale> {
   const h = await headers();
   const fromCookie = (await cookies()).get("locale")?.value;
-  if (fromCookie === "ko" || fromCookie === "en") return fromCookie;
+  if (fromCookie === "ko" || fromCookie === "en" || fromCookie === "ja" || fromCookie === "es") return fromCookie;
 
   const country = (h.get("x-vercel-ip-country") ?? "").toUpperCase();
   if (country === "KR") return "ko";
-  if (country) return "en"; // 지역이 확인됐고 한국이 아니면 영어
+  if (country === "JP") return "ja";
 
+  // 지역만으론 스페인어권이 특정 안 되므로 브라우저 선호 언어를 먼저 본다.
   const al = (h.get("accept-language") ?? "").toLowerCase();
-  return al.startsWith("ko") ? "ko" : "en";
+  if (al.startsWith("ko")) return "ko";
+  if (al.startsWith("ja")) return "ja";
+  if (al.startsWith("es")) return "es";
+  return "en"; // 그 외(지역 확인됨/미확인) 기본 영어
 }
 
 /** 서버 컴포넌트용 t. */

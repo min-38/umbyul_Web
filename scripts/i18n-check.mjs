@@ -17,14 +17,15 @@ const EXT = /\.(tsx?|jsx?)$/;
 // 의도적으로 EN 매핑 없이 t()에 넣는 키(예외). 필요 시 여기에 추가.
 const ALLOW = new Set([]);
 
-// ── 1) EN 맵 키 추출 (lib/i18n.ts 의 EN 객체 블록) ──────────────
-function extractEnKeys() {
-  const src = readFileSync(join(root, "lib/i18n.ts"), "utf8");
-  const start = src.indexOf("export const EN");
-  const open = src.indexOf("{", start);
+// ── 1) 사전 키 추출 (lib/i18n.ts 의 EN/JA/ES 객체 블록) ──────────
+const I18N_SRC = readFileSync(join(root, "lib/i18n.ts"), "utf8");
+function extractDictKeys(marker) {
+  const start = I18N_SRC.indexOf(marker);
+  if (start === -1) return new Set();
+  const open = I18N_SRC.indexOf("{", start);
   // 블록 끝: 최상위 닫는 중괄호(간단히 "\n};" 탐색).
-  const end = src.indexOf("\n};", open);
-  const block = src.slice(open + 1, end);
+  const end = I18N_SRC.indexOf("\n};", open);
+  const block = I18N_SRC.slice(open + 1, end);
 
   const keys = new Set();
   for (let line of block.split("\n")) {
@@ -65,25 +66,42 @@ function collectUsages(files) {
 }
 
 // ── 실행 ────────────────────────────────────────────────────────
-const enKeys = extractEnKeys();
+const enKeys = extractDictKeys("const EN:");
+const jaKeys = extractDictKeys("const JA:");
+const esKeys = extractDictKeys("const ES:");
 const files = [];
 for (const d of SCAN_DIRS) walk(join(root, d), files);
 const used = collectUsages(files);
 
 const missing = [...used].filter((k) => !enKeys.has(k) && !ALLOW.has(k)).sort();
 const unused = [...enKeys].filter((k) => !used.has(k) && !ALLOW.has(k)).sort();
+// 로케일 간 패리티: EN 키가 JA/ES에도 다 있어야(누락 시 해당 로케일에서 한국어 폴백 노출).
+const missingJa = [...enKeys].filter((k) => !jaKeys.has(k)).sort();
+const missingEs = [...enKeys].filter((k) => !esKeys.has(k)).sort();
 
-console.log(`i18n-check · 파일 ${files.length}개 · t() 리터럴 ${used.size}개 · EN 키 ${enKeys.size}개`);
+console.log(`i18n-check · 파일 ${files.length}개 · t() 리터럴 ${used.size}개 · 키 EN ${enKeys.size} · JA ${jaKeys.size} · ES ${esKeys.size}`);
 
 if (unused.length) {
   console.log(`\n⚠️  미사용(dead) EN 키 ${unused.length}개 (동적 사용이면 무시):`);
   for (const k of unused) console.log(`   · ${k}`);
 }
 
+let failed = false;
 if (missing.length) {
-  console.log(`\n❌ EN 매핑 누락 ${missing.length}개 (영어 로케일에서 한국어 노출):`);
+  console.log(`\n❌ EN 매핑 누락 ${missing.length}개 (t()로 쓰였으나 EN 없음):`);
   for (const k of missing) console.log(`   · ${k}`);
-  process.exit(1);
+  failed = true;
 }
+if (missingJa.length) {
+  console.log(`\n❌ JA 번역 누락 ${missingJa.length}개 (EN엔 있으나 JA 없음):`);
+  for (const k of missingJa) console.log(`   · ${k}`);
+  failed = true;
+}
+if (missingEs.length) {
+  console.log(`\n❌ ES 번역 누락 ${missingEs.length}개 (EN엔 있으나 ES 없음):`);
+  for (const k of missingEs) console.log(`   · ${k}`);
+  failed = true;
+}
+if (failed) process.exit(1);
 
-console.log("\n✅ 누락 없음 — 모든 t() 정적 키가 EN 매핑에 존재합니다.");
+console.log("\n✅ 누락 없음 — t() 키가 EN에 있고, EN 키가 JA·ES에도 모두 존재합니다.");

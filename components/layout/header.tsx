@@ -10,8 +10,8 @@ import { UserMenu } from "./user-menu";
 
 // 홈(피드)은 워드마크가 담당. Discover=신규·급상승 허브, Chart=랭킹.
 const NAV = [
-  { label: "Discover", href: "/discover" },
-  { label: "Chart", href: "/chart" },
+  { label: "발견", href: "/discover" },
+  { label: "차트", href: "/chart" },
 ];
 
 export async function Header() {

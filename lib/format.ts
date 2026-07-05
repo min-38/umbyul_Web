@@ -1,3 +1,5 @@
+import type { Locale } from "@/lib/i18n";
+
 /** ms → m:ss (예: 238000 → "3:58") */
 export function formatDuration(ms: number): string {
   if (!ms || ms < 0) return "0:00";
@@ -24,7 +26,22 @@ export function formatReleaseDate(date: string | null): string {
 }
 
 /** ISO 시각 → 상대시간 ("방금", "3시간 전" / "just now", "3h ago", …). 30일 넘으면 날짜. */
-export function formatRelativeTime(iso: string, locale: "ko" | "en" = "ko"): string {
+type RelUnits = {
+  now: string;
+  min: (n: number) => string;
+  hour: (n: number) => string;
+  day: (n: number) => string;
+  week: (n: number) => string;
+  dateLoc: string;
+};
+const REL: Record<Locale, RelUnits> = {
+  ko: { now: "방금", min: (n) => `${n}분 전`, hour: (n) => `${n}시간 전`, day: (n) => `${n}일 전`, week: (n) => `${n}주 전`, dateLoc: "ko-KR" },
+  en: { now: "just now", min: (n) => `${n}m ago`, hour: (n) => `${n}h ago`, day: (n) => `${n}d ago`, week: (n) => `${n}w ago`, dateLoc: "en-US" },
+  ja: { now: "たった今", min: (n) => `${n}分前`, hour: (n) => `${n}時間前`, day: (n) => `${n}日前`, week: (n) => `${n}週間前`, dateLoc: "ja-JP" },
+  es: { now: "ahora", min: (n) => `hace ${n} min`, hour: (n) => `hace ${n} h`, day: (n) => `hace ${n} d`, week: (n) => `hace ${n} sem`, dateLoc: "es-ES" },
+};
+
+export function formatRelativeTime(iso: string, locale: Locale = "ko"): string {
   const then = new Date(iso).getTime();
   if (Number.isNaN(then)) return "";
   const diff = Date.now() - then;
@@ -32,18 +49,11 @@ export function formatRelativeTime(iso: string, locale: "ko" | "en" = "ko"): str
   const min = Math.floor(sec / 60);
   const hour = Math.floor(min / 60);
   const day = Math.floor(hour / 24);
-  if (locale === "en") {
-    if (sec < 60) return "just now";
-    if (min < 60) return `${min}m ago`;
-    if (hour < 24) return `${hour}h ago`;
-    if (day < 7) return `${day}d ago`;
-    if (day < 30) return `${Math.floor(day / 7)}w ago`;
-    return new Date(iso).toLocaleDateString("en-US");
-  }
-  if (sec < 60) return "방금";
-  if (min < 60) return `${min}분 전`;
-  if (hour < 24) return `${hour}시간 전`;
-  if (day < 7) return `${day}일 전`;
-  if (day < 30) return `${Math.floor(day / 7)}주 전`;
-  return new Date(iso).toLocaleDateString("ko-KR");
+  const u = REL[locale] ?? REL.en;
+  if (day >= 30) return new Date(iso).toLocaleDateString(u.dateLoc);
+  if (sec < 60) return u.now;
+  if (min < 60) return u.min(min);
+  if (hour < 24) return u.hour(hour);
+  if (day < 7) return u.day(day);
+  return u.week(Math.floor(day / 7));
 }
