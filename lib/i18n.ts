@@ -164,6 +164,7 @@ export const EN: Record<string, string> = {
   발매일: "Release date",
   "트랙 수": "Tracks",
   저작권: "Copyright",
+  "평점 시세": "Rating trend",
   "MusicBrainz에서 보기": "View on MusicBrainz",
   장르: "Genre",
   "아직 장르 태그가 없습니다.": "No genre tags yet.",

@@ -1,7 +1,7 @@
 import { cache } from "react";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getAlbumDetail, getMySanction } from "@/lib/api";
+import { getAlbumDetail, getMySanction, getRatingHistory } from "@/lib/api";
 import { getT } from "@/lib/i18n-server";
 
 // generateMetadata 와 페이지가 같은 요청에서 한 번만 fetch 하도록 dedupe.
@@ -27,12 +27,15 @@ import { MusicBrainzLink } from "@/components/detail/musicbrainz-link";
 import { ShareButton } from "@/components/detail/share-button";
 import { ArtistLinks } from "@/components/detail/artist-links";
 import { AlbumTabs } from "@/components/detail/album-tabs";
+import { RatingChart } from "@/components/detail/rating-chart";
 import { ReviewList } from "@/components/detail/review-list";
 
 export default async function AlbumPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const album = await getAlbum(id);
   if (!album) notFound();
+
+  const ratingHistory = await getRatingHistory("album", album.targetId);
 
   const supabase = await createClient();
   const {
@@ -91,6 +94,8 @@ export default async function AlbumPage({ params }: { params: Promise<{ id: stri
           </div>
         </div>
       </div>
+
+      <RatingChart points={ratingHistory} label={t("평점 시세")} />
 
       <AlbumTabs album={album} loggedIn={!!user} />
 

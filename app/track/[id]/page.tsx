@@ -2,7 +2,7 @@ import { cache } from "react";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { getTrackDetail, getMySanction } from "@/lib/api";
+import { getTrackDetail, getMySanction, getRatingHistory } from "@/lib/api";
 import { getT } from "@/lib/i18n-server";
 
 const getTrack = cache(getTrackDetail);
@@ -27,6 +27,7 @@ import { RateButton } from "@/components/detail/rate-button";
 import { MetaRow, SpotifyLink, Copyright } from "@/components/detail/detail-bits";
 import { MusicBrainzLink } from "@/components/detail/musicbrainz-link";
 import { GenreTags } from "@/components/detail/genre-tags";
+import { RatingChart } from "@/components/detail/rating-chart";
 import { ShareButton } from "@/components/detail/share-button";
 import { ArtistLinks } from "@/components/detail/artist-links";
 import { formatDuration, formatReleaseDate } from "@/lib/format";
@@ -35,6 +36,8 @@ export default async function TrackPage({ params }: { params: Promise<{ id: stri
   const { id } = await params;
   const track = await getTrack(id);
   if (!track) notFound();
+
+  const ratingHistory = await getRatingHistory("track", track.targetId);
 
   const supabase = await createClient();
   const {
@@ -101,6 +104,8 @@ export default async function TrackPage({ params }: { params: Promise<{ id: stri
           </div>
         </div>
       </div>
+
+      <RatingChart points={ratingHistory} label={t("평점 시세")} />
 
       <MetaRow
         items={[

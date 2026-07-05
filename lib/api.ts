@@ -215,6 +215,21 @@ export async function getAlbumDetail(id: string): Promise<AlbumDetail | null> {
   return json.data as AlbumDetail;
 }
 
+// ── 평점 시세 (NON-124) — 일별 누적 평균 시계열. 공개. 실패 시 빈 배열. ──
+export type RatingPoint = { date: string; avg: number; count: number };
+
+export async function getRatingHistory(type: "track" | "album", targetId: string): Promise<RatingPoint[]> {
+  try {
+    const qs = new URLSearchParams({ type, id: targetId });
+    const res = await fetch(`${API_URL}/detail/rating-history?${qs}`, { cache: "no-store" });
+    if (!res.ok) return [];
+    const json = await res.json();
+    return (json?.data ?? []) as RatingPoint[];
+  } catch {
+    return [];
+  }
+}
+
 // ── 유저 장르 태깅 (NON-122) — 커뮤니티 큐레이트. 목록·집계 공개, 태깅은 로그인. ──
 export type Genre = { id: number; slug: string; name: string; parentId: number | null; sortOrder: number };
 export type GenreCount = { id: number; name: string; parentName: string | null; count: number };
