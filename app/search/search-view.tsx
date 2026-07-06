@@ -10,6 +10,7 @@ import type {
   UserResult,
 } from "@/lib/api";
 import { useT } from "@/components/i18n-provider";
+import { ExplicitBadge } from "@/components/detail/explicit-badge";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 const PAGE = 10;
@@ -66,7 +67,10 @@ function TrackCard({ t }: { t: TrackResult }) {
       <Link href={`/track/${t.id}`} className="flex flex-col gap-1.5">
         <Thumb url={t.imageUrl} />
         <div className="min-w-0">
-          <p className="truncate text-sm font-medium text-black dark:text-zinc-50">{t.name}</p>
+          <p className="flex items-center gap-1.5 text-sm font-medium text-black dark:text-zinc-50">
+            <span className="truncate">{t.name}</span>
+            {t.explicit && <ExplicitBadge />}
+          </p>
           <p className="truncate text-xs text-zinc-500">{t.artist}</p>
         </div>
       </Link>

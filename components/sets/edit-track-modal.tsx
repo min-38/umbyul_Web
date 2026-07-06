@@ -5,6 +5,7 @@ import type { TrackResult, DjSetTrack } from "@/lib/api";
 import { searchTracks } from "@/app/actions/sets";
 import { YT_RE, type PickedTrack } from "@/components/sets/track-picker";
 import { coverThumb } from "@/lib/image";
+import { ExplicitBadge } from "@/components/detail/explicit-badge";
 import { useT } from "@/components/i18n-provider";
 
 // 트랙 수정 모달: 노래 변경(재검색) + 유튜브 링크 편집.
@@ -28,6 +29,7 @@ export function EditTrackModal({
     albumName: track.albumName,
     imageUrl: track.imageUrl,
     youtubeUrl: track.youtubeUrl,
+    explicit: track.explicit,
   });
   const [changing, setChanging] = useState(false);
   const [q, setQ] = useState("");
@@ -60,6 +62,7 @@ export function EditTrackModal({
       albumName: tr.albumName,
       imageUrl: tr.imageUrl,
       youtubeUrl: p.youtubeUrl,
+      explicit: tr.explicit,
     }));
     setChanging(false);
     setHits([]);
@@ -96,7 +99,10 @@ export function EditTrackModal({
                         {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img src={coverThumb(tr.imageUrl, "sm") ?? "/placeholder.svg"} alt="" className="h-8 w-8 rounded bg-zinc-100 object-cover dark:bg-zinc-800" />
                         <span className="min-w-0 flex-1">
-                          <span className="block truncate text-sm text-zinc-800 dark:text-zinc-100">{tr.name}</span>
+                          <span className="flex items-center gap-1.5 text-sm text-zinc-800 dark:text-zinc-100">
+                            <span className="truncate">{tr.name}</span>
+                            {tr.explicit && <ExplicitBadge />}
+                          </span>
                           <span className="block truncate text-xs text-zinc-400">{tr.artist}</span>
                         </span>
                       </button>
@@ -110,7 +116,10 @@ export function EditTrackModal({
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={coverThumb(picked.imageUrl, "sm") ?? "/placeholder.svg"} alt="" className="h-9 w-9 rounded bg-zinc-100 object-cover dark:bg-zinc-800" />
               <span className="min-w-0 flex-1">
-                <span className="block truncate text-sm font-medium text-zinc-900 dark:text-zinc-50">{picked.name}</span>
+                <span className="flex items-center gap-1.5 text-sm font-medium text-zinc-900 dark:text-zinc-50">
+                  <span className="truncate">{picked.name}</span>
+                  {picked.explicit && <ExplicitBadge />}
+                </span>
                 <span className="block truncate text-xs text-zinc-400">{picked.artist}</span>
               </span>
               <button type="button" onClick={() => setChanging(true)} className="shrink-0 text-xs font-medium text-indigo-600 hover:underline dark:text-indigo-400">

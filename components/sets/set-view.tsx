@@ -11,6 +11,7 @@ import { Stars } from "@/components/detail/stars";
 import { ReviewModal } from "@/components/detail/review-modal";
 import { ReportDialog } from "@/components/detail/report-control";
 import { MusicBrainzLink } from "@/components/detail/musicbrainz-link";
+import { ExplicitBadge } from "@/components/detail/explicit-badge";
 import { coverThumb } from "@/lib/image";
 import { formatRelativeTime } from "@/lib/format";
 import { useT, useLocale } from "@/components/i18n-provider";
@@ -127,8 +128,9 @@ export function SetView({
               <img src={coverThumb(tr.imageUrl, "sm") ?? "/placeholder.svg"} alt="" className="h-14 w-14 rounded bg-zinc-100 object-cover dark:bg-zinc-800" />
             </Link>
             <div className="min-w-0 flex-1">
-              <Link href={`/track/${tr.spotifyId}`} className="block truncate text-sm font-medium text-zinc-900 hover:underline dark:text-zinc-50">
-                {tr.name}
+              <Link href={`/track/${tr.spotifyId}`} className="flex items-center gap-1.5 text-sm font-medium text-zinc-900 hover:underline dark:text-zinc-50">
+                <span className="truncate">{tr.name}</span>
+                {tr.explicit && <ExplicitBadge />}
               </Link>
               <p className="truncate text-xs text-zinc-400">
                 {tr.artists.length > 0
@@ -208,6 +210,7 @@ export function SetView({
           artist={rateFor.artist}
           artists={rateFor.artists}
           imageUrl={rateFor.imageUrl}
+          explicit={rateFor.explicit}
           initialScore={rateFor.myScore ?? 0}
           initialReview={rateFor.myReview ?? ""}
           path={path}

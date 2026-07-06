@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { coverThumb } from "@/lib/image";
+import { ExplicitBadge } from "@/components/detail/explicit-badge";
 import type { CoverItem } from "@/lib/discover-cover";
 
 // Discover 커버 카드 한 줄(가로 스크롤). 스크롤바 숨김 + 넘길 게 있을 때만 좌우 화살표.
@@ -55,9 +56,10 @@ export function CoverRow({ items, empty }: { items: CoverItem[]; empty: string }
             <div className="min-w-0">
               <Link
                 href={x.href}
-                className="block truncate text-sm font-medium text-zinc-900 hover:underline dark:text-zinc-50"
+                className="flex items-center gap-1.5 text-sm font-medium text-zinc-900 hover:underline dark:text-zinc-50"
               >
-                {x.name ?? ""}
+                <span className="truncate">{x.name ?? ""}</span>
+                {x.explicit && <ExplicitBadge />}
               </Link>
               {x.artists.length > 0 ? (
                 <p className="truncate text-xs text-zinc-400">

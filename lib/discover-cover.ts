@@ -8,6 +8,7 @@ export type CoverItem = {
   name: string | null;
   artist: string | null; // 조인된 이름(폴백 — 구 데이터는 링크 없이 이 값만)
   artists: { name: string; href: string | null }[]; // 개별 아티스트(있으면 각각 링크)
+  explicit: boolean; // 19금(BUG-14)
 };
 
 export function toCover(x: DiscoverItem): CoverItem {
@@ -17,6 +18,7 @@ export function toCover(x: DiscoverItem): CoverItem {
     imageUrl: x.imageUrl,
     name: x.name,
     artist: x.artist,
+    explicit: x.explicit ?? false,
     artists: (x.artists ?? [])
       .filter((a) => a.name)
       .map((a) => ({ name: a.name, href: a.id ? `/artist/${a.id}` : null })),

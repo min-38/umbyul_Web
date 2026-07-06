@@ -4,6 +4,7 @@ import { useState } from "react";
 import type { TrackResult } from "@/lib/api";
 import { searchTracks } from "@/app/actions/sets";
 import { coverThumb } from "@/lib/image";
+import { ExplicitBadge } from "@/components/detail/explicit-badge";
 import { useT } from "@/components/i18n-provider";
 
 export const MAX_TRACKS = 15;
@@ -37,6 +38,7 @@ export type PickedTrack = {
   albumName: string | null;
   imageUrl: string | null;
   youtubeUrl: string | null;
+  explicit: boolean;
 };
 
 const inputCls =
@@ -86,6 +88,7 @@ export function TrackPicker({
       albumName: selected.albumName,
       imageUrl: selected.imageUrl,
       youtubeUrl: val || null,
+      explicit: selected.explicit,
     });
     setBusy(false);
     if (ok) {
@@ -106,7 +109,10 @@ export function TrackPicker({
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={coverThumb(selected.imageUrl, "sm") ?? "/placeholder.svg"} alt="" className="h-8 w-8 rounded bg-zinc-100 object-cover dark:bg-zinc-800" />
           <span className="min-w-0 flex-1">
-            <span className="block truncate text-sm font-medium text-zinc-900 dark:text-zinc-50">{selected.name}</span>
+            <span className="flex items-center gap-1.5 text-sm font-medium text-zinc-900 dark:text-zinc-50">
+              <span className="truncate">{selected.name}</span>
+              {selected.explicit && <ExplicitBadge />}
+            </span>
             <span className="block truncate text-xs text-zinc-400">{selected.artist}</span>
           </span>
           <button type="button" onClick={() => setSelected(null)} aria-label={t("취소")} className="shrink-0 text-zinc-400 hover:text-zinc-600">
@@ -134,7 +140,10 @@ export function TrackPicker({
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img src={coverThumb(tr.imageUrl, "sm") ?? "/placeholder.svg"} alt="" className="h-8 w-8 rounded bg-zinc-100 object-cover dark:bg-zinc-800" />
                     <span className="min-w-0 flex-1">
-                      <span className="block truncate text-sm text-zinc-800 dark:text-zinc-100">{tr.name}</span>
+                      <span className="flex items-center gap-1.5 text-sm text-zinc-800 dark:text-zinc-100">
+                        <span className="truncate">{tr.name}</span>
+                        {tr.explicit && <ExplicitBadge />}
+                      </span>
                       <span className="block truncate text-xs text-zinc-400">{tr.artist}</span>
                     </span>
                   </button>

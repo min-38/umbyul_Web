@@ -2,6 +2,7 @@ import Link from "next/link";
 import { coverThumb } from "@/lib/image";
 import { Stars } from "@/components/detail/stars";
 import { TargetBadge } from "@/components/ui/target-badge";
+import { ExplicitBadge } from "@/components/detail/explicit-badge";
 import { toCover } from "@/lib/discover-cover";
 import type { DiscoverItem } from "@/lib/api";
 
@@ -39,6 +40,7 @@ export function ChartList({
                 >
                   {c.name ?? ""}
                 </Link>
+                {x.explicit && <ExplicitBadge />}
               </div>
               <p className="truncate text-xs text-zinc-400">
                 {c.artists.length > 0

@@ -99,6 +99,7 @@ export type TrackResult = {
   albumName: string | null;
   imageUrl: string | null;
   isrc: string | null;
+  explicit: boolean;
 };
 export type AlbumResult = {
   id: string;
@@ -337,6 +338,7 @@ export type TrendingItem = {
   name: string | null;
   artist: string | null;
   imageUrl: string | null;
+  explicit?: boolean; // 19금(BUG-14). 차트 O, discover는 미제공 시 undefined
 };
 export type HomeData = { recentReviews: HomeReview[]; trending: TrendingItem[]; followFeed: HomeReview[] };
 
@@ -361,6 +363,7 @@ export type FeedItem = {
   dislikes: number;
   myReaction: Reaction | null;
   commentCount: number;
+  explicit: boolean;
 };
 
 /** 홈 피드 v2 (공개, following은 로그인 필요). 실패 시 빈 목록. */
@@ -491,6 +494,7 @@ export type ProfileReview = {
   artist: string | null;
   imageUrl: string | null;
   deleted: boolean;
+  explicit: boolean;
 };
 export type UserProfile = {
   id: string;
@@ -643,6 +647,7 @@ export type DjSetTrack = {
   albumName: string | null;
   imageUrl: string | null;
   youtubeUrl: string | null;
+  explicit: boolean;
   myScore: number | null;
   myReview: string | null;
 };

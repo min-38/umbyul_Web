@@ -15,6 +15,7 @@ export function RateButton({
   artist,
   artists,
   imageUrl,
+  explicit = false,
   myScore,
   myReview,
   path,
@@ -28,6 +29,7 @@ export function RateButton({
   artist: string;
   artists: { id: string; name: string }[];
   imageUrl: string | null;
+  explicit?: boolean;
   myScore: number;
   myReview: string;
   path: string;
@@ -71,6 +73,7 @@ export function RateButton({
           artist={artist}
           artists={artists}
           imageUrl={imageUrl}
+          explicit={explicit}
           initialScore={myScore}
           initialReview={myReview}
           path={path}

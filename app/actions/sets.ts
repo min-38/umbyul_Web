@@ -79,6 +79,7 @@ export async function addSetTrack(
     albumName: string | null;
     imageUrl: string | null;
     youtubeUrl: string | null;
+    explicit: boolean;
   },
 ) {
   const r = await authed("POST", `/me/sets/${setId}/tracks`, track);
@@ -111,6 +112,7 @@ export async function replaceSetTrack(
     albumName: string | null;
     imageUrl: string | null;
     youtubeUrl: string | null;
+    explicit: boolean;
   },
 ) {
   const r = await authed("POST", `/me/sets/${setId}/tracks/${encodeURIComponent(oldSpotifyId)}/replace`, track);

@@ -9,6 +9,7 @@ import { ShareButton } from "@/components/detail/share-button";
 import { FeedCommentsModal } from "@/components/feed/feed-comments-modal";
 import { MeatballMenu } from "@/components/ui/meatball-menu";
 import { TargetBadge } from "@/components/ui/target-badge";
+import { ExplicitBadge } from "@/components/detail/explicit-badge";
 import { dismissReview, loadMoreFeed } from "@/app/actions/social";
 import { useT } from "@/components/i18n-provider";
 import { formatRelativeTime } from "@/lib/format";
@@ -159,6 +160,7 @@ export function FeedList({
                     {it.name ?? ""}
                     {it.artist ? <span className="font-normal text-zinc-400"> · {it.artist}</span> : null}
                   </Link>
+                  {it.explicit && <ExplicitBadge />}
                   <span className="ml-auto flex shrink-0 items-center gap-1">
                     <Stars value={it.score} size={12} />
                     <span className="text-xs font-semibold text-zinc-600 dark:text-zinc-300">{it.score.toFixed(1)}</span>
@@ -219,6 +221,7 @@ export function FeedList({
                   <Link href={targetHref(it)} className="truncate text-sm font-semibold text-zinc-900 hover:underline dark:text-zinc-50">
                     {it.name ?? ""}
                   </Link>
+                  {it.explicit && <ExplicitBadge />}
                 </div>
                 <p className="mt-0.5 truncate text-xs text-zinc-400">
                   <Artists item={it} />

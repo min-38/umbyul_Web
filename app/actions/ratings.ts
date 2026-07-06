@@ -44,6 +44,7 @@ export async function saveRating(input: {
   artist: string;
   imageUrl: string | null;
   artists: { id: string; name: string }[]; // 개별 아티스트 링크용 (NON-85)
+  explicit?: boolean; // 19금 스냅샷(BUG-14) — 피드·차트·프로필 배지용
 }): Promise<Result> {
   const r = await authedFetch("/me/ratings", {
     method: "POST",
@@ -57,6 +58,7 @@ export async function saveRating(input: {
       artist: input.artist,
       imageUrl: input.imageUrl,
       artists: input.artists,
+      explicit: input.explicit ?? false,
     }),
   });
   if (r.ok) revalidatePath(input.path);
