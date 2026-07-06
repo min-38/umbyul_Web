@@ -120,7 +120,7 @@ export default async function ChartPage({
 
   return (
     <div className="mx-auto flex w-full max-w-6xl flex-col gap-5 px-6 py-8">
-      <h1 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">Chart</h1>
+      <h1 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">{t("차트")}</h1>
 
       <div className="grid gap-8 md:grid-cols-2">
         {/* ── 좌: 음악 차트 ── */}

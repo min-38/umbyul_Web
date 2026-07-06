@@ -94,6 +94,7 @@ export type TrackResult = {
   id: string;
   name: string;
   artist: string;
+  artists: { id: string; name: string }[];
   albumId: string | null;
   albumName: string | null;
   imageUrl: string | null;
@@ -610,5 +611,74 @@ export async function getNotificationPrefs(): Promise<NotificationPrefs> {
     return json.data as NotificationPrefs;
   } catch {
     return defaults;
+  }
+}
+
+// ── DJ 믹스 (NON-133) ──
+export type DjSetSummary = {
+  id: string;
+  ownerId: string;
+  ownerUsername: string;
+  ownerAvatarUrl: string | null;
+  title: string;
+  note: string | null;
+  listenUrl: string | null;
+  createdAt: string;
+  trackCount: number;
+  updatedAt: string;
+  covers: string[];
+  likeCount: number;
+  likedByMe: boolean;
+};
+export type DjSetTrack = {
+  spotifyId: string;
+  position: number;
+  isrc: string | null;
+  name: string;
+  artist: string;
+  artists: { id: string; name: string }[];
+  albumId: string | null;
+  albumName: string | null;
+  imageUrl: string | null;
+  youtubeUrl: string | null;
+  myScore: number | null;
+  myReview: string | null;
+};
+export type DjSetDetail = { set: DjSetSummary; tracks: DjSetTrack[] };
+export type DjSetComment = { id: string; userId: string; username: string; avatarUrl: string | null; body: string; createdAt: string };
+
+/** 믹스 상세 (공개, 로그인 시 트랙별 내 평점 포함). 없으면 null. */
+export async function getSet(id: string): Promise<DjSetDetail | null> {
+  const res = await fetch(`${API_URL}/sets/${encodeURIComponent(id)}`, {
+    headers: await detailHeaders(),
+    cache: "no-store",
+  });
+  if (res.status === 404) return null;
+  if (!res.ok) return null;
+  const json = await res.json();
+  return json.data as DjSetDetail;
+}
+
+/** 유저의 믹스 목록 (공개). 실패 시 빈 목록. */
+export async function getUserSets(username: string): Promise<DjSetSummary[]> {
+  try {
+    const res = await fetch(`${API_URL}/users/${encodeURIComponent(username)}/sets`, { cache: "no-store" });
+    if (!res.ok) return [];
+    const json = await res.json();
+    return (json?.data?.items as DjSetSummary[]) ?? [];
+  } catch {
+    return [];
+  }
+}
+
+/** 최근 믹스 목록 (전체 유저, 공개). 실패 시 빈 목록. */
+export async function getRecentSets(): Promise<DjSetSummary[]> {
+  try {
+    const res = await fetch(`${API_URL}/sets`, { cache: "no-store" });
+    if (!res.ok) return [];
+    const json = await res.json();
+    return (json?.data?.items as DjSetSummary[]) ?? [];
+  } catch {
+    return [];
   }
 }

@@ -18,6 +18,7 @@ export function ReviewModal({
   initialReview,
   path,
   onClose,
+  onSaved,
 }: {
   targetType: "track" | "album";
   targetId: string;
@@ -30,6 +31,7 @@ export function ReviewModal({
   initialReview: string;
   path: string;
   onClose: () => void;
+  onSaved?: (score: number, review: string) => void;
 }) {
   const editing = initialScore > 0;
   const t = useT();
@@ -52,8 +54,10 @@ export function ReviewModal({
     setError(null);
     const r = await saveRating({ targetType, targetId, spotifyId, score, review: review.trim(), path, name, artist, artists, imageUrl });
     setBusy(false);
-    if (r.ok) onClose();
-    else setError(msg(r.code, locale));
+    if (r.ok) {
+      onSaved?.(score, review.trim());
+      onClose();
+    } else setError(msg(r.code, locale));
   };
 
   const remove = async () => {
@@ -62,8 +66,10 @@ export function ReviewModal({
     setError(null);
     const r = await deleteRating({ targetType, targetId, path });
     setBusy(false);
-    if (r.ok) onClose();
-    else setError(msg(r.code, locale));
+    if (r.ok) {
+      onSaved?.(0, "");
+      onClose();
+    } else setError(msg(r.code, locale));
   };
 
   return (

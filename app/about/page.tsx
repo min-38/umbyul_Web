@@ -4,8 +4,11 @@ import { getT } from "@/lib/i18n-server";
 
 const FEATURES = [
   { icon: "star", title: "0.5점 단위 별점", desc: "곡·앨범을 세밀하게 평가하고 나만의 기록을 남기세요." },
-  { icon: "review", title: "리뷰 & 반응", desc: "리뷰를 쓰고 좋아요로 좋은 리뷰를 띄우세요." },
+  { icon: "mix", title: "믹스", desc: "곡을 골라 '이거 들어봐' 믹스를 만들면, 유튜브·스포티파이로 듣고 평가해요." },
+  { icon: "review", title: "리뷰 & 댓글", desc: "리뷰를 쓰고 댓글로 이야기 나누세요. 좋은 리뷰엔 좋아요." },
+  { icon: "discover", title: "발견 & 차트", desc: "신규·급상승 음악을 발견하고, 랭킹으로 흐름을 봐요." },
   { icon: "follow", title: "취향 팔로우", desc: "취향이 맞는 유저를 팔로우하고 새 평가를 받아보세요." },
+  { icon: "trend", title: "평점 시세", desc: "곡·앨범 평점이 시간에 따라 어떻게 움직이는지 그래프로 봐요." },
 ] as const;
 
 // 서비스 소개(About). 공개 — 로그인 게이트 없음. 우주 배경 몰입형(항상 다크).
@@ -31,7 +34,7 @@ export default async function AboutPage() {
         </p>
         <div className="mt-2 flex flex-wrap items-center justify-center gap-3">
           <Link
-            href="/search"
+            href="/discover"
             className="rounded-lg bg-indigo-600 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-indigo-500"
           >
             {t("둘러보기")}
@@ -94,7 +97,7 @@ export default async function AboutPage() {
         <h2 className="text-balance text-2xl font-semibold text-white sm:text-3xl">{t("지금 첫 별점을 남겨보세요.")}</h2>
         <div className="flex flex-wrap items-center justify-center gap-3">
           <Link
-            href="/search"
+            href="/discover"
             className="rounded-lg bg-indigo-600 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-indigo-500"
           >
             {t("둘러보기")}
@@ -135,6 +138,28 @@ function FeatureIcon({ name }: { name: string }) {
     return (
       <svg {...common}>
         <path d="M21 15a2 2 0 0 1-2 2H8l-5 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+      </svg>
+    );
+  if (name === "mix")
+    return (
+      <svg {...common}>
+        <path d="M9 18V5l12-2v13" />
+        <circle cx="6" cy="18" r="3" />
+        <circle cx="18" cy="16" r="3" />
+      </svg>
+    );
+  if (name === "discover")
+    return (
+      <svg {...common}>
+        <circle cx="12" cy="12" r="9" />
+        <path d="M15.5 8.5l-2 5-5 2 2-5z" />
+      </svg>
+    );
+  if (name === "trend")
+    return (
+      <svg {...common}>
+        <path d="M3 16l5-5 4 4 8-8" />
+        <path d="M17 7h4v4" />
       </svg>
     );
   return (

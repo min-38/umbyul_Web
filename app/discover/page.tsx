@@ -14,7 +14,7 @@ export default async function DiscoverPage() {
 
   return (
     <div className="mx-auto flex w-full max-w-4xl flex-col gap-12 px-6 py-8">
-      <h1 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">Discover</h1>
+      <h1 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">{t("발견")}</h1>
 
       <RisingSection rising={rising} />
 

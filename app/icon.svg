@@ -1,0 +1,29 @@
+<svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="gBase" x1="0" y1="4" x2="190" y2="40" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#7c3aed"/>
+      <stop offset="0.5" stop-color="#4f46e5"/>
+      <stop offset="1" stop-color="#2563eb"/>
+    </linearGradient>
+    <radialGradient id="gLilac" cx="42" cy="9" r="85" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#d8b4fe"/><stop offset="1" stop-color="#d8b4fe" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="gPink" cx="152" cy="21" r="85" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#f9a8d4"/><stop offset="1" stop-color="#f9a8d4" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="gCyan" cx="99" cy="17" r="104" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#7dd3fc"/><stop offset="1" stop-color="#7dd3fc" stop-opacity="0"/>
+    </radialGradient>
+    <clipPath id="gClip">
+      <text x="16" y="17.5" text-anchor="middle" dominant-baseline="central"
+            font-family="Geist, ui-sans-serif, system-ui, -apple-system, Segoe UI, Arial, sans-serif"
+            font-weight="800" font-size="31">G</text>
+    </clipPath>
+  </defs>
+  <g clip-path="url(#gClip)">
+    <rect width="32" height="32" fill="url(#gBase)"/>
+    <rect width="32" height="32" fill="url(#gLilac)"/>
+    <rect width="32" height="32" fill="url(#gPink)"/>
+    <rect width="32" height="32" fill="url(#gCyan)"/>
+  </g>
+</svg>

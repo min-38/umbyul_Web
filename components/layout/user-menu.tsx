@@ -8,7 +8,10 @@ import { useClickOutside } from "@/lib/use-click-outside";
 import { useT } from "@/components/i18n-provider";
 
 // 포인트·업적은 출시 보류(게이미피케이션 미도입) — 메뉴에서 숨김 (NON-129).
-const STATIC_ITEMS = [{ label: "설정", href: "/settings" }];
+const STATIC_ITEMS = [
+  { label: "믹스 만들기", href: "/mixes/new" },
+  { label: "설정", href: "/settings" },
+];
 
 export function UserMenu({ username, avatarUrl }: { username: string; avatarUrl: string | null }) {
   const [open, setOpen] = useState(false);

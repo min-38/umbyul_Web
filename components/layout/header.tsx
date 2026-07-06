@@ -12,6 +12,7 @@ import { UserMenu } from "./user-menu";
 const NAV = [
   { label: "발견", href: "/discover" },
   { label: "차트", href: "/chart" },
+  { label: "믹스", href: "/mixes" },
 ];
 
 export async function Header() {

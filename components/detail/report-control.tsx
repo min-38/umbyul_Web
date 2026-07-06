@@ -7,13 +7,13 @@ import { msg } from "@/lib/messages";
 import { useT, useLocale } from "@/components/i18n-provider";
 
 const REASONS = [
-  { value: "not_music", label: "음악과 무관한 내용", for: ["rating", "comment"] },
+  { value: "not_music", label: "음악과 무관한 내용", for: ["rating", "comment", "set_comment"] },
   { value: "inappropriate_profile", label: "부적절한 이름·프로필 사진", for: ["rating", "user"] },
-  { value: "abuse", label: "악플·욕설", for: ["rating", "user", "comment"] },
-  { value: "other", label: "기타", for: ["rating", "user", "comment"] },
+  { value: "abuse", label: "악플·욕설", for: ["rating", "user", "comment", "set_comment"] },
+  { value: "other", label: "기타", for: ["rating", "user", "comment", "set_comment"] },
 ] as const;
 
-type ReportTarget = "rating" | "user" | "comment";
+type ReportTarget = "rating" | "user" | "comment" | "set_comment";
 
 export function ReportControl({
   targetType = "rating",
@@ -106,7 +106,7 @@ export function ReportDialog({
             ) : (
               <>
                 <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">
-                  {targetType === "user" ? t("유저 신고") : targetType === "comment" ? t("댓글 신고") : t("리뷰 신고")}
+                  {targetType === "user" ? t("유저 신고") : targetType === "comment" || targetType === "set_comment" ? t("댓글 신고") : t("리뷰 신고")}
                 </h2>
                 <p className="mt-0.5 text-xs text-zinc-500">{t("신고 내용은 운영자가 검토합니다.")}</p>
 

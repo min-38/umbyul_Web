@@ -1,13 +1,14 @@
 import { notFound } from "next/navigation";
-import { getUserProfile, getProfile } from "@/lib/api";
+import { getUserProfile, getProfile, getUserSets } from "@/lib/api";
 import { getT } from "@/lib/i18n-server";
 import { ProfileReviews } from "@/components/profile/profile-reviews";
+import { ProfileSets } from "@/components/profile/profile-sets";
 import { ProfileSocial } from "@/components/profile/profile-social";
 import { ProfileMenu } from "@/components/profile/profile-menu";
 
 export default async function ProfilePage({ params }: { params: Promise<{ username: string }> }) {
   const { username } = await params;
-  const [profile, me, t] = await Promise.all([getUserProfile(username), getProfile(), getT()]);
+  const [profile, me, sets, t] = await Promise.all([getUserProfile(username), getProfile(), getUserSets(username), getT()]);
   if (!profile) notFound();
 
   const loggedIn = me !== null;
@@ -48,15 +49,18 @@ export default async function ProfilePage({ params }: { params: Promise<{ userna
           {t("차단한 사용자입니다. 리뷰를 보려면 차단을 해제하세요.")}
         </p>
       ) : (
-        <section className="mt-10">
-          <div className="mb-4 flex items-baseline gap-3">
-            <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">
-              {t("작성한 리뷰")}<span className="text-zinc-400">({profile.reviewCount.toLocaleString()})</span>
-            </h2>
-            <span className="text-sm text-zinc-400">{t("받은 좋아요 {count}", { count: profile.totalLikes.toLocaleString() })}</span>
-          </div>
-          <ProfileReviews reviews={profile.reviews} />
-        </section>
+        <>
+          <ProfileSets sets={sets} isSelf={isSelf} />
+          <section className="mt-10">
+            <div className="mb-4 flex items-baseline gap-3">
+              <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">
+                {t("작성한 리뷰")}<span className="text-zinc-400">({profile.reviewCount.toLocaleString()})</span>
+              </h2>
+              <span className="text-sm text-zinc-400">{t("받은 좋아요 {count}", { count: profile.totalLikes.toLocaleString() })}</span>
+            </div>
+            <ProfileReviews reviews={profile.reviews} />
+          </section>
+        </>
       )}
     </div>
   );
