@@ -2,18 +2,26 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { getLegalDoc } from "@/lib/api";
 import { getLocale, getT } from "@/lib/i18n-server";
+import { LegalLangSelect } from "@/components/legal/legal-lang-select";
+
+const DOC_LOCALES = ["ko", "en", "ja", "es"];
 
 // 공개 약관/개인정보 문서 렌더(NON-66). 게시본을 마크다운으로, en 폴백은 서버(API)가 처리.
 // react-markdown 은 raw HTML 을 렌더하지 않아 안전(admin 작성 마크다운만).
-export async function LegalDoc({ type }: { type: "terms" | "privacy" }) {
-  const locale = await getLocale();
+// 글 자체 언어는 ?lang= 로 선택(UI 로케일과 별개, BUG-5).
+export async function LegalDoc({ type, langParam }: { type: "terms" | "privacy"; langParam?: string }) {
+  const uiLocale = await getLocale();
+  const locale = langParam && DOC_LOCALES.includes(langParam) ? langParam : uiLocale;
   const t = await getT();
   const doc = await getLegalDoc(type, locale);
   const title = type === "terms" ? t("이용약관") : t("개인정보 처리방침");
 
   return (
     <div className="mx-auto w-full max-w-3xl px-6 py-12">
-      <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-50">{title}</h1>
+      <div className="flex items-center justify-between gap-3">
+        <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-50">{title}</h1>
+        <LegalLangSelect current={locale} />
+      </div>
       {doc ? (
         <>
           <p className="mt-1 text-xs text-zinc-400">

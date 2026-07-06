@@ -71,8 +71,8 @@ export function DisplaySettings() {
           className="w-full max-w-xs rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 disabled:opacity-70 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100"
         >
           {/* 언어 이름은 원문(네이티브) 유지 — 번역하지 않음 */}
-          <option value="ko">한국어</option>
           <option value="en">English</option>
+          <option value="ko">한국어</option>
           <option value="ja">日本語</option>
           <option value="es">Español</option>
         </select>

@@ -73,7 +73,7 @@ export default async function ChartPage({
   };
   const sortLabel: Record<ChartSort, string> = { most: t("최다 리뷰"), top: t("최고 평가") };
   const userSortLabel: Record<ChartUserSort, string> = { reviews: t("리뷰"), likes: t("좋아요"), followers: t("팔로워") };
-  const periodLabel: Record<ChartPeriod, string> = { day: "D", week: "W", month: "M", year: "Y" };
+  const periodLabel: Record<ChartPeriod, string> = { day: "일", week: "주", month: "월", year: "년" };
   const genderLabel: Record<ChartGender, string> = { all: t("전체"), male: t("남성"), female: t("여성") };
   const ageLabel: Record<ChartAge, string> = {
     all: t("전체"), "10": t("10대"), "20": t("20대"), "30": t("30대"), "40": t("40대"), "50": t("50대+"),
@@ -114,7 +114,21 @@ export default async function ChartPage({
 
   const periodSeg = (current: ChartPeriod, key: "period" | "uperiod") => (
     <div className="flex justify-end">
-      <Seg options={PERIODS.map((v) => ({ label: periodLabel[v], href: hrefFor({ [key]: v }), active: v === current }))} />
+      <div className="flex gap-1 rounded-lg bg-zinc-100 p-0.5 dark:bg-zinc-900">
+        {PERIODS.map((v) => (
+          <Link
+            key={v}
+            href={hrefFor({ [key]: v })}
+            className={`rounded-md px-2.5 py-1 text-xs font-medium transition ${
+              v === current
+                ? "bg-white text-zinc-900 shadow-sm dark:bg-zinc-700 dark:text-zinc-50"
+                : "text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-200"
+            }`}
+          >
+            {t(periodLabel[v])}
+          </Link>
+        ))}
+      </div>
     </div>
   );
 

@@ -49,7 +49,7 @@ export async function dismissReview(ratingId: string) {
 }
 
 export async function submitReport(input: {
-  targetType: "rating" | "user" | "comment" | "set_comment";
+  targetType: "rating" | "user" | "comment" | "set_comment" | "set";
   targetId: string;
   reason: string;
   detail: string | null;

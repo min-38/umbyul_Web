@@ -9,6 +9,8 @@ import { YoutubeIcon, SpotifyIcon } from "@/components/sets/track-picker";
 import { MeatballMenu } from "@/components/ui/meatball-menu";
 import { Stars } from "@/components/detail/stars";
 import { ReviewModal } from "@/components/detail/review-modal";
+import { ReportDialog } from "@/components/detail/report-control";
+import { MusicBrainzLink } from "@/components/detail/musicbrainz-link";
 import { coverThumb } from "@/lib/image";
 import { formatRelativeTime } from "@/lib/format";
 import { useT, useLocale } from "@/components/i18n-provider";
@@ -31,6 +33,7 @@ export function SetView({
   const [rateFor, setRateFor] = useState<DjSetTrack | null>(null);
   const [liked, setLiked] = useState(set.likedByMe);
   const [likeCount, setLikeCount] = useState(set.likeCount);
+  const [reportOpen, setReportOpen] = useState(false);
   const path = `/mixes/${set.id}`;
 
   const toggleLike = async () => {
@@ -58,6 +61,10 @@ export function SetView({
 
   return (
     <div className="mx-auto w-full max-w-2xl px-4 py-8">
+      <Link href="/mixes" className="mb-4 inline-flex items-center gap-1 text-sm text-zinc-500 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-200">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6" /></svg>
+        {t("목록으로")}
+      </Link>
       <header className="flex flex-col gap-3 border-b border-zinc-200 pb-5 dark:border-zinc-800">
         <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-50">{set.title}</h1>
         <div className="flex items-center justify-between gap-3 text-xs text-zinc-400">
@@ -91,7 +98,7 @@ export function SetView({
             </svg>
             <span className="tabular-nums">{likeCount}</span>
           </button>
-          {isOwner && (
+          {isOwner ? (
             <MeatballMenu
               label={t("더보기")}
               items={[
@@ -99,6 +106,10 @@ export function SetView({
                 { label: t("삭제"), onSelect: removeSet, danger: true },
               ]}
             />
+          ) : (
+            loggedIn && (
+              <MeatballMenu label={t("더보기")} items={[{ label: t("신고"), onSelect: () => setReportOpen(true), danger: true }]} />
+            )
           )}
         </div>
       </header>
@@ -135,16 +146,19 @@ export function SetView({
                   </>
                 )}
               </p>
+              {/* 듣기 아이콘: 스포티파이 · MusicBrainz · 유튜브 (아티스트·앨범 하단) */}
+              <div className="mt-1.5 flex items-center gap-3">
+                <a href={`https://open.spotify.com/track/${tr.spotifyId}`} target="_blank" rel="noopener noreferrer" aria-label={t("Spotify에서 듣기")} className="text-[#1DB954] hover:opacity-80">
+                  <SpotifyIcon size={16} />
+                </a>
+                <MusicBrainzLink isrc={tr.isrc} size={16} label={t("MusicBrainz에서 보기")} />
+                {tr.youtubeUrl && (
+                  <a href={tr.youtubeUrl} target="_blank" rel="noopener noreferrer" aria-label={t("유튜브에서 보기")} className="text-red-600 hover:text-red-500">
+                    <YoutubeIcon size={16} />
+                  </a>
+                )}
+              </div>
             </div>
-
-            <a href={`https://open.spotify.com/track/${tr.spotifyId}`} target="_blank" rel="noopener noreferrer" aria-label={t("Spotify에서 듣기")} className="shrink-0 text-[#1DB954] hover:opacity-80">
-              <SpotifyIcon />
-            </a>
-            {tr.youtubeUrl && (
-              <a href={tr.youtubeUrl} target="_blank" rel="noopener noreferrer" aria-label={t("유튜브에서 보기")} className="shrink-0 text-red-600 hover:text-red-500">
-                <YoutubeIcon />
-              </a>
-            )}
 
             {tr.isrc &&
               (tr.myScore ? (
@@ -201,6 +215,8 @@ export function SetView({
           onSaved={(score, review) => onRated(rateFor.spotifyId, score, review)}
         />
       )}
+
+      <ReportDialog targetType="set" targetId={set.id} open={reportOpen} onClose={() => setReportOpen(false)} />
     </div>
   );
 }
