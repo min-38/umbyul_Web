@@ -8,6 +8,7 @@ import { TrackPicker, YoutubeIcon, MAX_TRACKS, type PickedTrack } from "@/compon
 import { EditTrackModal } from "@/components/sets/edit-track-modal";
 import { MeatballMenu } from "@/components/ui/meatball-menu";
 import { MixGuide } from "@/components/sets/mix-guide";
+import { ExplicitBadge } from "@/components/detail/explicit-badge";
 import { coverThumb } from "@/lib/image";
 import { useT } from "@/components/i18n-provider";
 
@@ -132,8 +133,14 @@ export function MixEditor({ detail }: { detail: DjSetDetail }) {
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={coverThumb(tr.imageUrl, "sm") ?? "/placeholder.svg"} alt="" className="h-10 w-10 shrink-0 rounded bg-zinc-100 object-cover dark:bg-zinc-800" />
               <div className="min-w-0 flex-1">
-                <span className="block truncate text-sm font-medium text-zinc-900 dark:text-zinc-50">{tr.name}</span>
-                <span className="block truncate text-xs text-zinc-400">{tr.artist}</span>
+                <span className="flex items-center gap-1.5 text-sm font-medium text-zinc-900 dark:text-zinc-50">
+                  <span className="truncate">{tr.name}</span>
+                  {tr.explicit && <ExplicitBadge />}
+                </span>
+                <span className="block truncate text-xs text-zinc-400">
+                  {tr.artist}
+                  {tr.albumName ? ` · ${tr.albumName}` : ""}
+                </span>
               </div>
               {tr.youtubeUrl && <span className="shrink-0 text-red-600"><YoutubeIcon size={14} /></span>}
               <MeatballMenu
