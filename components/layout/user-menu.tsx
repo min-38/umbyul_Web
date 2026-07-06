@@ -7,12 +7,8 @@ import { signOut } from "@/app/auth/actions";
 import { useClickOutside } from "@/lib/use-click-outside";
 import { useT } from "@/components/i18n-provider";
 
-// 미구현 대상은 플레이스홀더(#) — 각 기능 이슈에서 연결
-const STATIC_ITEMS = [
-  { label: "포인트 내역", href: "#" },
-  { label: "업적", href: "#" },
-  { label: "설정", href: "/settings" },
-];
+// 포인트·업적은 출시 보류(게이미피케이션 미도입) — 메뉴에서 숨김 (NON-129).
+const STATIC_ITEMS = [{ label: "설정", href: "/settings" }];
 
 export function UserMenu({ username, avatarUrl }: { username: string; avatarUrl: string | null }) {
   const [open, setOpen] = useState(false);
