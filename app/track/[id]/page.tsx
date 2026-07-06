@@ -24,10 +24,10 @@ import { createClient } from "@/lib/supabase/server";
 import { Stars } from "@/components/detail/stars";
 import { ReviewList } from "@/components/detail/review-list";
 import { RateButton } from "@/components/detail/rate-button";
-import { MetaRow, SpotifyLink, Copyright } from "@/components/detail/detail-bits";
+import { SpotifyLink } from "@/components/detail/detail-bits";
 import { MusicBrainzLink } from "@/components/detail/musicbrainz-link";
 import { GenreTags } from "@/components/detail/genre-tags";
-import { RatingChart } from "@/components/detail/rating-chart";
+import { DetailInfoTabs } from "@/components/detail/detail-info-tabs";
 import { ShareButton } from "@/components/detail/share-button";
 import { MentionMuteToggle } from "@/components/detail/mention-mute-toggle";
 import { ArtistLinks } from "@/components/detail/artist-links";
@@ -106,20 +106,34 @@ export default async function TrackPage({ params }: { params: Promise<{ id: stri
         </div>
       </div>
 
-      <RatingChart points={ratingHistory} label={t("평점 시세")} />
-
-      <MetaRow
-        items={[
-          { label: t("발매일"), value: formatReleaseDate(track.releaseDate) },
-          { label: t("길이"), value: formatDuration(track.durationMs) },
-        ]}
+      <DetailInfoTabs
+        points={ratingHistory}
+        chartLabel={t("평점 시세")}
+        info={
+          <dl className="flex flex-col gap-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div className="flex flex-col gap-1">
+                <dt className="text-xs text-zinc-400">{t("발매일")}</dt>
+                <dd className="text-sm text-zinc-800 dark:text-zinc-200">{formatReleaseDate(track.releaseDate)}</dd>
+              </div>
+              <div className="flex flex-col gap-1">
+                <dt className="text-xs text-zinc-400">{t("길이")}</dt>
+                <dd className="text-sm text-zinc-800 dark:text-zinc-200">{formatDuration(track.durationMs)}</dd>
+              </div>
+            </div>
+            {track.copyright && (
+              <div className="flex flex-col gap-1">
+                <dt className="text-xs text-zinc-400">{t("저작권")}</dt>
+                <dd className="text-xs leading-relaxed text-zinc-500 dark:text-zinc-400">{track.copyright}</dd>
+              </div>
+            )}
+            <div className="flex flex-col gap-1">
+              <dt className="text-xs text-zinc-400">{t("장르")}</dt>
+              <dd><GenreTags targetType="track" id={track.spotifyId} loggedIn={!!user} /></dd>
+            </div>
+          </dl>
+        }
       />
-      <Copyright text={track.copyright} />
-
-      <div className="mt-5">
-        <h2 className="mb-2 text-xs font-semibold text-zinc-400">{t("장르")}</h2>
-        <GenreTags targetType="track" id={track.spotifyId} loggedIn={!!user} />
-      </div>
 
       <section className="mt-10">
         <div className="mb-4 flex items-center justify-between gap-3">

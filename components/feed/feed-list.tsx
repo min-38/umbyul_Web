@@ -98,6 +98,7 @@ export function FeedList({
         <ShareButton
           path={`/${it.targetType}/${it.targetSpotifyId}#review-${it.id}`}
           title={t("{username}님의 리뷰", { username: it.username })}
+          text={`★ ${it.score.toFixed(1)} · ${it.name ?? ""}${it.artist ? ` — ${it.artist}` : ""}${it.body ? `\n@${it.username}: ${it.body}` : ""}`}
         />
       </div>
       <MeatballMenu items={menuItems(it)} label={t("더보기")} />

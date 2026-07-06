@@ -52,3 +52,8 @@ export async function deleteComment(id: string) {
   const r = await authed("DELETE", `/me/comments/${id}`);
   return { ok: r.ok, code: r.code };
 }
+
+export async function editComment(id: string, body: string) {
+  const r = await authed("PUT", `/me/comments/${id}`, { body });
+  return { ok: r.ok, code: r.code };
+}

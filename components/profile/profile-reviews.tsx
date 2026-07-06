@@ -81,7 +81,7 @@ export function ProfileReviews({ reviews }: { reviews: ProfileReview[] }) {
                 className="h-12 w-12 shrink-0 rounded-md bg-zinc-100 object-cover dark:bg-zinc-900"
               />
               <span
-                className={`flex w-11 shrink-0 items-center justify-center rounded-md py-1 text-xs font-medium ${
+                className={`flex shrink-0 items-center justify-center whitespace-nowrap rounded-md px-2 py-1 text-xs font-medium ${
                   r.targetType === "track"
                     ? "bg-indigo-100 text-indigo-700 dark:bg-indigo-950 dark:text-indigo-300"
                     : "bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300"

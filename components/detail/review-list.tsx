@@ -28,13 +28,18 @@ export function ReviewList({
 }) {
   const [sort, setSort] = useState<Sort>("popular");
   const [highlightId, setHighlightId] = useState<string | null>(null);
+  // 멘션 알림 딥링크(?c=<댓글id>): 해당 리뷰의 댓글을 펼쳐 그 댓글로 스크롤(BUG-3).
+  const [focus, setFocus] = useState<{ reviewId: string; commentId: string } | null>(null);
   const t = useT();
   const locale = useLocale();
 
   // 알림 딥링크(#review-<id>)로 진입 시 해당 리뷰로 스크롤 + 잠깐 하이라이트(NON-60).
+  // ?c=<댓글id> 가 함께 오면 그 리뷰의 댓글로 포커스 전달(BUG-3).
   useEffect(() => {
     if (!window.location.hash.startsWith("#review-")) return;
     const id = window.location.hash.slice("#review-".length);
+    const commentId = new URLSearchParams(window.location.search).get("c");
+    if (commentId) setFocus({ reviewId: id, commentId });
     const el = document.getElementById(`review-${id}`);
     if (!el) return;
     el.scrollIntoView({ behavior: "smooth", block: "center" });
@@ -113,11 +118,17 @@ export function ReviewList({
               <ShareButton
                 path={`${shareBasePath}#review-${r.id}`}
                 title={t("{username}님의 리뷰", { username: r.username })}
+                text={`★ ${r.score.toFixed(1)} · @${r.username}${r.body ? `\n${r.body}` : ""}`}
               />
               {r.userId !== currentUserId && <ReportControl targetId={r.id} loggedIn={currentUserId !== null} />}
             </div>
             {COMMENTS_ENABLED && (
-              <ReviewComments ratingId={r.id} initialCount={r.commentCount} currentUserId={currentUserId} />
+              <ReviewComments
+                ratingId={r.id}
+                initialCount={r.commentCount}
+                currentUserId={currentUserId}
+                focusCommentId={focus?.reviewId === r.id ? focus.commentId : undefined}
+              />
             )}
           </li>
         ))}

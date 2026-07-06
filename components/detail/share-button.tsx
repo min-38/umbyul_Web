@@ -4,14 +4,17 @@ import { useState } from "react";
 import { useT } from "@/components/i18n-provider";
 
 // 공유: 모바일 등 Web Share API 지원 시 네이티브 공유, 아니면 링크 복사(+"복사됨" 피드백).
+// text 를 주면 제목/별점/리뷰 본문 등 텍스트도 함께 공유·복사(BUG-13, URL 미리보기는 OG 메타가 처리).
 export function ShareButton({
   path,
   title,
+  text,
   label,
   size = 14,
 }: {
   path: string;
   title: string;
+  text?: string;
   label?: boolean;
   size?: number;
 }) {
@@ -22,14 +25,14 @@ export function ShareButton({
     const url = `${window.location.origin}${path}`;
     if (typeof navigator !== "undefined" && navigator.share) {
       try {
-        await navigator.share({ title, url });
+        await navigator.share(text ? { title, text, url } : { title, url });
         return;
       } catch {
         // 취소/실패 시 복사로 폴백
       }
     }
     try {
-      await navigator.clipboard.writeText(url);
+      await navigator.clipboard.writeText(text ? `${text}\n\n${url}` : url);
       setCopied(true);
       setTimeout(() => setCopied(false), 1500);
     } catch {

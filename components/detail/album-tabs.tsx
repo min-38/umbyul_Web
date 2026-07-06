@@ -2,23 +2,26 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import type { AlbumDetail } from "@/lib/api";
+import type { AlbumDetail, RatingPoint } from "@/lib/api";
 import { formatDuration, formatTotalDuration, formatReleaseDate } from "@/lib/format";
 import { useT } from "@/components/i18n-provider";
 import { Stars } from "./stars";
 import { GenreTags } from "./genre-tags";
+import { RatingChart } from "./rating-chart";
 
-// 리뷰는 탭에서 빼서 페이지 하단 별도 섹션으로(트랙 페이지와 일관).
-type Tab = "tracklist" | "info";
+// 리뷰는 탭에서 빼서 페이지 하단 별도 섹션으로(트랙 페이지와 일관). 시세 탭 추가(BUG-8).
+type Tab = "tracklist" | "info" | "chart";
 
 const TABS: { key: Tab; label: string }[] = [
   { key: "tracklist", label: "트랙리스트" },
   { key: "info", label: "정보" },
+  { key: "chart", label: "시세" },
 ];
 
-export function AlbumTabs({ album, loggedIn }: { album: AlbumDetail; loggedIn: boolean }) {
+export function AlbumTabs({ album, loggedIn, points }: { album: AlbumDetail; loggedIn: boolean; points: RatingPoint[] }) {
   const [tab, setTab] = useState<Tab>("tracklist");
   const t = useT();
+  const enoughChart = points.length >= 2 && (points[points.length - 1]?.count ?? 0) >= 5;
 
   return (
     <div className="mt-8">
@@ -92,6 +95,15 @@ export function AlbumTabs({ album, loggedIn }: { album: AlbumDetail; loggedIn: b
             </div>
           </dl>
         )}
+
+        {tab === "chart" &&
+          (enoughChart ? (
+            <RatingChart points={points} label={t("평점 시세")} />
+          ) : (
+            <p className="rounded-lg border border-dashed border-zinc-300 px-4 py-8 text-center text-sm text-zinc-400 dark:border-zinc-700">
+              {t("평가가 더 쌓이면 시세가 표시됩니다.")}
+            </p>
+          ))}
       </div>
     </div>
   );

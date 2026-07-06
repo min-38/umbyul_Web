@@ -27,7 +27,6 @@ import { MusicBrainzLink } from "@/components/detail/musicbrainz-link";
 import { ShareButton } from "@/components/detail/share-button";
 import { ArtistLinks } from "@/components/detail/artist-links";
 import { AlbumTabs } from "@/components/detail/album-tabs";
-import { RatingChart } from "@/components/detail/rating-chart";
 import { ReviewList } from "@/components/detail/review-list";
 import { MentionMuteToggle } from "@/components/detail/mention-mute-toggle";
 
@@ -96,9 +95,7 @@ export default async function AlbumPage({ params }: { params: Promise<{ id: stri
         </div>
       </div>
 
-      <RatingChart points={ratingHistory} label={t("평점 시세")} />
-
-      <AlbumTabs album={album} loggedIn={!!user} />
+      <AlbumTabs album={album} loggedIn={!!user} points={ratingHistory} />
 
       <section className="mt-10">
         <div className="mb-4 flex items-center justify-between gap-3">

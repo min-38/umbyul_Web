@@ -34,7 +34,7 @@ export function MixComments({ setId, currentUserId }: { setId: string; currentUs
   const saveEdit = async (id: string) => {
     const body = editDraft.trim();
     if (!body) return;
-    setComments((c) => c.map((x) => (x.id === id ? { ...x, body } : x)));
+    setComments((c) => c.map((x) => (x.id === id ? { ...x, body, edited: true } : x)));
     setEditingId(null);
     await editSetComment(setId, id, body);
   };
@@ -54,6 +54,7 @@ export function MixComments({ setId, currentUserId }: { setId: string; currentUs
   };
 
   const remove = async (id: string) => {
+    if (!window.confirm(t("이 댓글을 삭제할까요?"))) return;
     setComments((c) => c.filter((x) => x.id !== id));
     await deleteSetComment(setId, id);
   };
@@ -130,7 +131,10 @@ export function MixComments({ setId, currentUserId }: { setId: string; currentUs
                     </button>
                   </div>
                 ) : (
-                  <p className="whitespace-pre-wrap text-sm text-zinc-700 dark:text-zinc-200">{c.body}</p>
+                  <p className="whitespace-pre-wrap text-sm text-zinc-700 dark:text-zinc-200">
+                    {c.body}
+                    {c.edited && <span className="ml-1 text-xs text-zinc-400">{t("(수정됨)")}</span>}
+                  </p>
                 )}
               </div>
               {editingId !== c.id &&

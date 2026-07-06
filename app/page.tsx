@@ -48,7 +48,8 @@ export default async function Home({
           {t("피드가 비어 있습니다.")}
         </p>
       ) : (
-        <FeedList items={items} view={view} locale={locale} loggedIn={loggedIn} currentUserId={user?.id ?? null} sort={sort} scope={scope} trackLabel={t("곡")} albumLabel={t("앨범")} />
+        // key: 정렬·범위가 바뀌면 새 서버 데이터로 리마운트(클라 상태 stale 방지, BUG-7)
+        <FeedList key={`${sort}-${scope}`} items={items} view={view} locale={locale} loggedIn={loggedIn} currentUserId={user?.id ?? null} sort={sort} scope={scope} trackLabel={t("곡")} albumLabel={t("앨범")} />
       )}
     </div>
   );

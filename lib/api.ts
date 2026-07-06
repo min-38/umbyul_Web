@@ -156,6 +156,7 @@ export type ReviewComment = {
   likedByMe: boolean;
   score: number | null; // 작성자가 대상에 매긴 별점, null = 평가 없음
   deleted: boolean;
+  edited: boolean; // 수정됨 표시(BUG-11)
 };
 // 장르는 Spotify 앱 토큰으로 안 내려와 제외. 레이블은 copyrights(℗/©) 텍스트.
 export type TrackDetail = {
@@ -645,7 +646,7 @@ export type DjSetTrack = {
   myReview: string | null;
 };
 export type DjSetDetail = { set: DjSetSummary; tracks: DjSetTrack[] };
-export type DjSetComment = { id: string; userId: string; username: string; avatarUrl: string | null; body: string; createdAt: string };
+export type DjSetComment = { id: string; userId: string; username: string; avatarUrl: string | null; body: string; createdAt: string; edited: boolean };
 
 /** 믹스 상세 (공개, 로그인 시 트랙별 내 평점 포함). 없으면 null. */
 export async function getSet(id: string): Promise<DjSetDetail | null> {

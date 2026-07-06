@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import type { ReviewComment } from "@/lib/api";
-import { loadComments, addComment, deleteComment, toggleCommentLike } from "@/app/actions/comments";
+import { loadComments, addComment, deleteComment, editComment, toggleCommentLike } from "@/app/actions/comments";
 import { msg } from "@/lib/messages";
 import { formatRelativeTime } from "@/lib/format";
 import { useT, useLocale } from "@/components/i18n-provider";
@@ -25,16 +25,27 @@ function renderBody(body: string) {
   );
 }
 
+// 좋아요 = 엄지척(리뷰 반응과 동일 디자인, BUG-4).
+function ThumbUp({ filled }: { filled: boolean }) {
+  return (
+    <svg width="13" height="13" viewBox="0 0 24 24" fill={filled ? "currentColor" : "none"} stroke="currentColor" strokeWidth="2" strokeLinejoin="round" aria-hidden="true">
+      <path d="M7 10v11M2 13v6a2 2 0 002 2h13.5a2 2 0 001.97-1.64l1.3-7A2 2 0 0019.8 10H14V4a2 2 0 00-2-2l-3 7v11" />
+    </svg>
+  );
+}
+
 export function ReviewComments({
   ratingId,
   initialCount,
   currentUserId,
   defaultOpen = false,
+  focusCommentId,
 }: {
   ratingId: string;
   initialCount: number;
   currentUserId: string | null;
   defaultOpen?: boolean;
+  focusCommentId?: string; // 멘션 알림 딥링크로 진입 시 스크롤·강조할 댓글(BUG-3)
 }) {
   const t = useT();
   const locale = useLocale();
@@ -42,10 +53,13 @@ export function ReviewComments({
   const [loaded, setLoaded] = useState(false);
   const [comments, setComments] = useState<ReviewComment[]>([]);
   const [draft, setDraft] = useState("");
-  const [replyTo, setReplyTo] = useState<{ parentId: string; mention: string | null } | null>(null);
+  const [replyTo, setReplyTo] = useState<{ parentId: string } | null>(null);
   const [replyDraft, setReplyDraft] = useState("");
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editDraft, setEditDraft] = useState("");
   const [expanded, setExpanded] = useState<Set<string>>(new Set());
   const [reportTarget, setReportTarget] = useState<string | null>(null);
+  const [highlightId, setHighlightId] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
 
@@ -54,6 +68,31 @@ export function ReviewComments({
     if (defaultOpen && !loaded) loadComments(ratingId).then((c) => { setComments(c); setLoaded(true); });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // 멘션 딥링크(?c=): 댓글 열고 → 로드 → (대댓글이면 부모 펼침) → 스크롤 + 잠깐 강조(BUG-3).
+  useEffect(() => {
+    if (!focusCommentId) return;
+    let cancelled = false;
+    (async () => {
+      setOpen(true);
+      let list = comments;
+      if (!loaded) {
+        list = await loadComments(ratingId);
+        if (cancelled) return;
+        setComments(list);
+        setLoaded(true);
+      }
+      const target = list.find((c) => c.id === focusCommentId);
+      if (target?.parentId) setExpanded((s) => new Set(s).add(target.parentId!));
+      requestAnimationFrame(() => {
+        document.getElementById(`comment-${focusCommentId}`)?.scrollIntoView({ behavior: "smooth", block: "center" });
+      });
+      setHighlightId(focusCommentId);
+      setTimeout(() => { if (!cancelled) setHighlightId(null); }, 2500);
+    })();
+    return () => { cancelled = true; };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [focusCommentId]);
 
   const top = comments.filter((c) => c.parentId === null);
   const repliesOf = (id: string) => comments.filter((c) => c.parentId === id);
@@ -96,6 +135,7 @@ export function ReviewComments({
   };
 
   const remove = async (id: string) => {
+    if (!window.confirm(t("이 댓글을 삭제할까요?"))) return;
     await deleteComment(id);
     setComments((cs) => {
       const hasReplies = cs.some((c) => c.parentId === id);
@@ -105,14 +145,32 @@ export function ReviewComments({
     });
   };
 
-  const startReply = (parentTopId: string, mention: string | null) => {
+  const startEdit = (c: ReviewComment) => {
+    setEditingId(c.id);
+    setEditDraft(c.body ?? "");
+  };
+
+  const saveEdit = async (id: string) => {
+    const body = editDraft.trim();
+    if (!body) return;
+    setComments((cs) => cs.map((c) => (c.id === id ? { ...c, body, edited: true } : c)));
+    setEditingId(null);
+    await editComment(id, body);
+  };
+
+  const startReply = (parentTopId: string) => {
     if (!currentUserId) return;
-    setReplyTo({ parentId: parentTopId, mention });
-    setReplyDraft(mention ? `@${mention} ` : "");
+    setReplyTo({ parentId: parentTopId });
+    setReplyDraft("");
   };
 
   const commentRow = (c: ReviewComment) => (
-    <div className="flex items-start gap-2">
+    <div
+      id={`comment-${c.id}`}
+      className={`flex items-start gap-2 scroll-mt-24 rounded-lg transition-colors duration-500 ${
+        highlightId === c.id ? "bg-amber-100 dark:bg-amber-950/40" : ""
+      }`}
+    >
       <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center overflow-hidden rounded-full bg-zinc-200 text-[10px] font-medium text-zinc-500 dark:bg-zinc-800 dark:text-zinc-300">
         {c.avatarUrl ? (
           // eslint-disable-next-line @next/next/no-img-element
@@ -138,32 +196,55 @@ export function ReviewComments({
 
         {c.deleted ? (
           <p className="text-sm italic text-zinc-400">{t("삭제된 댓글입니다.")}</p>
+        ) : editingId === c.id ? (
+          <div className="mt-1 flex items-end gap-2">
+            <MentionTextarea
+              value={editDraft}
+              onChange={setEditDraft}
+              autoFocus
+              wrapperClassName="flex-1"
+              className="min-h-9 w-full resize-none rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 focus:border-zinc-500 focus:outline-none dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100"
+            />
+            <button type="button" onClick={() => setEditingId(null)} className="shrink-0 px-1 py-2 text-xs text-zinc-400 hover:text-zinc-600">
+              {t("취소")}
+            </button>
+            <button type="button" onClick={() => saveEdit(c.id)} disabled={editDraft.trim() === ""} className="shrink-0 rounded-lg bg-zinc-900 px-3 py-2 text-sm font-medium text-white hover:bg-zinc-700 disabled:opacity-50 dark:bg-zinc-100 dark:text-black">
+              {t("저장")}
+            </button>
+          </div>
         ) : (
-          <p className="whitespace-pre-wrap text-sm text-zinc-700 dark:text-zinc-200">{renderBody(c.body ?? "")}</p>
+          <p className="whitespace-pre-wrap text-sm text-zinc-700 dark:text-zinc-200">
+            {renderBody(c.body ?? "")}
+            {c.edited && <span className="ml-1 text-xs text-zinc-400">{t("(수정됨)")}</span>}
+          </p>
         )}
 
-        {!c.deleted && (
+        {!c.deleted && editingId !== c.id && (
           <div className="mt-0.5 flex items-center gap-3 text-xs text-zinc-400">
             <button
               type="button"
               onClick={() => (currentUserId ? like(c.id) : undefined)}
               aria-label={t("좋아요")}
-              className={`flex items-center gap-1 hover:text-zinc-600 dark:hover:text-zinc-300 ${c.likedByMe ? "text-rose-500" : ""}`}
+              aria-pressed={c.likedByMe}
+              className={`flex items-center gap-1 hover:text-zinc-600 dark:hover:text-zinc-300 ${c.likedByMe ? "text-indigo-600 dark:text-indigo-400" : ""}`}
             >
-              <svg width="13" height="13" viewBox="0 0 24 24" fill={c.likedByMe ? "currentColor" : "none"} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                <path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 1 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z" />
-              </svg>
+              <ThumbUp filled={c.likedByMe} />
               {c.likeCount > 0 && c.likeCount}
             </button>
             {currentUserId && (
-              <button type="button" onClick={() => startReply(c.parentId ?? c.id, c.parentId ? c.username : null)} className="hover:text-zinc-600 dark:hover:text-zinc-300">
+              <button type="button" onClick={() => startReply(c.parentId ?? c.id)} className="hover:text-zinc-600 dark:hover:text-zinc-300">
                 {t("답글")}
               </button>
             )}
             {currentUserId && c.userId === currentUserId && (
-              <button type="button" onClick={() => remove(c.id)} className="hover:text-red-500">
-                {t("삭제")}
-              </button>
+              <>
+                <button type="button" onClick={() => startEdit(c)} className="hover:text-zinc-600 dark:hover:text-zinc-300">
+                  {t("수정")}
+                </button>
+                <button type="button" onClick={() => remove(c.id)} className="hover:text-red-500">
+                  {t("삭제")}
+                </button>
+              </>
             )}
             {currentUserId && c.userId !== currentUserId && (
               <button type="button" onClick={() => setReportTarget(c.id)} className="hover:text-red-500">
@@ -244,7 +325,7 @@ export function ReviewComments({
           })}
 
           {currentUserId ? (
-            <div className="flex items-end gap-2">
+            <div className={defaultOpen ? "sticky bottom-0 -mb-1 flex items-end gap-2 bg-white pt-2 dark:bg-zinc-950" : "flex items-end gap-2"}>
               <MentionTextarea
                 value={draft}
                 onChange={setDraft}
