@@ -26,7 +26,7 @@ export function ReviewList({
   currentUserId: string | null;
   shareBasePath: string;
 }) {
-  const [sort, setSort] = useState<Sort>("latest");
+  const [sort, setSort] = useState<Sort>("popular");
   const [highlightId, setHighlightId] = useState<string | null>(null);
   const t = useT();
   const locale = useLocale();

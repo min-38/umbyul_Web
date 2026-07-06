@@ -357,6 +357,7 @@ export type FeedItem = {
   likes: number;
   dislikes: number;
   myReaction: Reaction | null;
+  commentCount: number;
 };
 
 /** 홈 피드 v2 (공개, following은 로그인 필요). 실패 시 빈 목록. */

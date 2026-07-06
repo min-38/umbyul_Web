@@ -48,7 +48,7 @@ export default async function Home({
           {t("피드가 비어 있습니다.")}
         </p>
       ) : (
-        <FeedList items={items} view={view} locale={locale} loggedIn={loggedIn} sort={sort} scope={scope} trackLabel={t("곡")} albumLabel={t("앨범")} />
+        <FeedList items={items} view={view} locale={locale} loggedIn={loggedIn} currentUserId={user?.id ?? null} sort={sort} scope={scope} trackLabel={t("곡")} albumLabel={t("앨범")} />
       )}
     </div>
   );

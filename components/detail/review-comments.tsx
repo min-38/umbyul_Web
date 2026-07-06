@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import type { ReviewComment } from "@/lib/api";
 import { loadComments, addComment, deleteComment, toggleCommentLike } from "@/app/actions/comments";
@@ -29,14 +29,16 @@ export function ReviewComments({
   ratingId,
   initialCount,
   currentUserId,
+  defaultOpen = false,
 }: {
   ratingId: string;
   initialCount: number;
   currentUserId: string | null;
+  defaultOpen?: boolean;
 }) {
   const t = useT();
   const locale = useLocale();
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(defaultOpen);
   const [loaded, setLoaded] = useState(false);
   const [comments, setComments] = useState<ReviewComment[]>([]);
   const [draft, setDraft] = useState("");
@@ -46,6 +48,12 @@ export function ReviewComments({
   const [reportTarget, setReportTarget] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
+
+  // 모달 등 임베드 모드: 마운트 시 바로 로드(토글 버튼 없음).
+  useEffect(() => {
+    if (defaultOpen && !loaded) loadComments(ratingId).then((c) => { setComments(c); setLoaded(true); });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const top = comments.filter((c) => c.parentId === null);
   const repliesOf = (id: string) => comments.filter((c) => c.parentId === id);
@@ -170,19 +178,21 @@ export function ReviewComments({
 
   return (
     <div className="flex flex-col">
-      <button
-        type="button"
-        onClick={toggle}
-        className="flex items-center gap-1 text-xs text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300"
-      >
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" aria-hidden="true">
-          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-        </svg>
-        {displayCount > 0 ? t("댓글 {count}", { count: displayCount }) : t("댓글")}
-      </button>
+      {!defaultOpen && (
+        <button
+          type="button"
+          onClick={toggle}
+          className="flex items-center gap-1 text-xs text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300"
+        >
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" aria-hidden="true">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+          </svg>
+          {displayCount > 0 ? t("댓글 {count}", { count: displayCount }) : t("댓글")}
+        </button>
+      )}
 
       {open && (
-        <div className="mt-2 flex flex-col gap-3 border-l-2 border-zinc-100 pl-3 dark:border-zinc-800">
+        <div className={`flex flex-col gap-3 ${defaultOpen ? "" : "mt-2 border-l-2 border-zinc-100 pl-3 dark:border-zinc-800"}`}>
           {loaded && top.length === 0 && <p className="text-xs text-zinc-400">{t("첫 댓글을 남겨보세요.")}</p>}
 
           {top.map((c) => {

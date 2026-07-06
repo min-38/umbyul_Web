@@ -5,6 +5,8 @@ import Link from "next/link";
 import { Stars } from "@/components/detail/stars";
 import { ReactionBar } from "@/components/detail/reaction-bar";
 import { ReportDialog } from "@/components/detail/report-control";
+import { ShareButton } from "@/components/detail/share-button";
+import { FeedCommentsModal } from "@/components/feed/feed-comments-modal";
 import { MeatballMenu } from "@/components/ui/meatball-menu";
 import { TargetBadge } from "@/components/ui/target-badge";
 import { dismissReview, loadMoreFeed } from "@/app/actions/social";
@@ -23,6 +25,7 @@ export function FeedList({
   view,
   locale,
   loggedIn,
+  currentUserId,
   sort,
   scope,
   trackLabel,
@@ -32,6 +35,7 @@ export function FeedList({
   view: "card" | "compact";
   locale: Locale;
   loggedIn: boolean;
+  currentUserId: string | null;
   sort: FeedSort;
   scope: FeedScope;
   trackLabel: string;
@@ -41,6 +45,7 @@ export function FeedList({
   const [items, setItems] = useState<FeedItem[]>(initialItems);
   const [dismissed, setDismissed] = useState<Set<string>>(new Set());
   const [reportId, setReportId] = useState<string | null>(null);
+  const [commentsFor, setCommentsFor] = useState<FeedItem | null>(null);
   const [hasMore, setHasMore] = useState(initialItems.length >= PAGE_SIZE);
   const [loadingMore, setLoadingMore] = useState(false);
 
@@ -73,11 +78,28 @@ export function FeedList({
 
   const actions = (it: FeedItem) => (
     <div className="flex items-center justify-between">
-      <ReactionBar
-        ratingId={it.id}
-        loggedIn={loggedIn}
-        initial={{ likeCount: it.likes, dislikeCount: it.dislikes, myReaction: it.myReaction }}
-      />
+      <div className="flex items-center gap-4">
+        <ReactionBar
+          ratingId={it.id}
+          loggedIn={loggedIn}
+          initial={{ likeCount: it.likes, dislikeCount: it.dislikes, myReaction: it.myReaction }}
+        />
+        <button
+          type="button"
+          onClick={() => setCommentsFor(it)}
+          aria-label={t("댓글")}
+          className="flex items-center gap-1 text-xs text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300"
+        >
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" aria-hidden="true">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+          </svg>
+          <span className="tabular-nums">{it.commentCount}</span>
+        </button>
+        <ShareButton
+          path={`/${it.targetType}/${it.targetSpotifyId}#review-${it.id}`}
+          title={t("{username}님의 리뷰", { username: it.username })}
+        />
+      </div>
       <MeatballMenu items={menuItems(it)} label={t("더보기")} />
     </div>
   );
@@ -92,6 +114,15 @@ export function FeedList({
       onClose={() => setReportId(null)}
     />
   );
+
+  const commentsModal = commentsFor ? (
+    <FeedCommentsModal
+      ratingId={commentsFor.id}
+      commentCount={commentsFor.commentCount}
+      currentUserId={currentUserId}
+      onClose={() => setCommentsFor(null)}
+    />
+  ) : null;
 
   const moreButton = hasMore ? (
     <div className="mt-4 text-center">
@@ -145,6 +176,7 @@ export function FeedList({
         </ul>
         {moreButton}
         {reportDialog}
+        {commentsModal}
       </>
     );
   }
@@ -207,6 +239,7 @@ export function FeedList({
       </div>
       {moreButton}
       {reportDialog}
+      {commentsModal}
     </>
   );
 }
