@@ -53,10 +53,15 @@ export function UserMenu({ username, avatarUrl }: { username: string; avatarUrl:
             </Link>
           ))}
           <div className="my-1 border-t border-zinc-200 dark:border-zinc-800" />
-          <form action={signOut.bind(null, pathname)}>
+          <form
+            action={signOut.bind(null, pathname)}
+            onSubmit={(e) => {
+              if (!window.confirm(t("로그아웃 하시겠어요?"))) e.preventDefault();
+            }}
+          >
             <button
               type="submit"
-              className="block w-full px-3 py-1.5 text-left text-sm text-zinc-700 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-900"
+              className="block w-full px-3 py-1.5 text-left text-sm font-medium text-rose-600 hover:bg-rose-50 dark:text-rose-500 dark:hover:bg-rose-950/40"
             >
               {t("로그아웃")}
             </button>

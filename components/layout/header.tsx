@@ -70,7 +70,7 @@ export async function Header() {
           ) : (
             <Link
               href="/login"
-              className="whitespace-nowrap rounded-lg bg-indigo-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-indigo-500"
+              className="whitespace-nowrap rounded-lg bg-gradient-to-r from-violet-600 via-indigo-600 to-blue-600 px-3 py-1.5 text-sm font-medium text-white transition hover:brightness-110"
             >
               {t("로그인 / 가입")}
             </Link>

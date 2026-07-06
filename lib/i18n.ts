@@ -32,6 +32,7 @@ export const EN: Record<string, string> = {
   업적: "Achievements",
   설정: "Settings",
   로그아웃: "Log out",
+  "로그아웃 하시겠어요?": "Log out?",
 
   // ── 푸터 ──
   정책: "Policy",
@@ -409,6 +410,7 @@ const JA: Record<string, string> = {
   업적: "実績",
   설정: "設定",
   로그아웃: "ログアウト",
+  "로그아웃 하시겠어요?": "ログアウトしますか？",
 
   정책: "ポリシー",
   고객지원: "サポート",
@@ -765,6 +767,7 @@ const ES: Record<string, string> = {
   업적: "Logros",
   설정: "Ajustes",
   로그아웃: "Cerrar sesión",
+  "로그아웃 하시겠어요?": "¿Cerrar sesión?",
 
   정책: "Políticas",
   고객지원: "Soporte",
