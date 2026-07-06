@@ -11,11 +11,11 @@ import { ShareButton } from "./share-button";
 import { formatRelativeTime } from "@/lib/format";
 import { useT, useLocale } from "@/components/i18n-provider";
 
-// 인기순 = 순좋아요(좋아요-싫어요) 내림차순. 최신순 = 작성시간.
+// 인기순 = 좋아요 내림차순. 최신순 = 작성시간.
 type Sort = "latest" | "popular";
 
-// 리뷰 댓글 기능 숨김(NON-112). 코드·API는 보존, 렌더만 게이팅. 재활성화 시 true.
-const COMMENTS_ENABLED = false;
+// 리뷰 댓글·대댓글(NON-40). 코드·API는 보존, 렌더만 게이팅.
+const COMMENTS_ENABLED = true;
 
 export function ReviewList({
   reviews,
@@ -54,7 +54,7 @@ export function ReviewList({
   const sorted = [...reviews].sort((a, b) =>
     sort === "latest"
       ? +new Date(b.createdAt) - +new Date(a.createdAt)
-      : b.likeCount - b.dislikeCount - (a.likeCount - a.dislikeCount),
+      : b.likeCount - a.likeCount,
   );
 
   return (

@@ -38,9 +38,14 @@ async function authed(method: string, path: string, body?: unknown) {
   }
 }
 
-export async function addComment(input: { ratingId: string; body: string }) {
+export async function addComment(input: { ratingId: string; body: string; parentId?: string | null }) {
   const r = await authed("POST", "/me/comments", input);
   return { ok: r.ok, code: r.code, comment: r.data as ReviewComment | null };
+}
+
+export async function toggleCommentLike(id: string) {
+  const r = await authed("POST", `/me/comments/${id}/like`);
+  return { ok: r.ok, code: r.code, data: r.data as { liked: boolean; likeCount: number } | null };
 }
 
 export async function deleteComment(id: string) {

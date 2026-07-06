@@ -13,14 +13,6 @@ function ThumbUp({ filled }: { filled: boolean }) {
   );
 }
 
-function ThumbDown({ filled }: { filled: boolean }) {
-  return (
-    <svg width="15" height="15" viewBox="0 0 24 24" fill={filled ? "currentColor" : "none"} stroke="currentColor" strokeWidth="2" strokeLinejoin="round">
-      <path d="M17 14V3M22 11V5a2 2 0 00-2-2H6.5a2 2 0 00-1.97 1.64l-1.3 7A2 2 0 004.2 14H10v6a2 2 0 002 2l3-7V3" />
-    </svg>
-  );
-}
-
 export function ReactionBar({
   ratingId,
   loggedIn,
@@ -60,20 +52,6 @@ export function ReactionBar({
       >
         <ThumbUp filled={state.myReaction === "like"} />
         <span className="tabular-nums">{state.likeCount}</span>
-      </button>
-      <button
-        type="button"
-        onClick={() => react("dislike")}
-        disabled={pending}
-        aria-pressed={state.myReaction === "dislike"}
-        className={`flex items-center gap-1 text-xs disabled:opacity-50 ${
-          state.myReaction === "dislike"
-            ? "text-red-500"
-            : "text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200"
-        }`}
-      >
-        <ThumbDown filled={state.myReaction === "dislike"} />
-        <span className="tabular-nums">{state.dislikeCount}</span>
       </button>
     </div>
   );

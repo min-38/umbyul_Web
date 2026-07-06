@@ -145,11 +145,16 @@ export type ReviewItem = {
 };
 export type ReviewComment = {
   id: string;
+  parentId: string | null;
   userId: string;
   username: string;
   avatarUrl: string | null;
-  body: string;
+  body: string | null; // 삭제 시 null
   createdAt: string;
+  likeCount: number;
+  likedByMe: boolean;
+  score: number | null; // 작성자가 대상에 매긴 별점, null = 평가 없음
+  deleted: boolean;
 };
 // 장르는 Spotify 앱 토큰으로 안 내려와 제외. 레이블은 copyrights(℗/©) 텍스트.
 export type TrackDetail = {
