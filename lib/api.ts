@@ -128,7 +128,7 @@ export async function searchAll(q: string): Promise<SearchResults> {
 // ── 상세 (NON-6) ── 영구 카탈로그 없이 Spotify 라이브 + 우리 평점/리뷰.
 export type ArtistRef = { id: string; name: string };
 export type AlbumRef = { id: string; name: string; imageUrl: string | null };
-export type TrackRef = { id: string; name: string; durationMs: number; trackNumber: number; rating: RatingSummary | null };
+export type TrackRef = { id: string; name: string; durationMs: number; trackNumber: number; explicit: boolean; rating: RatingSummary | null };
 export type RatingSummary = { average: number | null; count: number };
 export type Reaction = "like" | "dislike";
 export type ReviewItem = {
@@ -170,6 +170,7 @@ export type TrackDetail = {
   durationMs: number;
   releaseDate: string | null;
   copyright: string | null;
+  explicit: boolean;
   rating: RatingSummary;
   reviews: ReviewItem[];
 };
@@ -222,7 +223,7 @@ export async function getAlbumDetail(id: string): Promise<AlbumDetail | null> {
   return json.data as AlbumDetail;
 }
 
-// ── 평점 시세 (NON-124) — 일별 누적 평균 시계열. 공개. 실패 시 빈 배열. ──
+// ── 평점 추이 (NON-124) — 일별 누적 평균 시계열. 공개. 실패 시 빈 배열. ──
 export type RatingPoint = { date: string; avg: number; count: number };
 
 export async function getRatingHistory(type: "track" | "album", targetId: string): Promise<RatingPoint[]> {

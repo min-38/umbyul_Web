@@ -6,7 +6,7 @@ import type { RatingPoint } from "@/lib/api";
 import { useT } from "@/components/i18n-provider";
 import { RatingChart } from "./rating-chart";
 
-// 곡 상세를 정보/시세 탭으로(BUG-8). 기본 정보 탭(장르 선택 포함). 시세 탭은 평점 시계열.
+// 곡 상세를 정보/추이 탭으로(BUG-8/16). 기본 정보 탭(장르 선택 포함). 추이 탭은 평점 시계열.
 export function DetailInfoTabs({
   info,
   points,
@@ -22,7 +22,7 @@ export function DetailInfoTabs({
 
   const TABS: { key: "info" | "chart"; label: string }[] = [
     { key: "info", label: "정보" },
-    { key: "chart", label: "시세" },
+    { key: "chart", label: "추이" },
   ];
 
   return (
@@ -51,7 +51,7 @@ export function DetailInfoTabs({
           <RatingChart points={points} label={chartLabel} />
         ) : (
           <p className="rounded-lg border border-dashed border-zinc-300 px-4 py-8 text-center text-sm text-zinc-400 dark:border-zinc-700">
-            {t("평가가 더 쌓이면 시세가 표시됩니다.")}
+            {t("평가가 더 쌓이면 추이가 표시됩니다.")}
           </p>
         )}
       </div>

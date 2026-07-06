@@ -8,8 +8,9 @@ import { ThemeToggle } from "./theme-toggle";
 import { NotificationBell } from "./notification-bell";
 import { UserMenu } from "./user-menu";
 
-// 홈(피드)은 워드마크가 담당. Discover=신규·급상승 허브, Chart=랭킹.
+// 피드=홈 리뷰 타임라인(로고로도 진입). Discover=신규·급상승 허브, Chart=랭킹.
 const NAV = [
+  { label: "피드", href: "/" },
   { label: "발견", href: "/discover" },
   { label: "차트", href: "/chart" },
   { label: "믹스", href: "/mixes" },

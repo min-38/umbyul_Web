@@ -1,6 +1,6 @@
 import type { RatingPoint } from "@/lib/api";
 
-// 평점 "시세" 차트 (NON-124). 일별 누적 평균 시계열을 직접 SVG로. 차트 라이브러리 없음.
+// 평점 추이 차트 (NON-124). 일별 누적 평균 시계열을 직접 SVG로. 차트 라이브러리 없음.
 // 게이팅: 점 2개 미만 or 총 평가 5개 미만이면 렌더 안 함(sparse면 숫자만). y축은 데이터 범위 오토스케일(작은 변동도 보이게).
 export function RatingChart({ points, label }: { points: RatingPoint[]; label: string }) {
   const total = points.length ? points[points.length - 1].count : 0;

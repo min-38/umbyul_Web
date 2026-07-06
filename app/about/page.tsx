@@ -8,7 +8,7 @@ const FEATURES = [
   { icon: "review", title: "리뷰 & 댓글", desc: "리뷰를 쓰고 댓글로 이야기 나누세요. 좋은 리뷰엔 좋아요." },
   { icon: "discover", title: "발견 & 차트", desc: "신규·급상승 음악을 발견하고, 랭킹으로 흐름을 봐요." },
   { icon: "follow", title: "취향 팔로우", desc: "취향이 맞는 유저를 팔로우하고 새 평가를 받아보세요." },
-  { icon: "trend", title: "평점 시세", desc: "곡·앨범 평점이 시간에 따라 어떻게 움직이는지 그래프로 봐요." },
+  { icon: "trend", title: "평점 추이", desc: "곡·앨범 평점이 시간에 따라 어떻게 움직이는지 그래프로 봐요." },
 ] as const;
 
 // 서비스 소개(About). 공개 — 로그인 게이트 없음. 우주 배경 몰입형(항상 다크).

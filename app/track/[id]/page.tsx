@@ -28,6 +28,7 @@ import { SpotifyLink } from "@/components/detail/detail-bits";
 import { MusicBrainzLink } from "@/components/detail/musicbrainz-link";
 import { GenreTags } from "@/components/detail/genre-tags";
 import { DetailInfoTabs } from "@/components/detail/detail-info-tabs";
+import { ExplicitBadge } from "@/components/detail/explicit-badge";
 import { ShareButton } from "@/components/detail/share-button";
 import { MentionMuteToggle } from "@/components/detail/mention-mute-toggle";
 import { ArtistLinks } from "@/components/detail/artist-links";
@@ -61,7 +62,10 @@ export default async function TrackPage({ params }: { params: Promise<{ id: stri
         />
         <div className="flex flex-1 flex-col gap-3">
           <span className="self-start rounded px-2 py-0.5 text-xs font-medium bg-indigo-100 text-indigo-700 dark:bg-indigo-950 dark:text-indigo-300">{t("곡")}</span>
-          <h1 className="text-3xl font-bold text-zinc-900 dark:text-zinc-50">{track.name}</h1>
+          <h1 className="text-3xl font-bold text-zinc-900 dark:text-zinc-50">
+            {track.name}
+            {track.explicit && <> <ExplicitBadge size="lg" /></>}
+          </h1>
           <p className="text-zinc-600 dark:text-zinc-300">
             <ArtistLinks artists={track.artists} />
             {track.album && (
@@ -108,7 +112,7 @@ export default async function TrackPage({ params }: { params: Promise<{ id: stri
 
       <DetailInfoTabs
         points={ratingHistory}
-        chartLabel={t("평점 시세")}
+        chartLabel={t("평점 추이")}
         info={
           <dl className="flex flex-col gap-4">
             <div className="grid grid-cols-2 gap-4">

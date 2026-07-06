@@ -8,14 +8,15 @@ import { useT } from "@/components/i18n-provider";
 import { Stars } from "./stars";
 import { GenreTags } from "./genre-tags";
 import { RatingChart } from "./rating-chart";
+import { ExplicitBadge } from "./explicit-badge";
 
-// 리뷰는 탭에서 빼서 페이지 하단 별도 섹션으로(트랙 페이지와 일관). 시세 탭 추가(BUG-8).
+// 리뷰는 탭에서 빼서 페이지 하단 별도 섹션으로(트랙 페이지와 일관). 추이 탭 추가(BUG-8/16).
 type Tab = "tracklist" | "info" | "chart";
 
 const TABS: { key: Tab; label: string }[] = [
   { key: "tracklist", label: "트랙리스트" },
   { key: "info", label: "정보" },
-  { key: "chart", label: "시세" },
+  { key: "chart", label: "추이" },
 ];
 
 export function AlbumTabs({ album, loggedIn, points }: { album: AlbumDetail; loggedIn: boolean; points: RatingPoint[] }) {
@@ -51,8 +52,9 @@ export function AlbumTabs({ album, loggedIn, points }: { album: AlbumDetail; log
               {album.tracks.map((tr) => (
                 <li key={tr.id} className="flex items-center gap-3 border-b border-zinc-100 py-2.5 last:border-0 dark:border-zinc-900">
                   <span className="w-6 text-right text-sm tabular-nums text-zinc-400">{tr.trackNumber}</span>
-                  <Link href={`/track/${tr.id}`} className="flex-1 truncate text-sm text-zinc-800 hover:underline dark:text-zinc-100">
-                    {tr.name}
+                  <Link href={`/track/${tr.id}`} className="flex min-w-0 flex-1 items-center gap-1.5 text-sm text-zinc-800 hover:underline dark:text-zinc-100">
+                    <span className="truncate">{tr.name}</span>
+                    {tr.explicit && <ExplicitBadge />}
                   </Link>
                   {tr.rating?.average != null && (
                     <span className="flex items-center gap-1">
@@ -98,10 +100,10 @@ export function AlbumTabs({ album, loggedIn, points }: { album: AlbumDetail; log
 
         {tab === "chart" &&
           (enoughChart ? (
-            <RatingChart points={points} label={t("평점 시세")} />
+            <RatingChart points={points} label={t("평점 추이")} />
           ) : (
             <p className="rounded-lg border border-dashed border-zinc-300 px-4 py-8 text-center text-sm text-zinc-400 dark:border-zinc-700">
-              {t("평가가 더 쌓이면 시세가 표시됩니다.")}
+              {t("평가가 더 쌓이면 추이가 표시됩니다.")}
             </p>
           ))}
       </div>
