@@ -38,6 +38,13 @@ export function NotificationSettings({ initial }: { initial: NotificationPrefs }
           disabled={!prefs.master}
           onChange={(v) => save({ ...prefs, reviewLike: v })}
         />
+        <Row
+          title={t("멘션 알림")}
+          desc={t("다른 유저가 댓글에서 회원님을 @태그할 때")}
+          on={prefs.mention}
+          disabled={!prefs.master}
+          onChange={(v) => save({ ...prefs, mention: v })}
+        />
       </div>
     </div>
   );

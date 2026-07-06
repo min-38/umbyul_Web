@@ -17,7 +17,9 @@ const POLL_MS = 5000;
 
 // 이름(span) 뒤에 붙는 문구. ko: "{이름}님이 …", en: "{name} …" 로 자연스럽게.
 function suffix(n: NotificationItem) {
-  return n.type === "follow" ? "님이 회원님을 팔로우했습니다" : "님이 회원님의 리뷰를 좋아합니다";
+  if (n.type === "follow") return "님이 회원님을 팔로우했습니다";
+  if (n.type === "mention") return "님이 댓글에서 회원님을 언급했습니다";
+  return "님이 회원님의 리뷰를 좋아합니다";
 }
 
 export function NotificationBell({ items, unreadCount }: { items: NotificationItem[]; unreadCount: number }) {

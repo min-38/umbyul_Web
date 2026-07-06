@@ -54,6 +54,7 @@ export async function updateNotificationPrefs(prefs: {
   master: boolean;
   follow: boolean;
   reviewLike: boolean;
+  mention: boolean;
 }): Promise<{ ok: boolean }> {
   const supabase = await createClient();
   const {

@@ -533,7 +533,7 @@ export const getFollowing = (username: string) => fetchFollowList(username, "fol
 // ── 알림 (NON-26) ──
 export type NotificationItem = {
   id: string;
-  type: "follow" | "review_like" | "warning";
+  type: "follow" | "review_like" | "warning" | "mention";
   actorUsername: string;
   actorAvatarUrl: string | null;
   createdAt: string;
@@ -588,7 +588,7 @@ export async function getBlockedUsers(): Promise<BlockedUser[]> {
   }
 }
 
-export type NotificationPrefs = { master: boolean; follow: boolean; reviewLike: boolean };
+export type NotificationPrefs = { master: boolean; follow: boolean; reviewLike: boolean; mention: boolean };
 
 /** 알림 설정 조회 (로그인). 없으면/오류 시 기본 on. */
 export async function getNotificationPrefs(): Promise<NotificationPrefs> {
@@ -596,7 +596,7 @@ export async function getNotificationPrefs(): Promise<NotificationPrefs> {
   const {
     data: { session },
   } = await supabase.auth.getSession();
-  const defaults: NotificationPrefs = { master: true, follow: true, reviewLike: true };
+  const defaults: NotificationPrefs = { master: true, follow: true, reviewLike: true, mention: true };
   if (!session) return defaults;
 
   try {

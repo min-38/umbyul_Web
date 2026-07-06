@@ -29,6 +29,7 @@ import { MusicBrainzLink } from "@/components/detail/musicbrainz-link";
 import { GenreTags } from "@/components/detail/genre-tags";
 import { RatingChart } from "@/components/detail/rating-chart";
 import { ShareButton } from "@/components/detail/share-button";
+import { MentionMuteToggle } from "@/components/detail/mention-mute-toggle";
 import { ArtistLinks } from "@/components/detail/artist-links";
 import { formatDuration, formatReleaseDate } from "@/lib/format";
 
@@ -121,9 +122,12 @@ export default async function TrackPage({ params }: { params: Promise<{ id: stri
       </div>
 
       <section className="mt-10">
-        <h2 className="mb-4 text-lg font-semibold text-zinc-900 dark:text-zinc-50">
-          {t("리뷰")} <span className="text-zinc-400">({track.rating.count})</span>
-        </h2>
+        <div className="mb-4 flex items-center justify-between gap-3">
+          <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">
+            {t("리뷰")} <span className="text-zinc-400">({track.rating.count})</span>
+          </h2>
+          <MentionMuteToggle targetType="track" spotifyId={track.spotifyId} loggedIn={!!user} />
+        </div>
         <ReviewList reviews={track.reviews} currentUserId={user?.id ?? null} shareBasePath={`/track/${track.spotifyId}`} />
       </section>
     </div>

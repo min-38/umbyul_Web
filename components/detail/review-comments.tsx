@@ -8,6 +8,7 @@ import { msg } from "@/lib/messages";
 import { formatRelativeTime } from "@/lib/format";
 import { useT, useLocale } from "@/components/i18n-provider";
 import { ReportDialog } from "@/components/detail/report-control";
+import { MentionTextarea } from "@/components/detail/mention-textarea";
 
 const REPLY_COLLAPSE_THRESHOLD = 2;
 
@@ -205,14 +206,13 @@ export function ReviewComments({
                     {showReplies && replies.map((rep) => <div key={rep.id}>{commentRow(rep)}</div>)}
                     {replyTo?.parentId === c.id && (
                       <div className="flex items-end gap-2">
-                        <textarea
+                        <MentionTextarea
                           value={replyDraft}
-                          onChange={(e) => setReplyDraft(e.target.value)}
+                          onChange={setReplyDraft}
                           placeholder={t("댓글 달기…")}
-                          rows={1}
-                          maxLength={1000}
                           autoFocus
-                          className="min-h-9 flex-1 resize-none rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 placeholder:text-zinc-400 focus:border-zinc-500 focus:outline-none dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100"
+                          wrapperClassName="flex-1"
+                          className="min-h-9 w-full resize-none rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 placeholder:text-zinc-400 focus:border-zinc-500 focus:outline-none dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100"
                         />
                         <button type="button" onClick={() => setReplyTo(null)} className="shrink-0 px-1 py-2 text-xs text-zinc-400 hover:text-zinc-600">
                           {t("취소")}
@@ -235,13 +235,12 @@ export function ReviewComments({
 
           {currentUserId ? (
             <div className="flex items-end gap-2">
-              <textarea
+              <MentionTextarea
                 value={draft}
-                onChange={(e) => setDraft(e.target.value)}
+                onChange={setDraft}
                 placeholder={t("댓글 달기…")}
-                rows={1}
-                maxLength={1000}
-                className="min-h-9 flex-1 resize-none rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 placeholder:text-zinc-400 focus:border-zinc-500 focus:outline-none dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100"
+                wrapperClassName="flex-1"
+                className="min-h-9 w-full resize-none rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 placeholder:text-zinc-400 focus:border-zinc-500 focus:outline-none dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100"
               />
               <button
                 type="button"

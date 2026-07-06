@@ -29,6 +29,7 @@ import { ArtistLinks } from "@/components/detail/artist-links";
 import { AlbumTabs } from "@/components/detail/album-tabs";
 import { RatingChart } from "@/components/detail/rating-chart";
 import { ReviewList } from "@/components/detail/review-list";
+import { MentionMuteToggle } from "@/components/detail/mention-mute-toggle";
 
 export default async function AlbumPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -100,9 +101,12 @@ export default async function AlbumPage({ params }: { params: Promise<{ id: stri
       <AlbumTabs album={album} loggedIn={!!user} />
 
       <section className="mt-10">
-        <h2 className="mb-4 text-lg font-semibold text-zinc-900 dark:text-zinc-50">
-          {t("리뷰")} <span className="text-zinc-400">({album.rating.count})</span>
-        </h2>
+        <div className="mb-4 flex items-center justify-between gap-3">
+          <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">
+            {t("리뷰")} <span className="text-zinc-400">({album.rating.count})</span>
+          </h2>
+          <MentionMuteToggle targetType="album" spotifyId={album.spotifyId} loggedIn={!!user} />
+        </div>
         <ReviewList reviews={album.reviews} currentUserId={user?.id ?? null} shareBasePath={`/album/${album.spotifyId}`} />
       </section>
     </div>
