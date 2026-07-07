@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
+import { safeSpotifyImageUrl } from "@/lib/validation";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -56,7 +57,8 @@ export async function saveRating(input: {
       review: input.review,
       name: input.name,
       artist: input.artist,
-      imageUrl: input.imageUrl,
+      // 클라 제공 imageUrl은 Spotify CDN만 신뢰 — 그 외는 떨궈 placeholder 폴백(SEC-W-2). 이름/아티스트 텍스트는 렌더 시 이스케이프됨. 완전한 해결은 서버가 카탈로그에서 파생.
+      imageUrl: safeSpotifyImageUrl(input.imageUrl),
       artists: input.artists,
       explicit: input.explicit ?? false,
     }),

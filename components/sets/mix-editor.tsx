@@ -10,6 +10,7 @@ import { MeatballMenu } from "@/components/ui/meatball-menu";
 import { MixGuide } from "@/components/sets/mix-guide";
 import { ExplicitBadge } from "@/components/detail/explicit-badge";
 import { coverThumb } from "@/lib/image";
+import { safeHttpUrl } from "@/lib/validation";
 import { useT } from "@/components/i18n-provider";
 
 const field =
@@ -23,14 +24,20 @@ export function MixEditor({ detail }: { detail: DjSetDetail }) {
   const [title, setTitle] = useState(set.title);
   const [note, setNote] = useState(set.note ?? "");
   const [url, setUrl] = useState(set.listenUrl ?? "");
+  const [urlErr, setUrlErr] = useState(false);
   const [editFor, setEditFor] = useState<DjSetTrack | null>(null);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
 
   const saveFields = async () => {
     if (!title.trim() || saving) return;
+    const listenUrl = url.trim() || null;
+    if (listenUrl && !safeHttpUrl(listenUrl)) {
+      setUrlErr(true);
+      return;
+    }
     setSaving(true);
-    const r = await updateSet(set.id, { title: title.trim(), note: note.trim() || null, listenUrl: url.trim() || null });
+    const r = await updateSet(set.id, { title: title.trim(), note: note.trim() || null, listenUrl });
     setSaving(false);
     if (r.ok) {
       setSaved(true);
@@ -96,7 +103,17 @@ export function MixEditor({ detail }: { detail: DjSetDetail }) {
       </label>
       <label className="flex flex-col gap-1.5">
         <span className={labelCls}>{t("플레이리스트 링크")}</span>
-        <input value={url} onChange={(e) => setUrl(e.target.value)} maxLength={500} placeholder={t("듣기 링크 (선택) — 유튜브·스포티파이 등")} className={field} />
+        <input
+          value={url}
+          onChange={(e) => {
+            setUrl(e.target.value);
+            setUrlErr(false);
+          }}
+          maxLength={500}
+          placeholder={t("듣기 링크 (선택) — 유튜브·스포티파이 등")}
+          className={field}
+        />
+        {urlErr && <p className="text-xs text-red-500">{t("http(s) 링크만 넣을 수 있어요.")}</p>}
       </label>
       <button
         type="button"

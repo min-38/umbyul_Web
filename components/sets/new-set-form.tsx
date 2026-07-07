@@ -6,6 +6,7 @@ import { createSet, addSetTrack } from "@/app/actions/sets";
 import { TrackPicker, YoutubeIcon, MAX_TRACKS, type PickedTrack } from "@/components/sets/track-picker";
 import { MixGuide } from "@/components/sets/mix-guide";
 import { coverThumb } from "@/lib/image";
+import { safeHttpUrl } from "@/lib/validation";
 import { useT } from "@/components/i18n-provider";
 
 const field =
@@ -18,6 +19,7 @@ export function NewSetForm() {
   const [title, setTitle] = useState("");
   const [note, setNote] = useState("");
   const [url, setUrl] = useState("");
+  const [urlErr, setUrlErr] = useState(false);
   const [tracks, setTracks] = useState<PickedTrack[]>([]);
   const [busy, setBusy] = useState(false);
 
@@ -30,8 +32,13 @@ export function NewSetForm() {
 
   const submit = async () => {
     if (!title.trim() || busy) return;
+    const listenUrl = url.trim() || null;
+    if (listenUrl && !safeHttpUrl(listenUrl)) {
+      setUrlErr(true);
+      return;
+    }
     setBusy(true);
-    const r = await createSet({ title: title.trim(), note: note.trim() || null, listenUrl: url.trim() || null });
+    const r = await createSet({ title: title.trim(), note: note.trim() || null, listenUrl });
     if (!r.ok || !r.id) {
       setBusy(false);
       return;
@@ -95,7 +102,17 @@ export function NewSetForm() {
       {/* 플레이리스트 링크 */}
       <label className="flex flex-col gap-1.5">
         <span className={labelCls}>{t("플레이리스트 링크")}</span>
-        <input value={url} onChange={(e) => setUrl(e.target.value)} maxLength={500} placeholder={t("듣기 링크 (선택) — 유튜브·스포티파이 등")} className={field} />
+        <input
+          value={url}
+          onChange={(e) => {
+            setUrl(e.target.value);
+            setUrlErr(false);
+          }}
+          maxLength={500}
+          placeholder={t("듣기 링크 (선택) — 유튜브·스포티파이 등")}
+          className={field}
+        />
+        {urlErr && <p className="text-xs text-red-500">{t("http(s) 링크만 넣을 수 있어요.")}</p>}
       </label>
 
       <button

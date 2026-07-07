@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { isEmail, isUsername, passwordChecks } from "./validation";
+import { isEmail, isUsername, passwordChecks, safeHttpUrl, safeSpotifyImageUrl, safeInternalPath } from "./validation";
 
 describe("isEmail", () => {
   it.each(["a@b.com", "x.y@z.co.kr", "user+tag@mail.io"])("valid: %s", (e) => {
@@ -20,6 +20,67 @@ describe("isUsername", () => {
   it("length boundaries", () => {
     expect(isUsername("a".repeat(30))).toBe(true);
     expect(isUsername("a".repeat(31))).toBe(false);
+  });
+});
+
+describe("safeHttpUrl", () => {
+  it.each([
+    "https://open.spotify.com/playlist/abc",
+    "http://example.com",
+    "https://youtu.be/xyz?t=10",
+    "  https://example.com/path  ",
+  ])("passes http(s): %s", (u) => {
+    expect(safeHttpUrl(u)).not.toBeNull();
+  });
+  it.each([
+    "javascript:alert(1)",
+    "JavaScript:alert(1)",
+    "java\tscript:alert(1)",
+    "data:text/html,<script>alert(1)</script>",
+    "vbscript:msgbox(1)",
+    "//evil.com",
+    "/relative",
+    "ftp://host/file",
+    "",
+    null,
+    undefined,
+  ])("blocks non-http(s): %s", (u) => {
+    expect(safeHttpUrl(u as string)).toBeNull();
+  });
+});
+
+describe("safeSpotifyImageUrl", () => {
+  it.each([
+    "https://i.scdn.co/image/ab67616d0000b273abcdef",
+    "https://mosaic.scdn.co/640/abc",
+    "https://image-cdn-ak.spotifycdn.com/image/abc",
+  ])("passes Spotify CDN: %s", (u) => {
+    expect(safeSpotifyImageUrl(u)).not.toBeNull();
+  });
+  it.each([
+    "https://evil.com/x.png",
+    "http://i.scdn.co/image/abc", // http (not https)
+    "https://i.scdn.co.evil.com/x", // suffix spoof
+    "javascript:alert(1)",
+    "",
+    null,
+  ])("blocks non-Spotify: %s", (u) => {
+    expect(safeSpotifyImageUrl(u as string)).toBeNull();
+  });
+});
+
+describe("safeInternalPath", () => {
+  it.each(["/", "/mixes", "/u/name?tab=sets"])("passes internal: %s", (p) => {
+    expect(safeInternalPath(p)).toBe(p);
+  });
+  it.each(["//evil.com", "/\\evil.com", "https://evil.com", "evil", "", null, undefined])(
+    "falls back for: %s",
+    (p) => {
+      expect(safeInternalPath(p as string)).toBe("/");
+    },
+  );
+  it("uses custom fallback", () => {
+    expect(safeInternalPath("//evil.com", "/login")).toBe("/login");
   });
 });
 

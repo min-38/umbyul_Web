@@ -1,6 +1,7 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
+import { safeHttpUrl } from "@/lib/validation";
 import type { TrackResult, DjSetComment, DjSetSummary } from "@/lib/api";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -39,11 +40,14 @@ async function authed<T>(method: string, path: string, body?: unknown): Promise<
 }
 
 export async function createSet(input: { title: string; note: string | null; listenUrl: string | null }) {
+  // listenUrl은 http(s)만 허용 — 크래프트된 호출로 javascript: 등이 저장되는 것 차단(SEC-W-1)
+  if (input.listenUrl && !safeHttpUrl(input.listenUrl)) return { ok: false, code: "INVALID_URL", id: null };
   const r = await authed<{ id: string }>("POST", "/me/sets", input);
   return { ok: r.ok, code: r.code, id: r.data?.id ?? null };
 }
 
 export async function updateSet(setId: string, input: { title: string; note: string | null; listenUrl: string | null }) {
+  if (input.listenUrl && !safeHttpUrl(input.listenUrl)) return { ok: false, code: "INVALID_URL" };
   const r = await authed("POST", `/me/sets/${setId}/edit`, input);
   return { ok: r.ok, code: r.code };
 }

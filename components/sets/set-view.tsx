@@ -14,6 +14,7 @@ import { MusicBrainzLink } from "@/components/detail/musicbrainz-link";
 import { ExplicitBadge } from "@/components/detail/explicit-badge";
 import { coverThumb } from "@/lib/image";
 import { formatRelativeTime } from "@/lib/format";
+import { safeHttpUrl } from "@/lib/validation";
 import { useT, useLocale } from "@/components/i18n-provider";
 
 // 믹스 상세(읽기 전용). 소유자 편집은 미트볼 → 수정 페이지(/mixes/[id]/edit).
@@ -36,6 +37,7 @@ export function SetView({
   const [likeCount, setLikeCount] = useState(set.likeCount);
   const [reportOpen, setReportOpen] = useState(false);
   const path = `/mixes/${set.id}`;
+  const listenUrl = safeHttpUrl(set.listenUrl); // http(s)만 렌더 — 저장된 javascript: 등 차단(SEC-W-1)
 
   const toggleLike = async () => {
     if (!loggedIn) {
@@ -184,11 +186,11 @@ export function SetView({
       {tracks.length === 0 && <p className="py-8 text-center text-sm text-zinc-400">{t("아직 담긴 곡이 없습니다.")}</p>}
 
       {/* 플레이리스트 링크 (하단) */}
-      {set.listenUrl && (
+      {listenUrl && (
         <div className="mt-6 flex flex-col gap-2 border-t border-zinc-200 pt-5 dark:border-zinc-800">
           <span className="text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">{t("플레이리스트 링크")}</span>
           <a
-            href={set.listenUrl}
+            href={listenUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex w-fit items-center gap-1.5 rounded-full bg-gradient-to-r from-violet-600 via-indigo-600 to-blue-600 px-4 py-2 text-sm font-medium text-white hover:brightness-110"
