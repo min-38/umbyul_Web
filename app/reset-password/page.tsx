@@ -123,7 +123,7 @@ export default function ResetPasswordPage() {
               >
                 {loading ? <Spinner /> : t("비밀번호 변경")}
               </button>
-              {error && <p className="text-center text-sm text-red-600 dark:text-red-400">{error}</p>}
+              {error && <p role="alert" className="text-center text-sm text-red-600 dark:text-red-400">{error}</p>}
             </form>
           </div>
         )}

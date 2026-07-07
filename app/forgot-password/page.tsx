@@ -78,7 +78,7 @@ export default function ForgotPasswordPage() {
               >
                 {loading ? <Spinner /> : t("재설정 링크 보내기")}
               </button>
-              {error && <p className="text-center text-sm text-red-600 dark:text-red-400">{error}</p>}
+              {error && <p role="alert" className="text-center text-sm text-red-600 dark:text-red-400">{error}</p>}
             </form>
 
             <Link href="/login" className="text-center text-sm text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300">

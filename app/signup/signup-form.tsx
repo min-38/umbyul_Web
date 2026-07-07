@@ -155,7 +155,7 @@ export function SignupForm() {
           </button>
         </form>
 
-        {error && <p className="text-center text-sm text-red-600 dark:text-red-400">{error}</p>}
+        {error && <p role="alert" className="text-center text-sm text-red-600 dark:text-red-400">{error}</p>}
 
         <p className="text-center text-xs text-zinc-500">{t("메일이 안 보이면 스팸함을 확인하세요.")}</p>
       </div>
@@ -263,7 +263,7 @@ export function SignupForm() {
         </button>
       </form>
 
-      {error && <p className="text-center text-sm text-red-600 dark:text-red-400">{error}</p>}
+      {error && <p role="alert" className="text-center text-sm text-red-600 dark:text-red-400">{error}</p>}
 
       <p className="text-center text-sm text-zinc-600 dark:text-zinc-400">
         {t("이미 계정이 있으신가요?")}{" "}

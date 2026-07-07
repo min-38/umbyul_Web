@@ -205,6 +205,7 @@ export function AccountSettings({
           <input
             value={username}
             onChange={(e) => setUsername(e.target.value)}
+            aria-label={t("닉네임")}
             className="w-full max-w-xs rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 focus:border-zinc-500 focus:outline-none dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100"
           />
           <button
@@ -260,6 +261,7 @@ export function AccountSettings({
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            aria-label={t("이메일 변경")}
             className="w-full max-w-xs rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 focus:border-zinc-500 focus:outline-none dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100"
           />
           <button
@@ -316,5 +318,5 @@ function Section({ title, children }: { title: string; children: React.ReactNode
 
 function NoteText({ note }: { note: Note }) {
   if (!note) return null;
-  return <p className={`mt-2 text-sm ${note.ok ? "text-emerald-600 dark:text-emerald-400" : "text-red-500"}`}>{note.text}</p>;
+  return <p role={note.ok ? "status" : "alert"} className={`mt-2 text-sm ${note.ok ? "text-emerald-600 dark:text-emerald-400" : "text-red-500"}`}>{note.text}</p>;
 }

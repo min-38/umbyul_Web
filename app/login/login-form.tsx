@@ -78,7 +78,7 @@ export function LoginForm() {
           {loading ? <Spinner /> : t("로그인")}
         </button>
         {error && (
-          <p className="text-center text-sm text-red-600 dark:text-red-400">{error}</p>
+          <p role="alert" className="text-center text-sm text-red-600 dark:text-red-400">{error}</p>
         )}
       </form>
 
