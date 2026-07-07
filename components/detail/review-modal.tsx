@@ -4,6 +4,7 @@ import { useState } from "react";
 import { StarInput } from "./star-input";
 import { saveRating, deleteRating } from "@/app/actions/ratings";
 import { msg } from "@/lib/messages";
+import { Dialog } from "@/components/ui/dialog";
 import { useT, useLocale } from "@/components/i18n-provider";
 
 export function ReviewModal({
@@ -75,15 +76,8 @@ export function ReviewModal({
   };
 
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
-      onClick={onClose}
-    >
-      <div
-        className="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl dark:bg-zinc-950"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">{t("평가하기")}</h2>
+    <Dialog open onClose={onClose} labelledBy="review-modal-title" panelClassName="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl outline-none dark:bg-zinc-950">
+      <h2 id="review-modal-title" className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">{t("평가하기")}</h2>
         <p className="mt-0.5 truncate text-sm text-zinc-500">{name}</p>
 
         <div className="mt-5">
@@ -136,7 +130,6 @@ export function ReviewModal({
             {busy ? t("저장 중…") : editing ? t("수정") : t("등록")}
           </button>
         </div>
-      </div>
-    </div>
+    </Dialog>
   );
 }

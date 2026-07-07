@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import type { FollowUser } from "@/lib/api";
 import { loadFollowers, loadFollowing, followUser, unfollowUser } from "@/app/actions/social";
+import { Dialog } from "@/components/ui/dialog";
 import { useT } from "@/components/i18n-provider";
 
 export function FollowListModal({
@@ -30,27 +31,22 @@ export function FollowListModal({
   }, [username, kind]);
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" onClick={onClose}>
-      <div
-        className="flex max-h-[70vh] w-full max-w-sm flex-col rounded-2xl bg-white p-5 shadow-xl dark:bg-zinc-950"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <h2 className="mb-3 text-base font-semibold text-zinc-900 dark:text-zinc-50">
-          {kind === "followers" ? t("팔로워") : t("팔로잉")}
-        </h2>
-        {users === null ? (
-          <p className="py-8 text-center text-sm text-zinc-400">{t("불러오는 중…")}</p>
-        ) : users.length === 0 ? (
-          <p className="py-8 text-center text-sm text-zinc-400">{t("아직 없습니다.")}</p>
-        ) : (
-          <ul className="flex flex-col gap-1 overflow-y-auto">
-            {users.map((u) => (
-              <FollowRow key={u.username} user={u} loggedIn={loggedIn} myUsername={myUsername} onFollowChange={onFollowChange} onNavigate={onClose} />
-            ))}
-          </ul>
-        )}
-      </div>
-    </div>
+    <Dialog open onClose={onClose} labelledBy="follow-list-title" panelClassName="flex max-h-[70vh] w-full max-w-sm flex-col rounded-2xl bg-white p-5 shadow-xl outline-none dark:bg-zinc-950">
+      <h2 id="follow-list-title" className="mb-3 text-base font-semibold text-zinc-900 dark:text-zinc-50">
+        {kind === "followers" ? t("팔로워") : t("팔로잉")}
+      </h2>
+      {users === null ? (
+        <p className="py-8 text-center text-sm text-zinc-400">{t("불러오는 중…")}</p>
+      ) : users.length === 0 ? (
+        <p className="py-8 text-center text-sm text-zinc-400">{t("아직 없습니다.")}</p>
+      ) : (
+        <ul className="flex flex-col gap-1 overflow-y-auto">
+          {users.map((u) => (
+            <FollowRow key={u.username} user={u} loggedIn={loggedIn} myUsername={myUsername} onFollowChange={onFollowChange} onNavigate={onClose} />
+          ))}
+        </ul>
+      )}
+    </Dialog>
   );
 }
 

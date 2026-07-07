@@ -6,6 +6,7 @@ import { searchTracks } from "@/app/actions/sets";
 import { YT_RE, type PickedTrack } from "@/components/sets/track-picker";
 import { coverThumb } from "@/lib/image";
 import { ExplicitBadge } from "@/components/detail/explicit-badge";
+import { Dialog } from "@/components/ui/dialog";
 import { useT } from "@/components/i18n-provider";
 
 // 트랙 수정 모달: 노래 변경(재검색) + 유튜브 링크 편집.
@@ -83,9 +84,8 @@ export function EditTrackModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" onClick={onClose}>
-      <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl dark:bg-zinc-950" onClick={(e) => e.stopPropagation()}>
-        <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">{t("곡 수정")}</h2>
+    <Dialog open onClose={onClose} labelledBy="edit-track-title" panelClassName="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl outline-none dark:bg-zinc-950">
+      <h2 id="edit-track-title" className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">{t("곡 수정")}</h2>
 
         <div className="mt-4">
           {changing ? (
@@ -153,7 +153,6 @@ export function EditTrackModal({
             {busy ? t("저장 중…") : t("저장")}
           </button>
         </div>
-      </div>
-    </div>
+    </Dialog>
   );
 }

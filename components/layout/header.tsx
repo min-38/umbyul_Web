@@ -7,14 +7,7 @@ import { SearchBar } from "./search-bar";
 import { ThemeToggle } from "./theme-toggle";
 import { NotificationBell } from "./notification-bell";
 import { UserMenu } from "./user-menu";
-
-// 피드=홈 리뷰 타임라인(로고로도 진입). Discover=신규·급상승 허브, Chart=랭킹.
-const NAV = [
-  { label: "피드", href: "/" },
-  { label: "발견", href: "/discover" },
-  { label: "차트", href: "/chart" },
-  { label: "믹스", href: "/mixes" },
-];
+import { HeaderNav } from "./header-nav";
 
 export async function Header() {
   const supabase = await createClient();
@@ -43,17 +36,7 @@ export async function Header() {
           <Link href="/" className="shrink-0">
             <span className="glitter-text text-lg font-bold tracking-tight">Glitter</span>
           </Link>
-          <nav className="ml-2 hidden items-center gap-1 sm:flex">
-            {NAV.map((n) => (
-              <Link
-                key={n.label}
-                href={n.href}
-                className="whitespace-nowrap rounded-lg px-2.5 py-1.5 text-sm font-medium text-zinc-600 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-900"
-              >
-                {t(n.label)}
-              </Link>
-            ))}
-          </nav>
+          <HeaderNav />
         </div>
 
         {/* 중앙: 검색 (정중앙) */}

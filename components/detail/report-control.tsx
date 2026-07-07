@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { submitReport } from "@/app/actions/social";
 import { msg } from "@/lib/messages";
+import { Dialog } from "@/components/ui/dialog";
 import { useT, useLocale } from "@/components/i18n-provider";
 
 const REASONS = [
@@ -85,38 +86,32 @@ export function ReportDialog({
   };
 
   return (
-    <>
-      {open && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" onClick={close}>
-          <div
-            className="w-full max-w-sm rounded-2xl bg-white p-6 shadow-xl dark:bg-zinc-950"
-            onClick={(e) => e.stopPropagation()}
+    <Dialog open={open} onClose={close} labelledBy="report-dialog-title" panelClassName="w-full max-w-sm rounded-2xl bg-white p-6 shadow-xl outline-none dark:bg-zinc-950">
+      {done ? (
+        <div className="flex flex-col gap-4 text-center">
+          <p className="text-sm text-zinc-700 dark:text-zinc-200">{t("신고가 접수되었습니다.")}</p>
+          <button
+            type="button"
+            onClick={close}
+            className="self-center rounded-lg bg-zinc-900 px-4 py-2 text-sm font-medium text-white dark:bg-zinc-100 dark:text-black"
           >
-            {done ? (
-              <div className="flex flex-col gap-4 text-center">
-                <p className="text-sm text-zinc-700 dark:text-zinc-200">{t("신고가 접수되었습니다.")}</p>
-                <button
-                  type="button"
-                  onClick={close}
-                  className="self-center rounded-lg bg-zinc-900 px-4 py-2 text-sm font-medium text-white dark:bg-zinc-100 dark:text-black"
-                >
-                  {t("닫기")}
-                </button>
-              </div>
-            ) : (
-              <>
-                <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">
-                  {targetType === "user"
-                    ? t("유저 신고")
-                    : targetType === "comment" || targetType === "set_comment"
-                      ? t("댓글 신고")
-                      : targetType === "set"
-                        ? t("믹스 신고")
-                        : t("리뷰 신고")}
-                </h2>
-                <p className="mt-0.5 text-xs text-zinc-500">{t("신고 내용은 운영자가 검토합니다.")}</p>
+            {t("닫기")}
+          </button>
+        </div>
+      ) : (
+        <>
+          <h2 id="report-dialog-title" className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">
+            {targetType === "user"
+              ? t("유저 신고")
+              : targetType === "comment" || targetType === "set_comment"
+                ? t("댓글 신고")
+                : targetType === "set"
+                  ? t("믹스 신고")
+                  : t("리뷰 신고")}
+          </h2>
+          <p className="mt-0.5 text-xs text-zinc-500">{t("신고 내용은 운영자가 검토합니다.")}</p>
 
-                <fieldset className="mt-4 flex flex-col gap-2">
+          <fieldset className="mt-4 flex flex-col gap-2">
                   {REASONS.filter((r) => (r.for as readonly string[]).includes(targetType)).map((r) => (
                     <label key={r.value} className="flex cursor-pointer items-center gap-2 text-sm text-zinc-700 dark:text-zinc-200">
                       <input
@@ -160,12 +155,9 @@ export function ReportDialog({
                   >
                     {busy ? t("접수 중…") : t("신고")}
                   </button>
-                </div>
-              </>
-            )}
           </div>
-        </div>
+        </>
       )}
-    </>
+    </Dialog>
   );
 }
