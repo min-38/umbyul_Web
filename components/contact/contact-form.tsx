@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { submitInquiry } from "@/app/actions/inquiry";
 import { msg } from "@/lib/messages";
 import { useT, useLocale } from "@/components/i18n-provider";
@@ -92,6 +93,14 @@ export function ContactForm() {
       >
         {busy ? t("보내는 중…") : t("보내기")}
       </button>
+
+      {/* 수집 고지 (LEG-8) */}
+      <p className="text-xs text-zinc-500">
+        {t("입력하신 이메일·문의 내용은 답변 목적으로만 사용되며, 처리 후 파기됩니다.")}{" "}
+        <Link href="/privacy" target="_blank" className="underline">
+          {t("개인정보 처리방침")}
+        </Link>
+      </p>
     </div>
   );
 }
