@@ -7,7 +7,6 @@ import { msg } from "@/lib/messages";
 import { isUsername } from "@/lib/validation";
 import { dateLocale } from "@/lib/format";
 import { PasswordInput } from "@/components/ui/password-input";
-import { useConfirm } from "@/components/ui/confirm-dialog";
 import { useT, useLocale } from "@/components/i18n-provider";
 
 type Note = { ok: boolean; text: string } | null;
@@ -35,7 +34,6 @@ export function AccountSettings({
 }) {
   const t = useT();
   const locale = useLocale();
-  const confirm = useConfirm();
   // 아바타
   const [avatarUrl, setAvatarUrl] = useState(initialAvatarUrl);
   const fileRef = useRef<HTMLInputElement>(null);
@@ -133,10 +131,12 @@ export function AccountSettings({
     setExportNote({ ok: true, text: t("내보내기 파일을 저장했습니다.") });
   };
 
-  // 탈퇴
+  // 탈퇴 — 재인증 대체로 사용자명 타입-투-컨펌(OAuth·이메일 공통, 실수 방지) (LEG-15)
   const [delBusy, setDelBusy] = useState(false);
+  const [delConfirm, setDelConfirm] = useState("");
+  const delReady = delConfirm.trim() === initialUsername;
   const doDelete = async () => {
-    if (!(await confirm({ message: t("정말 탈퇴하시겠어요?\n모든 데이터가 삭제되며 되돌릴 수 없습니다."), danger: true }))) return;
+    if (!delReady) return;
     setDelBusy(true);
     const r = await deleteAccount();
     if (r.ok) window.location.href = "/";
@@ -295,14 +295,26 @@ export function AccountSettings({
       {/* 탈퇴 */}
       <Section title={t("회원 탈퇴")}>
         <p className="mb-2 text-xs text-zinc-500">{t("계정과 모든 데이터가 영구 삭제됩니다.")}</p>
-        <button
-          type="button"
-          onClick={doDelete}
-          disabled={delBusy}
-          className="w-fit rounded-lg bg-red-500 px-4 py-2 text-sm font-medium text-white hover:bg-red-600 disabled:opacity-50"
-        >
-          {delBusy ? t("처리 중…") : t("회원 탈퇴")}
-        </button>
+        <p className="mb-1.5 text-xs text-zinc-500">
+          {t("확인을 위해 사용자명을 입력하세요")}: <code className="rounded bg-zinc-100 px-1.5 py-0.5 font-mono text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300">{initialUsername}</code>
+        </p>
+        <div className="flex gap-2">
+          <input
+            value={delConfirm}
+            onChange={(e) => setDelConfirm(e.target.value)}
+            autoComplete="off"
+            aria-label={t("확인을 위해 사용자명을 입력하세요")}
+            className="w-full max-w-xs rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 focus:border-red-400 focus:outline-none dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100"
+          />
+          <button
+            type="button"
+            onClick={doDelete}
+            disabled={delBusy || !delReady}
+            className="w-fit shrink-0 rounded-lg bg-red-500 px-4 py-2 text-sm font-medium text-white hover:bg-red-600 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            {delBusy ? t("처리 중…") : t("회원 탈퇴")}
+          </button>
+        </div>
       </Section>
     </div>
   );
