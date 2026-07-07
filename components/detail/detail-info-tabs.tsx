@@ -27,11 +27,13 @@ export function DetailInfoTabs({
 
   return (
     <div className="mt-8">
-      <div className="flex gap-6 border-b border-zinc-200 dark:border-zinc-800">
+      <div role="tablist" className="flex gap-6 border-b border-zinc-200 dark:border-zinc-800">
         {TABS.map((tb) => (
           <button
             key={tb.key}
             type="button"
+            role="tab"
+            aria-selected={tab === tb.key}
             onClick={() => setTab(tb.key)}
             className={`-mb-px border-b-2 pb-2.5 text-sm font-medium ${
               tab === tb.key

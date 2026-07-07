@@ -85,7 +85,7 @@ export function ReviewComments({
       const target = list.find((c) => c.id === focusCommentId);
       if (target?.parentId) setExpanded((s) => new Set(s).add(target.parentId!));
       requestAnimationFrame(() => {
-        document.getElementById(`comment-${focusCommentId}`)?.scrollIntoView({ behavior: "smooth", block: "center" });
+        document.getElementById(`comment-${focusCommentId}`)?.scrollIntoView({ behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "center" });
       });
       setHighlightId(focusCommentId);
       setTimeout(() => { if (!cancelled) setHighlightId(null); }, 2500);

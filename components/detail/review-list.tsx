@@ -42,7 +42,7 @@ export function ReviewList({
     if (commentId) setFocus({ reviewId: id, commentId });
     const el = document.getElementById(`review-${id}`);
     if (!el) return;
-    el.scrollIntoView({ behavior: "smooth", block: "center" });
+    el.scrollIntoView({ behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "center" });
     setHighlightId(id);
     const timer = setTimeout(() => setHighlightId(null), 2500);
     return () => clearTimeout(timer);
