@@ -151,7 +151,7 @@ export function SignupForm() {
             disabled={loading}
             className="mt-1 flex h-10 w-full items-center justify-center rounded-lg bg-indigo-600 text-sm font-medium text-white hover:bg-indigo-500 disabled:opacity-60"
           >
-            {loading ? <Spinner /> : t("확인")}
+            {loading ? <><Spinner /><span className="sr-only">{t("확인")}</span></> : t("확인")}
           </button>
         </form>
 
@@ -259,7 +259,7 @@ export function SignupForm() {
           disabled={!canSubmit}
           className="flex h-10 w-full items-center justify-center rounded-lg bg-indigo-600 text-sm font-medium text-white hover:bg-indigo-500 disabled:opacity-50"
         >
-          {loading ? <Spinner /> : t("가입하기")}
+          {loading ? <><Spinner /><span className="sr-only">{t("가입하기")}</span></> : t("가입하기")}
         </button>
       </form>
 

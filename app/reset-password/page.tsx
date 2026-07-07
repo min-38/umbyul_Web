@@ -121,7 +121,7 @@ export default function ResetPasswordPage() {
                 disabled={loading || !pw || !pw2}
                 className="mt-1 flex h-10 w-full items-center justify-center rounded-lg bg-indigo-600 text-sm font-medium text-white hover:bg-indigo-500 disabled:opacity-60"
               >
-                {loading ? <Spinner /> : t("비밀번호 변경")}
+                {loading ? <><Spinner /><span className="sr-only">{t("비밀번호 변경")}</span></> : t("비밀번호 변경")}
               </button>
               {error && <p role="alert" className="text-center text-sm text-red-600 dark:text-red-400">{error}</p>}
             </form>

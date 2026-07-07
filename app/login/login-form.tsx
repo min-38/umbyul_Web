@@ -75,7 +75,7 @@ export function LoginForm() {
           disabled={loading}
           className="mt-1 flex h-10 w-full items-center justify-center rounded-lg bg-indigo-600 text-sm font-medium text-white hover:bg-indigo-500 disabled:opacity-60"
         >
-          {loading ? <Spinner /> : t("로그인")}
+          {loading ? <><Spinner /><span className="sr-only">{t("로그인")}</span></> : t("로그인")}
         </button>
         {error && (
           <p role="alert" className="text-center text-sm text-red-600 dark:text-red-400">{error}</p>

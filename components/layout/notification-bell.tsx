@@ -111,7 +111,9 @@ export function NotificationBell({ items, unreadCount }: { items: NotificationIt
       <button
         type="button"
         onClick={toggle}
-        aria-label={t("알림")}
+        aria-label={unread > 0 ? `${t("알림")} ${unread}` : t("알림")}
+        aria-haspopup="true"
+        aria-expanded={open}
         className="relative flex h-9 w-9 items-center justify-center rounded-lg text-zinc-600 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-900"
       >
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" aria-hidden="true">
