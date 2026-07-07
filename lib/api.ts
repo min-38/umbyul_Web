@@ -315,21 +315,7 @@ export async function getArtistDetail(id: string): Promise<ArtistDetail | null> 
   return json.data as ArtistDetail;
 }
 
-// ── 홈 피드 (NON-43) ── 전부 DB 캐시 메타데이터라 Spotify 호출 없음.
-export type HomeReview = {
-  id: string;
-  userId: string;
-  username: string;
-  avatarUrl: string | null;
-  targetType: "track" | "album";
-  targetSpotifyId: string;
-  score: number;
-  body: string;
-  createdAt: string;
-  name: string | null;
-  artist: string | null;
-  imageUrl: string | null;
-};
+// 화제의 릴리스(TrendingItem) — Discover 커버용. 전부 DB 캐시 메타라 Spotify 호출 없음.
 export type TrendingItem = {
   targetType: "track" | "album";
   spotifyId: string;
@@ -340,8 +326,6 @@ export type TrendingItem = {
   imageUrl: string | null;
   explicit?: boolean; // 19금(BUG-14). 차트 O, discover는 미제공 시 undefined
 };
-export type HomeData = { recentReviews: HomeReview[]; trending: TrendingItem[]; followFeed: HomeReview[] };
-
 // 홈 피드 v2(NON-88). Reddit식 정렬 + 반응 집계.
 export type FeedSort = "hot" | "newest" | "likes" | "ratio" | "rising";
 export type FeedScope = "all" | "following";
@@ -376,18 +360,6 @@ export async function getFeed(sort: FeedSort, scope: FeedScope, offset = 0, limi
     return (json?.data?.items ?? []) as FeedItem[];
   } catch {
     return [];
-  }
-}
-
-/** 홈 피드 (공개, 로그인 시 팔로우 피드 포함). 실패 시 null(홈이 죽지 않게). */
-export async function getHome(): Promise<HomeData | null> {
-  try {
-    const res = await fetch(`${API_URL}/home`, { headers: await detailHeaders(), cache: "no-store" });
-    if (!res.ok) return null;
-    const json = await res.json();
-    return json.data as HomeData;
-  } catch {
-    return null;
   }
 }
 
@@ -670,18 +642,6 @@ export async function getSet(id: string): Promise<DjSetDetail | null> {
 export async function getUserSets(username: string): Promise<DjSetSummary[]> {
   try {
     const res = await fetch(`${API_URL}/users/${encodeURIComponent(username)}/sets`, { cache: "no-store" });
-    if (!res.ok) return [];
-    const json = await res.json();
-    return (json?.data?.items as DjSetSummary[]) ?? [];
-  } catch {
-    return [];
-  }
-}
-
-/** 최근 믹스 목록 (전체 유저, 공개). 실패 시 빈 목록. */
-export async function getRecentSets(): Promise<DjSetSummary[]> {
-  try {
-    const res = await fetch(`${API_URL}/sets`, { cache: "no-store" });
     if (!res.ok) return [];
     const json = await res.json();
     return (json?.data?.items as DjSetSummary[]) ?? [];

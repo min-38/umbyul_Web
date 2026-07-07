@@ -1,23 +1,4 @@
-// 상세 페이지 공용 조각: 메타 행, 저작권(copyrights), Spotify 링크백(컴플라이언스).
-
-export function Copyright({ text }: { text: string | null }) {
-  if (!text) return null;
-  return <p className="mt-3 text-xs leading-relaxed text-zinc-400">{text}</p>;
-}
-
-export function MetaRow({ items }: { items: { label: string; value: string }[] }) {
-  return (
-    <dl className="mt-8 grid grid-cols-2 gap-4 border-t border-zinc-200 pt-6 sm:grid-cols-3 dark:border-zinc-800">
-      {items.map((it) => (
-        <div key={it.label} className="flex flex-col gap-1">
-          <dt className="text-xs text-zinc-400">{it.label}</dt>
-          <dd className="text-sm text-zinc-800 dark:text-zinc-200">{it.value}</dd>
-        </div>
-      ))}
-    </dl>
-  );
-}
-
+// 상세 페이지 공용 조각: Spotify 링크백(컴플라이언스).
 // Spotify Developer Policy: 콘텐츠 출처를 Spotify로 링크백.
 export function SpotifyLink({ url, label }: { url: string; label: string }) {
   if (!url) return null;
