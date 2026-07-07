@@ -51,7 +51,7 @@ export async function Header() {
           <ThemeToggle />
           {user && <NotificationBell items={notifs.items} unreadCount={notifs.unreadCount} />}
           {user ? (
-            <UserMenu username={profile?.username ?? "프로필"} avatarUrl={profile?.avatarUrl ?? null} />
+            <UserMenu username={profile?.username ?? t("프로필")} avatarUrl={profile?.avatarUrl ?? null} />
           ) : (
             <Link
               href="/login"

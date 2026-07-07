@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
+import { useT } from "@/components/i18n-provider";
 
 // 약관/개인정보 글 자체의 언어 선택(UI 로케일과 별개). ?lang= 로 문서 언어만 바꾼다.
 const LANGS = [
@@ -11,6 +12,7 @@ const LANGS = [
 ] as const;
 
 export function LegalLangSelect({ current }: { current: string }) {
+  const t = useT();
   const router = useRouter();
   const pathname = usePathname();
   const sp = useSearchParams();
@@ -25,7 +27,7 @@ export function LegalLangSelect({ current }: { current: string }) {
     <select
       value={current}
       onChange={(e) => onChange(e.target.value)}
-      aria-label="Document language"
+      aria-label={t("문서 언어")}
       className="rounded-lg border border-zinc-300 bg-white px-2 py-1 text-sm text-zinc-700 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-200"
     >
       {LANGS.map((l) => (
