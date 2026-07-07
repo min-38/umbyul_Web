@@ -54,6 +54,28 @@ export async function getMySanction(): Promise<MySanction | null> {
   }
 }
 
+// 국가/성별 정정용 조회(LEG-11). canChangeAt 이 미래면 쿨다운 중. 비로그인·오류면 null.
+export type MyDemographics = { country: string | null; gender: string | null; canChangeAt: string | null };
+
+export async function getMyDemographics(): Promise<MyDemographics | null> {
+  const supabase = await createClient();
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+  if (!session) return null;
+  try {
+    const res = await fetch(`${API_URL}/me/demographics`, {
+      headers: { Authorization: `Bearer ${session.access_token}` },
+      cache: "no-store",
+    });
+    if (!res.ok) return null;
+    const json = await res.json();
+    return json.data as MyDemographics;
+  } catch {
+    return null;
+  }
+}
+
 // 재동의 상태(LEG-2/5, NON-148). 약관/개인정보 최신 게시 버전에 재동의 필요 여부.
 // 비로그인·API 오류·마이그레이션 전이면 null → 게이트 없음(fail-open).
 export type ConsentDoc = {

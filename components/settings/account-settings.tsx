@@ -1,11 +1,13 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
-import { updateUsername, uploadAvatar, deleteAccount, exportMyData } from "@/app/actions/account";
+import { updateUsername, uploadAvatar, deleteAccount, exportMyData, updateDemographics } from "@/app/actions/account";
 import { msg } from "@/lib/messages";
 import { isUsername } from "@/lib/validation";
 import { dateLocale } from "@/lib/format";
+import { COUNTRY_CODES } from "@/lib/countries";
+import { GENDERS } from "@/lib/demographics";
 import { PasswordInput } from "@/components/ui/password-input";
 import { useT, useLocale } from "@/components/i18n-provider";
 
@@ -24,6 +26,9 @@ export function AccountSettings({
   hasPassword,
   joinedAt,
   providers,
+  initialCountry,
+  initialGender,
+  demographicsCanChangeAt,
 }: {
   initialUsername: string;
   initialEmail: string;
@@ -31,6 +36,9 @@ export function AccountSettings({
   hasPassword: boolean;
   joinedAt: string;
   providers: string[];
+  initialCountry: string;
+  initialGender: string | null;
+  demographicsCanChangeAt: string | null;
 }) {
   const t = useT();
   const locale = useLocale();
@@ -109,6 +117,27 @@ export function AccountSettings({
     setEmailBusy(false);
     if (error) return setEmailNote({ ok: false, text: error.message });
     setEmailNote({ ok: true, text: t("새 이메일로 확인 메일을 보냈습니다. 링크를 눌러야 변경이 완료됩니다.") });
+  };
+
+  // 국가·성별 정정(LEG-11) — 잦은 변경 방지 쿨다운
+  const [country, setCountry] = useState(initialCountry);
+  const [gender, setGender] = useState(initialGender ?? "");
+  const [demoBusy, setDemoBusy] = useState(false);
+  const [demoNote, setDemoNote] = useState<Note>(null);
+  const countries = useMemo(() => {
+    const dn = new Intl.DisplayNames([locale], { type: "region" });
+    return COUNTRY_CODES.map((code) => ({ code, name: dn.of(code) ?? code })).sort((a, b) => a.name.localeCompare(b.name, locale));
+  }, [locale]);
+  const cooldownUntil = demographicsCanChangeAt ? new Date(demographicsCanChangeAt) : null;
+  const inCooldown = cooldownUntil ? cooldownUntil.getTime() > Date.now() : false;
+  const demoChanged = country !== initialCountry || (gender || null) !== (initialGender ?? null);
+
+  const saveDemo = async () => {
+    setDemoBusy(true);
+    setDemoNote(null);
+    const r = await updateDemographics(country, gender || null);
+    setDemoBusy(false);
+    setDemoNote(r.ok ? { ok: true, text: t("변경되었습니다.") } : { ok: false, text: msg(r.code, locale) });
   };
 
   // 데이터 내보내기 — JSON 다운로드
@@ -276,6 +305,49 @@ export function AccountSettings({
         </div>
         <p className="mt-1 text-xs text-zinc-500">{t("변경하려면 새 이메일로 온 확인 링크를 눌러야 합니다.")}</p>
         <NoteText note={emailNote} />
+      </Section>
+
+      {/* 국가·성별 정정 (LEG-11) */}
+      <Section title={t("국가·성별")}>
+        <div className="flex max-w-xs flex-col gap-2">
+          <select
+            value={country}
+            onChange={(e) => setCountry(e.target.value)}
+            disabled={inCooldown}
+            aria-label={t("국가")}
+            className="rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 focus:border-zinc-500 focus:outline-none disabled:opacity-60 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100"
+          >
+            {countries.map(({ code, name }) => (
+              <option key={code} value={code}>{name}</option>
+            ))}
+          </select>
+          <select
+            value={gender}
+            onChange={(e) => setGender(e.target.value)}
+            disabled={inCooldown}
+            aria-label={t("성별")}
+            className="rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 focus:border-zinc-500 focus:outline-none disabled:opacity-60 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100"
+          >
+            <option value="">{t("성별 (선택)")}</option>
+            {GENDERS.map((g) => (
+              <option key={g.v} value={g.v}>{t(g.l)}</option>
+            ))}
+          </select>
+          <button
+            type="button"
+            onClick={saveDemo}
+            disabled={demoBusy || inCooldown || !demoChanged}
+            className="w-fit rounded-lg bg-zinc-900 px-4 py-2 text-sm font-medium text-white hover:bg-zinc-700 disabled:opacity-50 dark:bg-zinc-100 dark:text-black dark:hover:bg-zinc-200"
+          >
+            {demoBusy ? t("처리 중…") : t("변경")}
+          </button>
+        </div>
+        {inCooldown && cooldownUntil && (
+          <p className="mt-2 text-xs text-zinc-500">
+            {t("이 정보는 다음 날짜 이후 다시 변경할 수 있습니다.")} {cooldownUntil.toLocaleDateString(dateLocale(locale))}
+          </p>
+        )}
+        <NoteText note={demoNote} />
       </Section>
 
       {/* 데이터 내보내기 */}

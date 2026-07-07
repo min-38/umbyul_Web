@@ -7,6 +7,7 @@ import { createClient } from "@/lib/supabase/client";
 import { Spinner } from "@/components/ui/spinner";
 import { BrandMark } from "@/components/ui/brand-mark";
 import { COUNTRY_CODES } from "@/lib/countries";
+import { GENDERS } from "@/lib/demographics";
 import { isUsername, borderClass, type FieldStatus } from "@/lib/validation";
 import { msg } from "@/lib/messages";
 import { useT, useLocale } from "@/components/i18n-provider";
@@ -15,13 +16,6 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 const inputBase =
   "w-full rounded-lg border px-3 py-2.5 text-sm text-black outline-none focus:ring-1 focus:ring-zinc-300 dark:bg-zinc-900 dark:text-zinc-50";
-
-const GENDERS = [
-  { v: "male", l: "남성" },
-  { v: "female", l: "여성" },
-  { v: "other", l: "기타" },
-  { v: "undisclosed", l: "비공개" },
-];
 
 const NOW = new Date();
 // 만 14세 이상만 — 선택 가능한 연도 상한을 올해-14로 둔다(경계는 서버·클라가 재검증)

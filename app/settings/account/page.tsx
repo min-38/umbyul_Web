@@ -1,5 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
-import { getProfile } from "@/lib/api";
+import { getProfile, getMyDemographics } from "@/lib/api";
 import { AccountSettings } from "@/components/settings/account-settings";
 
 export default async function AccountTabPage() {
@@ -7,7 +7,7 @@ export default async function AccountTabPage() {
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  const profile = await getProfile();
+  const [profile, demographics] = await Promise.all([getProfile(), getMyDemographics()]);
   if (!user || !profile) return null; // 인증은 settings/layout 에서 게이트
 
   const identities = user.identities ?? [];
@@ -22,6 +22,9 @@ export default async function AccountTabPage() {
       hasPassword={hasPassword}
       joinedAt={profile.createdAt}
       providers={providers}
+      initialCountry={demographics?.country ?? profile.country ?? "KR"}
+      initialGender={demographics?.gender ?? null}
+      demographicsCanChangeAt={demographics?.canChangeAt ?? null}
     />
   );
 }
