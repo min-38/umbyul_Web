@@ -7,6 +7,7 @@ import { createClient } from "@/lib/supabase/client";
 import { OAuthButtons } from "@/components/auth/oauth-buttons";
 import { Spinner } from "@/components/ui/spinner";
 import { BrandMark } from "@/components/ui/brand-mark";
+import { PasswordInput } from "@/components/ui/password-input";
 import { useT } from "@/components/i18n-provider";
 
 const inputBase =
@@ -60,8 +61,7 @@ export function LoginForm() {
           placeholder={t("이메일")}
           className={`${inputBase} ${border}`}
         />
-        <input
-          type="password"
+        <PasswordInput
           value={password}
           onChange={(e) => {
             setPassword(e.target.value);

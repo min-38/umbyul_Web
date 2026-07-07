@@ -6,6 +6,7 @@ import { updateUsername, uploadAvatar, deleteAccount, exportMyData } from "@/app
 import { msg } from "@/lib/messages";
 import { isUsername } from "@/lib/validation";
 import { dateLocale } from "@/lib/format";
+import { PasswordInput } from "@/components/ui/password-input";
 import { useT, useLocale } from "@/components/i18n-provider";
 
 type Note = { ok: boolean; text: string } | null;
@@ -228,15 +229,13 @@ export function AccountSettings({
           </p>
         )}
         <div className="flex max-w-xs flex-col gap-2">
-          <input
-            type="password"
+          <PasswordInput
             value={pw}
             onChange={(e) => setPw(e.target.value)}
             placeholder={t("새 비밀번호")}
             className="rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 placeholder:text-zinc-400 focus:border-zinc-500 focus:outline-none dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100"
           />
-          <input
-            type="password"
+          <PasswordInput
             value={pw2}
             onChange={(e) => setPw2(e.target.value)}
             placeholder={t("새 비밀번호 확인")}

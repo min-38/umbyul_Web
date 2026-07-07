@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { BrandMark } from "@/components/ui/brand-mark";
 import { Spinner } from "@/components/ui/spinner";
+import { PasswordInput } from "@/components/ui/password-input";
 import { useT } from "@/components/i18n-provider";
 
 const inputBase =
@@ -96,8 +97,7 @@ export default function ResetPasswordPage() {
               <h1 className="text-lg font-medium text-black dark:text-zinc-50">{t("새 비밀번호 설정")}</h1>
             </div>
             <form noValidate onSubmit={onSubmit} className="flex flex-col gap-2">
-              <input
-                type="password"
+              <PasswordInput
                 value={pw}
                 onChange={(e) => {
                   setPw(e.target.value);
@@ -106,8 +106,7 @@ export default function ResetPasswordPage() {
                 placeholder={t("새 비밀번호 (8자 이상)")}
                 className={inputBase}
               />
-              <input
-                type="password"
+              <PasswordInput
                 value={pw2}
                 onChange={(e) => {
                   setPw2(e.target.value);

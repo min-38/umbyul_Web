@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { Spinner } from "@/components/ui/spinner";
 import { BrandMark } from "@/components/ui/brand-mark";
+import { PasswordInput } from "@/components/ui/password-input";
 import { isEmail, passwordChecks, borderClass, type FieldStatus } from "@/lib/validation";
 import { useT } from "@/components/i18n-provider";
 
@@ -193,8 +194,7 @@ export function SignupForm() {
         </div>
 
         <div className="flex flex-col gap-1">
-          <input
-            type="password"
+          <PasswordInput
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder={t("비밀번호")}
@@ -209,8 +209,7 @@ export function SignupForm() {
         </div>
 
         <div className="flex flex-col gap-1">
-          <input
-            type="password"
+          <PasswordInput
             value={confirm}
             onChange={(e) => setConfirm(e.target.value)}
             placeholder={t("비밀번호 확인")}
