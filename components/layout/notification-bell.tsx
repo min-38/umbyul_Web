@@ -88,6 +88,7 @@ export function NotificationBell({ items, unreadCount }: { items: NotificationIt
     setOpen(next);
     if (next && unread > 0) {
       setUnread(0);
+      setList((l) => l.map((x) => (x.read ? x : { ...x, read: true }))); // 로컬도 즉시 읽음 처리 — 재오픈 시 unread 스타일 잔상 방지(LOG-W-6)
       markNotificationsRead();
     }
   };

@@ -19,9 +19,13 @@ export function MixList({ initial }: { initial: DjSetSummary[] }) {
   const [loading, setLoading] = useState(false);
   const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
+  const seq = useRef(0);
+
   const refetch = async (nq: string, ns: string) => {
+    const my = ++seq.current; // 최신 요청만 반영 — out-of-order 응답이 덮어쓰는 것 방지(LOG-W-3)
     setLoading(true);
     const r = await loadMixes(nq, ns, 0);
+    if (my !== seq.current) return;
     setItems(r);
     setHasMore(r.length >= PAGE);
     setLoading(false);
@@ -35,13 +39,18 @@ export function MixList({ initial }: { initial: DjSetSummary[] }) {
 
   const onSort = (s: string) => {
     setSort(s);
+    clearTimeout(timer.current); // 대기 중인 검색 디바운스 취소(LOG-W-3)
     refetch(q, s);
   };
 
   const loadMore = async () => {
     setLoading(true);
     const more = await loadMixes(q, sort, items.length);
-    setItems((prev) => [...prev, ...more]);
+    // 중간에 새 믹스가 생기면 창이 밀려 중복될 수 있음 → id 디듑(LOG-W-2)
+    setItems((prev) => {
+      const seen = new Set(prev.map((x) => x.id));
+      return [...prev, ...more.filter((x) => !seen.has(x.id))];
+    });
     setHasMore(more.length >= PAGE);
     setLoading(false);
   };

@@ -44,12 +44,16 @@ export function SetView({
       router.push("/login");
       return;
     }
-    setLiked((l) => !l);
-    setLikeCount((c) => c + (liked ? -1 : 1));
+    const wasLiked = liked; // 클릭 시점 값 고정 — 델타 계산·롤백에 stale 클로저 방지(LOG-W-1)
+    setLiked(!wasLiked);
+    setLikeCount((c) => c + (wasLiked ? -1 : 1));
     const r = await toggleSetLike(set.id);
     if (r.ok && r.data) {
       setLiked(r.data.liked);
       setLikeCount(r.data.likeCount);
+    } else {
+      setLiked(wasLiked); // 실패 시 낙관적 업데이트 롤백
+      setLikeCount((c) => c + (wasLiked ? 1 : -1));
     }
   };
 

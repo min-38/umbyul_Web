@@ -1,28 +1,28 @@
 "use client";
 
-import { useState } from "react";
+import { useId, useState } from "react";
 import { useT } from "@/components/i18n-provider";
 
 const PATH = "M12 2.5l2.9 6 6.6.9-4.8 4.6 1.2 6.5L12 17.8 6.1 20.5l1.2-6.5L2.5 9.4l6.6-.9z";
 
-function Star({ fill, size }: { fill: number; size: number }) {
+function Star({ fill, size, gradId }: { fill: number; size: number; gradId: string }) {
   return (
     <span className="relative block" style={{ width: size, height: size }}>
       <svg width={size} height={size} viewBox="0 0 24 24" className="absolute inset-0 fill-zinc-300 dark:fill-zinc-700">
         <path d={PATH} />
       </svg>
       <span className="absolute inset-0 overflow-hidden" style={{ width: `${fill * 100}%` }}>
-        {/* 우주(성운) 그라데이션 채움 (NON-91) */}
+        {/* 우주(성운) 그라데이션 채움 (NON-91). id 는 인스턴스별 useId — 중복 DOM id 방지(LOG-W-5) */}
         <svg width={size} height={size} viewBox="0 0 24 24" aria-hidden="true">
           <defs>
-            <linearGradient id="glitterInputGrad" x1="0" y1="0" x2="1" y2="1">
+            <linearGradient id={gradId} x1="0" y1="0" x2="1" y2="1">
               <stop offset="0" stopColor="#c084fc" />
               <stop offset="0.35" stopColor="#6366f1" />
               <stop offset="0.7" stopColor="#f472b6" />
               <stop offset="1" stopColor="#38bdf8" />
             </linearGradient>
           </defs>
-          <path d={PATH} fill="url(#glitterInputGrad)" />
+          <path d={PATH} fill={`url(#${gradId})`} />
         </svg>
       </span>
     </span>
@@ -41,6 +41,7 @@ export function StarInput({
 }) {
   const t = useT();
   const [hover, setHover] = useState(0);
+  const gradId = useId();
   const shown = hover || value;
 
   return (
@@ -50,7 +51,7 @@ export function StarInput({
           const fill = Math.max(0, Math.min(1, shown - (i - 1)));
           return (
             <span key={i} className="relative" style={{ width: size, height: size }}>
-              <Star fill={fill} size={size} />
+              <Star fill={fill} size={size} gradId={gradId} />
               <button
                 type="button"
                 aria-label={t("{score}점", { score: i - 0.5 })}

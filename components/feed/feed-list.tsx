@@ -53,7 +53,11 @@ export function FeedList({
   const loadMore = async () => {
     setLoadingMore(true);
     const more = await loadMoreFeed(sort, scope, items.length);
-    setItems((prev) => [...prev, ...more]);
+    // 라이브 정렬(hot/rising)로 창이 밀려 이미 표시된 항목이 다시 올 수 있음 → id 디듑(중복 키·중복 카드 방지, LOG-W-2)
+    setItems((prev) => {
+      const seen = new Set(prev.map((x) => x.id));
+      return [...prev, ...more.filter((x) => !seen.has(x.id))];
+    });
     setHasMore(more.length >= PAGE_SIZE);
     setLoadingMore(false);
   };
