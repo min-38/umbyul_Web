@@ -8,12 +8,14 @@ import { ReportDialog } from "@/components/detail/report-control";
 import { MeatballMenu } from "@/components/ui/meatball-menu";
 import { msg } from "@/lib/messages";
 import { formatRelativeTime } from "@/lib/format";
+import { useConfirm } from "@/components/ui/confirm-dialog";
 import { useT, useLocale } from "@/components/i18n-provider";
 
 // 믹스 평면 댓글 (NON-133).
 export function MixComments({ setId, currentUserId }: { setId: string; currentUserId: string | null }) {
   const t = useT();
   const locale = useLocale();
+  const confirm = useConfirm();
   const [comments, setComments] = useState<DjSetComment[]>([]);
   const [draft, setDraft] = useState("");
   const [busy, setBusy] = useState(false);
@@ -54,7 +56,7 @@ export function MixComments({ setId, currentUserId }: { setId: string; currentUs
   };
 
   const remove = async (id: string) => {
-    if (!window.confirm(t("이 댓글을 삭제할까요?"))) return;
+    if (!(await confirm({ message: t("이 댓글을 삭제할까요?"), danger: true }))) return;
     setComments((c) => c.filter((x) => x.id !== id));
     await deleteSetComment(setId, id);
   };

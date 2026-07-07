@@ -11,6 +11,7 @@ import {
 } from "@/app/actions/notifications";
 import { useClickOutside } from "@/lib/use-click-outside";
 import { formatRelativeTime } from "@/lib/format";
+import { useConfirm } from "@/components/ui/confirm-dialog";
 import { useT, useLocale } from "@/components/i18n-provider";
 
 const POLL_MS = 5000;
@@ -24,6 +25,7 @@ function suffix(n: NotificationItem) {
 
 export function NotificationBell({ items, unreadCount }: { items: NotificationItem[]; unreadCount: number }) {
   const t = useT();
+  const confirm = useConfirm();
   const [open, setOpen] = useState(false);
   const [list, setList] = useState(items);
   const [unread, setUnread] = useState(unreadCount);
@@ -93,8 +95,8 @@ export function NotificationBell({ items, unreadCount }: { items: NotificationIt
     }
   };
 
-  const clearAll = () => {
-    if (!window.confirm(t("알림을 모두 지울까요?"))) return; // 전체 삭제는 확인 후(UX-3)
+  const clearAll = async () => {
+    if (!(await confirm({ message: t("알림을 모두 지울까요?"), danger: true }))) return; // 전체 삭제는 확인 후(UX-3)
     setList([]);
     setUnread(0);
     clearNotifications();

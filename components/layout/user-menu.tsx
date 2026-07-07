@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { signOut } from "@/app/auth/actions";
 import { useClickOutside } from "@/lib/use-click-outside";
+import { useConfirm } from "@/components/ui/confirm-dialog";
 import { useT } from "@/components/i18n-provider";
 
 // 포인트·업적은 출시 보류(게이미피케이션 미도입) — 메뉴에서 숨김 (NON-129).
@@ -15,8 +16,14 @@ export function UserMenu({ username, avatarUrl }: { username: string; avatarUrl:
   const pathname = usePathname();
   const ref = useRef<HTMLDivElement>(null);
   const t = useT();
+  const confirm = useConfirm();
   useClickOutside(ref, () => setOpen(false), open);
   const items = [{ label: "프로필", href: `/u/${username}` }, ...STATIC_ITEMS];
+
+  const onSignOut = async () => {
+    if (!(await confirm({ message: t("로그아웃 하시겠어요?") }))) return;
+    await signOut(pathname);
+  };
 
   return (
     <div ref={ref} className="relative">
@@ -49,19 +56,13 @@ export function UserMenu({ username, avatarUrl }: { username: string; avatarUrl:
             </Link>
           ))}
           <div className="my-1 border-t border-zinc-200 dark:border-zinc-800" />
-          <form
-            action={signOut.bind(null, pathname)}
-            onSubmit={(e) => {
-              if (!window.confirm(t("로그아웃 하시겠어요?"))) e.preventDefault();
-            }}
+          <button
+            type="button"
+            onClick={onSignOut}
+            className="block w-full px-3 py-1.5 text-left text-sm font-medium text-rose-600 hover:bg-rose-50 dark:text-rose-500 dark:hover:bg-rose-950/40"
           >
-            <button
-              type="submit"
-              className="block w-full px-3 py-1.5 text-left text-sm font-medium text-rose-600 hover:bg-rose-50 dark:text-rose-500 dark:hover:bg-rose-950/40"
-            >
-              {t("로그아웃")}
-            </button>
-          </form>
+            {t("로그아웃")}
+          </button>
         </div>
       )}
     </div>

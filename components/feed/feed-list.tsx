@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Link from "next/link";
 import { Stars } from "@/components/detail/stars";
 import { ReactionBar } from "@/components/detail/reaction-bar";
@@ -49,6 +49,13 @@ export function FeedList({
   const [commentsFor, setCommentsFor] = useState<FeedItem | null>(null);
   const [hasMore, setHasMore] = useState(initialItems.length >= PAGE_SIZE);
   const [loadingMore, setLoadingMore] = useState(false);
+  // 실행 취소 대기 중인 항목들(UX-10). 항목당 토스트 1개, 최신이 맨 위, 최대 4개.
+  const [pending, setPending] = useState<string[]>([]);
+  const [leaving, setLeaving] = useState<Set<string>>(new Set()); // 퇴장 애니메이션 중인 토스트
+  const pendingRef = useRef<string[]>([]); // 동기적 소스(빠른 연속 dismiss·오버플로 계산용)
+  const dismissTimers = useRef<Map<string, ReturnType<typeof setTimeout>>>(new Map());
+  const MAX_TOASTS = 4;
+  const TOAST_EXIT_MS = 200; // globals.css toast-out 길이와 일치
 
   const loadMore = async () => {
     setLoadingMore(true);
@@ -70,10 +77,64 @@ export function FeedList({
       return n;
     });
 
-  const onDismiss = async (id: string) => {
-    hide(id); // 낙관적 제거
+  const commitDismiss = async (id: string) => {
     const r = await dismissReview(id);
     if (!r.ok) unhide(id); // 실패 시 복원
+  };
+
+  const stopTimer = (id: string) => {
+    const timer = dismissTimers.current.get(id);
+    if (timer) clearTimeout(timer);
+    dismissTimers.current.delete(id);
+  };
+
+  const clearLeaving = (id: string) =>
+    setLeaving((s) => {
+      if (!s.has(id)) return s;
+      const n = new Set(s);
+      n.delete(id);
+      return n;
+    });
+
+  // 스택에서 즉시 제거(퇴장 애니메이션 없이) — 오버플로 축출용
+  const dropToast = (id: string) => {
+    pendingRef.current = pendingRef.current.filter((x) => x !== id);
+    setPending([...pendingRef.current]);
+    clearLeaving(id);
+  };
+
+  // 퇴장 애니메이션 후 제거 — 타이머 만료·실행취소용
+  const removeToast = (id: string) => {
+    setLeaving((s) => new Set(s).add(id));
+    setTimeout(() => dropToast(id), TOAST_EXIT_MS);
+  };
+
+  // 관심 없음: 즉시 숨기되 항목마다 5초 실행 취소 토스트 노출 — 유예 후 서버 반영(UX-10)
+  const onDismiss = (id: string) => {
+    hide(id); // 낙관적 제거
+    pendingRef.current = [...pendingRef.current.filter((x) => x !== id), id]; // 최신을 끝에
+    // 4개 초과 시 가장 오래된 것부터 즉시 서버 확정하고 스택에서 제거
+    while (pendingRef.current.length > MAX_TOASTS) {
+      const oldest = pendingRef.current.shift()!;
+      stopTimer(oldest);
+      commitDismiss(oldest);
+      clearLeaving(oldest);
+    }
+    setPending([...pendingRef.current]);
+    dismissTimers.current.set(
+      id,
+      setTimeout(() => {
+        stopTimer(id);
+        commitDismiss(id);
+        removeToast(id); // 유예 만료 → 페이드아웃
+      }, 5000),
+    );
+  };
+
+  const undoDismiss = (id: string) => {
+    stopTimer(id);
+    unhide(id);
+    removeToast(id); // 즉시 복원 + 토스트 페이드아웃
   };
 
   const menuItems = (it: FeedItem) => [
@@ -130,6 +191,25 @@ export function FeedList({
     />
   ) : null;
 
+  // 항목당 토스트 1개를 하단 중앙에 세로 스택. flex-col-reverse로 최신(배열 끝)이 맨 위
+  const undoToasts = pending.length > 0 ? (
+    <div className="fixed bottom-6 left-1/2 z-50 flex -translate-x-1/2 flex-col-reverse items-center gap-2">
+      {pending.map((id) => (
+        <div
+          key={id}
+          role="status"
+          aria-live="polite"
+          className={`flex items-center gap-3 rounded-full bg-zinc-900 px-4 py-2.5 text-sm text-white shadow-lg dark:bg-zinc-100 dark:text-zinc-900 ${leaving.has(id) ? "animate-toast-out" : "animate-toast-in"}`}
+        >
+          <span>{t("피드에서 숨겼어요")}</span>
+          <button type="button" onClick={() => undoDismiss(id)} className="font-semibold text-indigo-300 hover:text-indigo-200 dark:text-indigo-600 dark:hover:text-indigo-500">
+            {t("실행 취소")}
+          </button>
+        </div>
+      ))}
+    </div>
+  ) : null;
+
   const moreButton = hasMore ? (
     <div className="mt-4 text-center">
       <button
@@ -184,6 +264,7 @@ export function FeedList({
         {moreButton}
         {reportDialog}
         {commentsModal}
+        {undoToasts}
       </>
     );
   }
@@ -248,6 +329,7 @@ export function FeedList({
       {moreButton}
       {reportDialog}
       {commentsModal}
+      {undoToasts}
     </>
   );
 }

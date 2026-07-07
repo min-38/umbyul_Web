@@ -15,6 +15,7 @@ import { ExplicitBadge } from "@/components/detail/explicit-badge";
 import { coverThumb } from "@/lib/image";
 import { formatRelativeTime } from "@/lib/format";
 import { safeHttpUrl } from "@/lib/validation";
+import { useConfirm } from "@/components/ui/confirm-dialog";
 import { useT, useLocale } from "@/components/i18n-provider";
 
 // 믹스 상세(읽기 전용). 소유자 편집은 미트볼 → 수정 페이지(/mixes/[id]/edit).
@@ -29,6 +30,7 @@ export function SetView({
 }) {
   const t = useT();
   const locale = useLocale();
+  const confirm = useConfirm();
   const router = useRouter();
   const { set } = detail;
   const [tracks, setTracks] = useState<DjSetTrack[]>(detail.tracks);
@@ -61,7 +63,7 @@ export function SetView({
     setTracks((ts) => ts.map((x) => (x.spotifyId === spotifyId ? { ...x, myScore: score > 0 ? score : null, myReview: review || null } : x)));
 
   const removeSet = async () => {
-    if (!window.confirm(t("이 믹스를 삭제할까요?"))) return;
+    if (!(await confirm({ message: t("이 믹스를 삭제할까요?"), danger: true }))) return;
     await deleteSet(set.id);
     router.push("/mixes");
   };

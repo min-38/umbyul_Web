@@ -7,6 +7,7 @@ import { msg } from "@/lib/messages";
 import { isUsername } from "@/lib/validation";
 import { dateLocale } from "@/lib/format";
 import { PasswordInput } from "@/components/ui/password-input";
+import { useConfirm } from "@/components/ui/confirm-dialog";
 import { useT, useLocale } from "@/components/i18n-provider";
 
 type Note = { ok: boolean; text: string } | null;
@@ -34,6 +35,7 @@ export function AccountSettings({
 }) {
   const t = useT();
   const locale = useLocale();
+  const confirm = useConfirm();
   // 아바타
   const [avatarUrl, setAvatarUrl] = useState(initialAvatarUrl);
   const fileRef = useRef<HTMLInputElement>(null);
@@ -134,7 +136,7 @@ export function AccountSettings({
   // 탈퇴
   const [delBusy, setDelBusy] = useState(false);
   const doDelete = async () => {
-    if (!window.confirm(t("정말 탈퇴하시겠어요?\n모든 데이터가 삭제되며 되돌릴 수 없습니다."))) return;
+    if (!(await confirm({ message: t("정말 탈퇴하시겠어요?\n모든 데이터가 삭제되며 되돌릴 수 없습니다."), danger: true }))) return;
     setDelBusy(true);
     const r = await deleteAccount();
     if (r.ok) window.location.href = "/";

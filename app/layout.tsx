@@ -6,6 +6,7 @@ import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { SanctionBanner } from "@/components/layout/sanction-banner";
 import { I18nProvider } from "@/components/i18n-provider";
+import { ConfirmProvider } from "@/components/ui/confirm-dialog";
 import { getLocale, getT } from "@/lib/i18n-server";
 
 // 첫 페인트 전에 테마(.dark) 적용 — 깜빡임(FOUC) 방지
@@ -51,10 +52,12 @@ export default async function RootLayout({
           {t("본문으로 건너뛰기")}
         </a>
         <I18nProvider locale={locale}>
-          <Header />
-          <SanctionBanner />
-          <main id="main" className="flex flex-1 flex-col">{children}</main>
-          <Footer />
+          <ConfirmProvider>
+            <Header />
+            <SanctionBanner />
+            <main id="main" className="flex flex-1 flex-col">{children}</main>
+            <Footer />
+          </ConfirmProvider>
         </I18nProvider>
       </body>
     </html>

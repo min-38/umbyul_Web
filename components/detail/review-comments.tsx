@@ -6,6 +6,7 @@ import type { ReviewComment } from "@/lib/api";
 import { loadComments, addComment, deleteComment, editComment, toggleCommentLike } from "@/app/actions/comments";
 import { msg } from "@/lib/messages";
 import { formatRelativeTime } from "@/lib/format";
+import { useConfirm } from "@/components/ui/confirm-dialog";
 import { useT, useLocale } from "@/components/i18n-provider";
 import { ReportDialog } from "@/components/detail/report-control";
 import { MentionTextarea } from "@/components/detail/mention-textarea";
@@ -49,6 +50,7 @@ export function ReviewComments({
 }) {
   const t = useT();
   const locale = useLocale();
+  const confirm = useConfirm();
   const [open, setOpen] = useState(defaultOpen);
   const [loaded, setLoaded] = useState(false);
   const [comments, setComments] = useState<ReviewComment[]>([]);
@@ -135,7 +137,7 @@ export function ReviewComments({
   };
 
   const remove = async (id: string) => {
-    if (!window.confirm(t("이 댓글을 삭제할까요?"))) return;
+    if (!(await confirm({ message: t("이 댓글을 삭제할까요?"), danger: true }))) return;
     await deleteComment(id);
     setComments((cs) => {
       const hasReplies = cs.some((c) => c.parentId === id);

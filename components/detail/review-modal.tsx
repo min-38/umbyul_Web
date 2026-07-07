@@ -5,6 +5,7 @@ import { StarInput } from "./star-input";
 import { saveRating, deleteRating } from "@/app/actions/ratings";
 import { msg } from "@/lib/messages";
 import { Dialog } from "@/components/ui/dialog";
+import { useConfirm } from "@/components/ui/confirm-dialog";
 import { useT, useLocale } from "@/components/i18n-provider";
 
 export function ReviewModal({
@@ -39,6 +40,7 @@ export function ReviewModal({
   const editing = initialScore > 0;
   const t = useT();
   const locale = useLocale();
+  const confirm = useConfirm();
   const [score, setScore] = useState(initialScore);
   const [review, setReview] = useState(initialReview);
   const [busy, setBusy] = useState(false);
@@ -64,7 +66,7 @@ export function ReviewModal({
   };
 
   const remove = async () => {
-    if (!window.confirm(t("평가를 삭제할까요?"))) return;
+    if (!(await confirm({ message: t("평가를 삭제할까요?"), danger: true }))) return;
     setBusy(true);
     setError(null);
     const r = await deleteRating({ targetType, targetId, path });
