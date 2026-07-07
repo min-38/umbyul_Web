@@ -102,8 +102,11 @@ export function ProfileReviews({ reviews }: { reviews: ProfileReview[] }) {
                   <Stars value={r.score} size={12} />
                   <span className="text-sm font-semibold text-zinc-700 dark:text-zinc-200">{r.score.toFixed(1)}</span>
                 </span>
-                <span className="text-xs text-zinc-500">
-                  ♥ {r.likeCount} · {formatRelativeTime(r.createdAt, locale)}
+                <span className="inline-flex items-center gap-1 text-xs text-zinc-500">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                    <path d="M7 10v11M2 13v6a2 2 0 002 2h13.5a2 2 0 001.97-1.64l1.3-7A2 2 0 0019.8 10H14V4a2 2 0 00-2-2l-3 7v11" />
+                  </svg>
+                  {r.likeCount} · {formatRelativeTime(r.createdAt, locale)}
                 </span>
               </div>
             </div>
