@@ -7,6 +7,8 @@ import { Footer } from "@/components/layout/footer";
 import { SanctionBanner } from "@/components/layout/sanction-banner";
 import { I18nProvider } from "@/components/i18n-provider";
 import { ConfirmProvider } from "@/components/ui/confirm-dialog";
+import { ReconsentGate } from "@/components/legal/reconsent-gate";
+import { getConsentStatus } from "@/lib/api";
 import { getLocale, getT } from "@/lib/i18n-server";
 
 // 첫 페인트 전에 테마(.dark) 적용 — 깜빡임(FOUC) 방지
@@ -36,6 +38,9 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const [locale, t] = await Promise.all([getLocale(), getT()]);
+  // 약관/개인정보 재동의 필요 시 앱 대신 게이트 노출(LEG-2/5, NON-148). 비로그인·오류면 null → 통과.
+  const consent = await getConsentStatus(locale);
+  const pendingConsent = consent?.docs.filter((d) => d.required) ?? [];
 
   return (
     <html
@@ -53,10 +58,16 @@ export default async function RootLayout({
         </a>
         <I18nProvider locale={locale}>
           <ConfirmProvider>
-            <Header />
-            <SanctionBanner />
-            <main id="main" className="flex flex-1 flex-col">{children}</main>
-            <Footer />
+            {pendingConsent.length > 0 ? (
+              <ReconsentGate docs={pendingConsent} />
+            ) : (
+              <>
+                <Header />
+                <SanctionBanner />
+                <main id="main" className="flex flex-1 flex-col">{children}</main>
+                <Footer />
+              </>
+            )}
           </ConfirmProvider>
         </I18nProvider>
       </body>

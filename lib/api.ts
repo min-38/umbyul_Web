@@ -54,6 +54,37 @@ export async function getMySanction(): Promise<MySanction | null> {
   }
 }
 
+// 재동의 상태(LEG-2/5, NON-148). 약관/개인정보 최신 게시 버전에 재동의 필요 여부.
+// 비로그인·API 오류·마이그레이션 전이면 null → 게이트 없음(fail-open).
+export type ConsentDoc = {
+  type: "terms" | "privacy";
+  required: boolean;
+  version: string | null;
+  effectiveDate: string | null;
+  content: string | null;
+  locale: string | null;
+};
+export type ConsentStatus = { required: boolean; docs: ConsentDoc[] };
+
+export async function getConsentStatus(locale: string): Promise<ConsentStatus | null> {
+  const supabase = await createClient();
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+  if (!session) return null;
+  try {
+    const res = await fetch(`${API_URL}/me/consent-status?locale=${encodeURIComponent(locale)}`, {
+      headers: { Authorization: `Bearer ${session.access_token}` },
+      cache: "no-store",
+    });
+    if (!res.ok) return null;
+    const json = await res.json();
+    return json.data as ConsentStatus;
+  } catch {
+    return null;
+  }
+}
+
 // 약관/개인정보 게시본 조회. 요청 로케일 없으면 서버가 en 폴백. 미게시면 null. (NON-66)
 export type LegalDoc = {
   type: string;
