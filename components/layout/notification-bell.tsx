@@ -94,6 +94,7 @@ export function NotificationBell({ items, unreadCount }: { items: NotificationIt
   };
 
   const clearAll = () => {
+    if (!window.confirm(t("알림을 모두 지울까요?"))) return; // 전체 삭제는 확인 후(UX-3)
     setList([]);
     setUnread(0);
     clearNotifications();

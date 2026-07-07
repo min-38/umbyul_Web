@@ -28,6 +28,7 @@ export function ProfileMenu({
       router.push("/login");
       return;
     }
+    if (!blocked && !window.confirm(t("이 사용자를 차단할까요?"))) return; // 차단은 확인 후(UX-3)
     const r = blocked ? await unblockUser(username) : await blockUser(username);
     if (r.ok) router.refresh();
   };

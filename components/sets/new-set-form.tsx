@@ -20,6 +20,7 @@ export function NewSetForm() {
   const [note, setNote] = useState("");
   const [url, setUrl] = useState("");
   const [urlErr, setUrlErr] = useState(false);
+  const [err, setErr] = useState<string | null>(null);
   const [tracks, setTracks] = useState<PickedTrack[]>([]);
   const [busy, setBusy] = useState(false);
 
@@ -37,9 +38,11 @@ export function NewSetForm() {
       setUrlErr(true);
       return;
     }
+    setErr(null);
     setBusy(true);
     const r = await createSet({ title: title.trim(), note: note.trim() || null, listenUrl });
     if (!r.ok || !r.id) {
+      setErr(t("만들지 못했어요. 잠시 후 다시 시도해주세요.")); // 실패 무음 방지(UX-4)
       setBusy(false);
       return;
     }
@@ -114,6 +117,8 @@ export function NewSetForm() {
         />
         {urlErr && <p className="text-xs text-red-500">{t("http(s) 링크만 넣을 수 있어요.")}</p>}
       </label>
+
+      {err && <p className="text-sm text-red-500" role="alert">{err}</p>}
 
       <button
         type="button"
