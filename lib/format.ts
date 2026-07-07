@@ -41,6 +41,11 @@ const REL: Record<Locale, RelUnits> = {
   es: { now: "ahora", min: (n) => `hace ${n} min`, hour: (n) => `hace ${n} h`, day: (n) => `hace ${n} d`, week: (n) => `hace ${n} sem`, dateLoc: "es-ES" },
 };
 
+// 로케일 → Intl 로케일 태그(날짜/숫자 포맷용). 미지원/미지 문자열은 en-US.
+export function dateLocale(locale: string = "ko"): string {
+  return (REL[locale as Locale] ?? REL.en).dateLoc;
+}
+
 export function formatRelativeTime(iso: string, locale: Locale = "ko"): string {
   const then = new Date(iso).getTime();
   if (Number.isNaN(then)) return "";

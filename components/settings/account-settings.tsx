@@ -5,6 +5,7 @@ import { createClient } from "@/lib/supabase/client";
 import { updateUsername, uploadAvatar, deleteAccount, exportMyData } from "@/app/actions/account";
 import { msg } from "@/lib/messages";
 import { isUsername } from "@/lib/validation";
+import { dateLocale } from "@/lib/format";
 import { useT, useLocale } from "@/components/i18n-provider";
 
 type Note = { ok: boolean; text: string } | null;
@@ -149,7 +150,7 @@ export function AccountSettings({
         <dl className="flex flex-col gap-3 text-sm">
           <div className="flex gap-3">
             <dt className="w-20 shrink-0 text-zinc-400">{t("가입일")}</dt>
-            <dd className="text-zinc-800 dark:text-zinc-200">{new Date(joinedAt).toLocaleDateString(locale === "ko" ? "ko-KR" : "en-US")}</dd>
+            <dd className="text-zinc-800 dark:text-zinc-200">{new Date(joinedAt).toLocaleDateString(dateLocale(locale))}</dd>
           </div>
           <div className="flex gap-3">
             <dt className="w-20 shrink-0 text-zinc-400">{t("연동 계정")}</dt>

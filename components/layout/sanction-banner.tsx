@@ -1,5 +1,6 @@
 import { getMySanction } from "@/lib/api";
 import { getT, getLocale } from "@/lib/i18n-server";
+import { dateLocale } from "@/lib/format";
 
 // 정지/영구정지 상태를 상단 배너로 노출(NON-55). 경고는 알림으로 전달(NON-58).
 // 제재 없으면 아무것도 렌더하지 않음.
@@ -14,7 +15,7 @@ export async function SanctionBanner() {
   if (s.banned) {
     text = t("계정이 영구 정지되어 작성이 제한됩니다.");
   } else {
-    const until = new Date(s.suspendedUntil!).toLocaleString(locale === "ko" ? "ko-KR" : "en-US", {
+    const until = new Date(s.suspendedUntil!).toLocaleString(dateLocale(locale), {
       dateStyle: "medium",
       timeStyle: "short",
     });

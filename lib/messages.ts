@@ -75,8 +75,76 @@ const EN: Record<string, string> = {
   UNKNOWN: "Something went wrong. Please try again shortly.",
 };
 
-/** 서버 응답 code 를 로케일별 표시 문구로. 미지의 code 는 UNKNOWN 으로 폴백. */
+const JA: Record<string, string> = {
+  USERNAME_TAKEN: "そのユーザー名は既に使われています。",
+  INVALID_USERNAME: "ユーザー名の形式を確認してください。",
+  INVALID_COUNTRY: "国の値が正しくありません。",
+  PROFILE_NOT_FOUND: "プロフィールが見つかりません。",
+  DB_NOT_CONFIGURED: "サーバー設定エラーです。しばらくしてからもう一度お試しください。",
+  DB_UNAVAILABLE: "サーバーに接続できません。しばらくしてからもう一度お試しください。",
+  UNAUTHORIZED: "ログインが必要です。",
+  INVALID_SCORE: "評価は0.5刻みで0.5〜5.0の間で入力してください。",
+  INVALID_TARGET: "対象が正しくありません。",
+  INVALID_TARGET_TYPE: "対象の種類が正しくありません。",
+  REVIEW_TOO_LONG: "レビューが長すぎます。",
+  REVIEW_TOO_SHORT: "レビューは10文字以上で入力してください。",
+  PROFILE_REQUIRED: "先にプロフィールの設定が必要です。",
+  RATING_NOT_FOUND: "評価が見つかりません。",
+  INVALID_REACTION: "リアクションの値が正しくありません。",
+  BLOCKED: "ブロックしたユーザーです。",
+  CANNOT_BLOCK_SELF: "自分自身はブロックできません。",
+  ACCOUNT_SUSPENDED: "アカウントが一時停止中のため投稿できません。",
+  ACCOUNT_BANNED: "アカウントが永久停止されているため投稿できません。",
+  NO_FILE: "ファイルを選択してください。",
+  FILE_TOO_LARGE: "ファイルが大きすぎます（最大5MB）。",
+  INVALID_FILE_TYPE: "jpg・png・webp画像のみ利用できます。",
+  STORAGE_NOT_CONFIGURED: "画像アップロードの設定エラーです。",
+  UPLOAD_FAILED: "アップロードに失敗しました。しばらくしてからもう一度お試しください。",
+  INVALID_REASON: "通報の理由を選択してください。",
+  DETAIL_TOO_LONG: "詳細が長すぎます。",
+  INVALID_EMAIL: "メールアドレスの形式を確認してください。",
+  INVALID_TITLE: "タイトルを入力してください。",
+  INVALID_CONTENT: "内容を入力してください。",
+  RATE_LIMITED: "リクエストが多すぎます。しばらくしてからもう一度お試しください。",
+  UNKNOWN: "問題が発生しました。しばらくしてからもう一度お試しください。",
+};
+
+const ES: Record<string, string> = {
+  USERNAME_TAKEN: "Ese nombre de usuario ya está en uso.",
+  INVALID_USERNAME: "Revisa el formato del nombre de usuario.",
+  INVALID_COUNTRY: "Valor de país no válido.",
+  PROFILE_NOT_FOUND: "Perfil no encontrado.",
+  DB_NOT_CONFIGURED: "Error de configuración del servidor. Inténtalo de nuevo en un momento.",
+  DB_UNAVAILABLE: "No se puede conectar con el servidor. Inténtalo de nuevo en un momento.",
+  UNAUTHORIZED: "Inicia sesión.",
+  INVALID_SCORE: "La valoración debe estar entre 0,5 y 5,0 en pasos de media estrella.",
+  INVALID_TARGET: "Destino no válido.",
+  INVALID_TARGET_TYPE: "Tipo de destino no válido.",
+  REVIEW_TOO_LONG: "Tu reseña es demasiado larga.",
+  REVIEW_TOO_SHORT: "Las reseñas deben tener al menos 10 caracteres.",
+  PROFILE_REQUIRED: "Primero debes configurar tu perfil.",
+  RATING_NOT_FOUND: "Valoración no encontrada.",
+  INVALID_REACTION: "Valor de reacción no válido.",
+  BLOCKED: "Has bloqueado a este usuario.",
+  CANNOT_BLOCK_SELF: "No puedes bloquearte a ti mismo.",
+  ACCOUNT_SUSPENDED: "Tu cuenta está suspendida; no puedes publicar.",
+  ACCOUNT_BANNED: "Tu cuenta está suspendida permanentemente; no puedes publicar.",
+  NO_FILE: "Selecciona un archivo.",
+  FILE_TOO_LARGE: "El archivo es demasiado grande (máx. 5 MB).",
+  INVALID_FILE_TYPE: "Solo se permiten imágenes jpg, png o webp.",
+  STORAGE_NOT_CONFIGURED: "La subida de imágenes está mal configurada.",
+  UPLOAD_FAILED: "Error al subir. Inténtalo de nuevo en un momento.",
+  INVALID_REASON: "Selecciona un motivo de denuncia.",
+  DETAIL_TOO_LONG: "Los detalles son demasiado largos.",
+  INVALID_EMAIL: "Comprueba el formato del correo.",
+  INVALID_TITLE: "Escribe un título.",
+  INVALID_CONTENT: "Escribe tu mensaje.",
+  RATE_LIMITED: "Demasiadas solicitudes. Inténtalo de nuevo en un momento.",
+  UNKNOWN: "Algo salió mal. Inténtalo de nuevo en un momento.",
+};
+
+/** 서버 응답 code 를 로케일별 표시 문구로. 미지의 code 는 UNKNOWN, 미지원 로케일은 EN 으로 폴백. */
 export function msg(code?: string | null, locale: Locale = "ko"): string {
-  const dict = locale === "en" ? EN : KO;
+  const dict = locale === "ko" ? KO : locale === "ja" ? JA : locale === "es" ? ES : EN;
   return (code && dict[code]) || dict.UNKNOWN;
 }

@@ -3,6 +3,7 @@ import remarkGfm from "remark-gfm";
 import { getLegalDoc } from "@/lib/api";
 import { getLocale, getT } from "@/lib/i18n-server";
 import { LegalLangSelect } from "@/components/legal/legal-lang-select";
+import { dateLocale } from "@/lib/format";
 
 const DOC_LOCALES = ["ko", "en", "ja", "es"];
 
@@ -27,7 +28,7 @@ export async function LegalDoc({ type, langParam }: { type: "terms" | "privacy";
           <p className="mt-1 text-xs text-zinc-400">
             {doc.version ? <span className="font-mono">{doc.version}</span> : null}
             {doc.version ? " · " : ""}
-            {t("시행일")}: {new Date(doc.effectiveDate ?? doc.updatedAt).toLocaleDateString(locale === "ko" ? "ko-KR" : "en-US", { dateStyle: "long" })}
+            {t("시행일")}: {new Date(doc.effectiveDate ?? doc.updatedAt).toLocaleDateString(dateLocale(locale), { dateStyle: "long" })}
           </p>
           <article className="mt-6">
             <ReactMarkdown
