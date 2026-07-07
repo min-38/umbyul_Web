@@ -25,7 +25,7 @@ export function FeedCommentsModal({
           type="button"
           onClick={onClose}
           aria-label={t("닫기")}
-          className="text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200"
+          className="text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-200"
         >
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
             <path d="M18 6 6 18M6 6l12 12" />

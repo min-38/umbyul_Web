@@ -161,7 +161,7 @@ export function NotificationBell({ items, unreadCount }: { items: NotificationIt
         <div className="absolute right-0 z-20 mt-1 flex w-80 flex-col overflow-hidden rounded-lg border border-zinc-200 bg-white shadow-lg dark:border-zinc-800 dark:bg-zinc-950">
           <div className="max-h-80 overflow-y-auto py-1">
             {list.length === 0 ? (
-              <p className="px-4 py-8 text-center text-sm text-zinc-400">{t("알림이 없습니다.")}</p>
+              <p className="px-4 py-8 text-center text-sm text-zinc-500">{t("알림이 없습니다.")}</p>
             ) : (
               <ul>
                 {list.map((n) => (
@@ -206,8 +206,8 @@ function NotifRow({
   const t = useT();
   const locale = useLocale();
   // 확인한(읽은) 알림은 흐리게, 안읽음은 강조 + 배경 하이라이트.
-  const nameCls = n.read ? "text-zinc-400 dark:text-zinc-500" : "font-medium text-zinc-900 dark:text-zinc-50";
-  const textCls = n.read ? "text-zinc-400 dark:text-zinc-500" : "text-zinc-700 dark:text-zinc-200";
+  const nameCls = n.read ? "text-zinc-500 dark:text-zinc-500" : "font-medium text-zinc-900 dark:text-zinc-50";
+  const textCls = n.read ? "text-zinc-500 dark:text-zinc-500" : "text-zinc-700 dark:text-zinc-200";
 
   const isWarning = n.type === "warning";
   const inner = (
@@ -230,13 +230,13 @@ function NotifRow({
         {isWarning ? (
           <>
             <span className={nameCls}>{t("경고를 받았습니다.")}</span>
-            <span className="ml-1 text-xs text-zinc-400">{formatRelativeTime(n.createdAt, locale)}</span>
+            <span className="ml-1 text-xs text-zinc-500">{formatRelativeTime(n.createdAt, locale)}</span>
             {n.detail ? <span className="mt-0.5 block">{t("사유")}: {n.detail}</span> : null}
           </>
         ) : (
           <>
             <span className={nameCls}>{n.actorUsername}</span>{t(suffix(n))}
-            <span className="ml-1 text-xs text-zinc-400">{formatRelativeTime(n.createdAt, locale)}</span>
+            <span className="ml-1 text-xs text-zinc-500">{formatRelativeTime(n.createdAt, locale)}</span>
           </>
         )}
       </p>
@@ -260,7 +260,7 @@ function NotifRow({
           e.stopPropagation();
           onDelete(n);
         }}
-        className="flex h-6 w-6 shrink-0 items-center justify-center rounded text-zinc-400 hover:bg-zinc-100 hover:text-zinc-700 dark:hover:bg-zinc-800 dark:hover:text-zinc-200"
+        className="flex h-6 w-6 shrink-0 items-center justify-center rounded text-zinc-500 hover:bg-zinc-100 hover:text-zinc-700 dark:hover:bg-zinc-800 dark:hover:text-zinc-200"
       >
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
           <path d="M18 6 6 18M6 6l12 12" />

@@ -39,7 +39,7 @@ export function ReportControl({
 
   return (
     <>
-      <button type="button" onClick={openModal} className="text-xs text-zinc-400 hover:text-red-500">
+      <button type="button" onClick={openModal} className="text-xs text-zinc-500 hover:text-red-500">
         {t("신고")}
       </button>
       <ReportDialog targetType={targetType} targetId={targetId} open={open} onClose={() => setOpen(false)} />

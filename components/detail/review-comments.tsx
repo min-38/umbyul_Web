@@ -189,13 +189,13 @@ export function ReviewComments({
               ★ {c.score.toFixed(1)}
             </span>
           ) : (
-            <span className="text-[10px] text-zinc-400">{t("평가 없음")}</span>
+            <span className="text-[10px] text-zinc-500">{t("평가 없음")}</span>
           )}
-          <span className="text-zinc-400">{formatRelativeTime(c.createdAt, locale)}</span>
+          <span className="text-zinc-500">{formatRelativeTime(c.createdAt, locale)}</span>
         </p>
 
         {c.deleted ? (
-          <p className="text-sm italic text-zinc-400">{t("삭제된 댓글입니다.")}</p>
+          <p className="text-sm italic text-zinc-500">{t("삭제된 댓글입니다.")}</p>
         ) : editingId === c.id ? (
           <div className="mt-1 flex items-end gap-2">
             <MentionTextarea
@@ -205,7 +205,7 @@ export function ReviewComments({
               wrapperClassName="flex-1"
               className="min-h-9 w-full resize-none rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 focus:border-zinc-500 focus:outline-none dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100"
             />
-            <button type="button" onClick={() => setEditingId(null)} className="shrink-0 px-1 py-2 text-xs text-zinc-400 hover:text-zinc-600">
+            <button type="button" onClick={() => setEditingId(null)} className="shrink-0 px-1 py-2 text-xs text-zinc-500 hover:text-zinc-600">
               {t("취소")}
             </button>
             <button type="button" onClick={() => saveEdit(c.id)} disabled={editDraft.trim() === ""} className="shrink-0 rounded-lg bg-zinc-900 px-3 py-2 text-sm font-medium text-white hover:bg-zinc-700 disabled:opacity-50 dark:bg-zinc-100 dark:text-black">
@@ -215,12 +215,12 @@ export function ReviewComments({
         ) : (
           <p className="whitespace-pre-wrap text-sm text-zinc-700 dark:text-zinc-200">
             {renderBody(c.body ?? "")}
-            {c.edited && <span className="ml-1 text-xs text-zinc-400">{t("(수정됨)")}</span>}
+            {c.edited && <span className="ml-1 text-xs text-zinc-500">{t("(수정됨)")}</span>}
           </p>
         )}
 
         {!c.deleted && editingId !== c.id && (
-          <div className="mt-0.5 flex items-center gap-3 text-xs text-zinc-400">
+          <div className="mt-0.5 flex items-center gap-3 text-xs text-zinc-500">
             <button
               type="button"
               onClick={() => (currentUserId ? like(c.id) : undefined)}
@@ -263,7 +263,7 @@ export function ReviewComments({
         <button
           type="button"
           onClick={toggle}
-          className="flex items-center gap-1 text-xs text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300"
+          className="flex items-center gap-1 text-xs text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-300"
         >
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" aria-hidden="true">
             <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
@@ -274,7 +274,7 @@ export function ReviewComments({
 
       {open && (
         <div className={`flex flex-col gap-3 ${defaultOpen ? "" : "mt-2 border-l-2 border-zinc-100 pl-3 dark:border-zinc-800"}`}>
-          {loaded && top.length === 0 && <p className="text-xs text-zinc-400">{t("첫 댓글을 남겨보세요.")}</p>}
+          {loaded && top.length === 0 && <p className="text-xs text-zinc-500">{t("첫 댓글을 남겨보세요.")}</p>}
 
           {top.map((c) => {
             const replies = repliesOf(c.id);
@@ -305,7 +305,7 @@ export function ReviewComments({
                           wrapperClassName="flex-1"
                           className="min-h-9 w-full resize-none rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 placeholder:text-zinc-400 focus:border-zinc-500 focus:outline-none dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100"
                         />
-                        <button type="button" onClick={() => setReplyTo(null)} className="shrink-0 px-1 py-2 text-xs text-zinc-400 hover:text-zinc-600">
+                        <button type="button" onClick={() => setReplyTo(null)} className="shrink-0 px-1 py-2 text-xs text-zinc-500 hover:text-zinc-600">
                           {t("취소")}
                         </button>
                         <button

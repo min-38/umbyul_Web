@@ -36,7 +36,7 @@ export function DetailInfoTabs({
             className={`-mb-px border-b-2 pb-2.5 text-sm font-medium ${
               tab === tb.key
                 ? "border-zinc-900 text-zinc-900 dark:border-zinc-100 dark:text-zinc-100"
-                : "border-transparent text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300"
+                : "border-transparent text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-300"
             }`}
           >
             {t(tb.label)}
@@ -50,7 +50,7 @@ export function DetailInfoTabs({
         ) : enough ? (
           <RatingChart points={points} label={chartLabel} />
         ) : (
-          <p className="rounded-lg border border-dashed border-zinc-300 px-4 py-8 text-center text-sm text-zinc-400 dark:border-zinc-700">
+          <p className="rounded-lg border border-dashed border-zinc-300 px-4 py-8 text-center text-sm text-zinc-500 dark:border-zinc-700">
             {t("평가가 더 쌓이면 추이가 표시됩니다.")}
           </p>
         )}

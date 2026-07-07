@@ -62,7 +62,7 @@ export function SortDropdown({
       </button>
       {open && (
         <div className={`absolute ${align === "left" ? "left-0" : "right-0"} z-20 mt-1 w-max min-w-[8rem] rounded-xl border border-zinc-200 bg-white p-2 shadow-lg dark:border-zinc-800 dark:bg-zinc-900`}>
-          <p className="px-2 py-1 text-xs font-semibold text-zinc-400">{title}</p>
+          <p className="px-2 py-1 text-xs font-semibold text-zinc-500">{title}</p>
           {options.map((o) => (
             <button
               key={o.value}

@@ -50,7 +50,7 @@ export function ReactionBar({
         className={`flex items-center gap-1 text-xs disabled:opacity-50 ${
           state.myReaction === "like"
             ? "text-indigo-600 dark:text-indigo-400"
-            : "text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200"
+            : "text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-200"
         }`}
       >
         <ThumbUp filled={state.myReaction === "like"} />

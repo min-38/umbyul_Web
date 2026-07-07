@@ -35,7 +35,7 @@ export function RatingChart({ points, label }: { points: RatingPoint[]; label: s
         <span className={`text-xs font-medium ${up ? "text-emerald-600 dark:text-emerald-500" : "text-rose-500"}`}>
           {up ? "▲" : "▼"} {Math.abs(delta).toFixed(1)}
         </span>
-        <span className="ml-auto text-xs text-zinc-400">{last.avg.toFixed(2)}</span>
+        <span className="ml-auto text-xs text-zinc-500">{last.avg.toFixed(2)}</span>
       </div>
       <svg viewBox={`0 0 ${W} ${H}`} className="w-full" aria-hidden="true">
         <polygon points={area} fill="#6366f1" fillOpacity="0.1" />

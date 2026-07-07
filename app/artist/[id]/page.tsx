@@ -40,7 +40,7 @@ export default async function ArtistPage({ params }: { params: Promise<{ id: str
           className="h-40 w-40 shrink-0 rounded-full bg-zinc-100 object-cover dark:bg-zinc-900"
         />
         <div className="flex flex-col gap-2">
-          <p className="text-xs font-medium uppercase tracking-wide text-zinc-400">{t("아티스트")}</p>
+          <p className="text-xs font-medium uppercase tracking-wide text-zinc-500">{t("아티스트")}</p>
           <h1 className="text-3xl font-bold text-zinc-900 sm:text-4xl dark:text-zinc-50">{artist.name}</h1>
           {artist.totalRatings > 0 && (
             <p className="text-sm text-zinc-500">
@@ -82,7 +82,7 @@ export default async function ArtistPage({ params }: { params: Promise<{ id: str
                   <Link href={`/u/${rv.username}`} className="text-sm font-medium text-zinc-800 hover:underline dark:text-zinc-100">
                     {rv.username}
                   </Link>
-                  <span className="text-xs text-zinc-400">·</span>
+                  <span className="text-xs text-zinc-500">·</span>
                   <span
                     className={`shrink-0 rounded px-1.5 py-0.5 text-[10px] font-medium ${
                       rv.targetType === "track"
@@ -104,7 +104,7 @@ export default async function ArtistPage({ params }: { params: Promise<{ id: str
                   </span>
                 </div>
                 <p className="whitespace-pre-wrap text-sm leading-relaxed text-zinc-600 dark:text-zinc-300">{rv.body}</p>
-                <span className="text-xs text-zinc-400">{formatRelativeTime(rv.createdAt, locale)}</span>
+                <span className="text-xs text-zinc-500">{formatRelativeTime(rv.createdAt, locale)}</span>
               </li>
             ))}
           </ul>

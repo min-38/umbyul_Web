@@ -54,9 +54,9 @@ export default async function ProfilePage({ params }: { params: Promise<{ userna
           <section className="mt-10">
             <div className="mb-4 flex items-baseline gap-3">
               <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">
-                {t("작성한 리뷰")}<span className="text-zinc-400">({profile.reviewCount.toLocaleString()})</span>
+                {t("작성한 리뷰")}<span className="text-zinc-500">({profile.reviewCount.toLocaleString()})</span>
               </h2>
-              <span className="text-sm text-zinc-400">{t("받은 좋아요 {count}", { count: profile.totalLikes.toLocaleString() })}</span>
+              <span className="text-sm text-zinc-500">{t("받은 좋아요 {count}", { count: profile.totalLikes.toLocaleString() })}</span>
             </div>
             <ProfileReviews reviews={profile.reviews} />
           </section>

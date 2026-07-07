@@ -179,7 +179,7 @@ function ColumnHeader({
       </span>
       <div className="flex flex-col">
         <h2 className="text-lg font-bold text-zinc-900 dark:text-zinc-50">{title}</h2>
-        <span className="text-xs text-zinc-400">{subtitle}</span>
+        <span className="text-xs text-zinc-500">{subtitle}</span>
       </div>
     </div>
   );

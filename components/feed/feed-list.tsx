@@ -93,7 +93,7 @@ export function FeedList({
           type="button"
           onClick={() => setCommentsFor(it)}
           aria-label={t("댓글")}
-          className="flex items-center gap-1 text-xs text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300"
+          className="flex items-center gap-1 text-xs text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-300"
         >
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" aria-hidden="true">
             <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
@@ -162,7 +162,7 @@ export function FeedList({
                   <TargetBadge type={it.targetType} label={it.targetType === "track" ? trackLabel : albumLabel} />
                   <Link href={targetHref(it)} className="min-w-0 truncate text-sm font-medium text-zinc-900 hover:underline dark:text-zinc-50">
                     {it.name ?? ""}
-                    {it.artist ? <span className="font-normal text-zinc-400"> · {it.artist}</span> : null}
+                    {it.artist ? <span className="font-normal text-zinc-500"> · {it.artist}</span> : null}
                   </Link>
                   {it.explicit && <ExplicitBadge />}
                   <span className="ml-auto flex shrink-0 items-center gap-1">
@@ -170,7 +170,7 @@ export function FeedList({
                     <span className="text-xs font-semibold text-zinc-600 dark:text-zinc-300">{it.score.toFixed(1)}</span>
                   </span>
                 </div>
-                <p className="text-xs text-zinc-400">
+                <p className="text-xs text-zinc-500">
                   <Link href={`/u/${it.username}`} className="hover:underline">{it.username}</Link>
                   {" · "}
                   <span suppressHydrationWarning>{formatRelativeTime(it.createdAt, locale)}</span>
@@ -206,7 +206,7 @@ export function FeedList({
                 </span>
                 <span className="text-sm font-medium text-zinc-800 hover:underline dark:text-zinc-100">{it.username}</span>
               </Link>
-              <span className="text-xs text-zinc-400">· <span suppressHydrationWarning>{formatRelativeTime(it.createdAt, locale)}</span></span>
+              <span className="text-xs text-zinc-500">· <span suppressHydrationWarning>{formatRelativeTime(it.createdAt, locale)}</span></span>
             </div>
 
             {/* 대상: 커버 + 배지/이름/아티스트 + 별점 */}
@@ -227,7 +227,7 @@ export function FeedList({
                   </Link>
                   {it.explicit && <ExplicitBadge />}
                 </div>
-                <p className="mt-0.5 truncate text-xs text-zinc-400">
+                <p className="mt-0.5 truncate text-xs text-zinc-500">
                   <Artists item={it} />
                 </p>
                 <span className="mt-1 flex items-center gap-1.5">

@@ -47,7 +47,7 @@ export function FaqView({ items }: { items: FaqItem[] }) {
         groups.map((g) => (
           <section key={g.category || "_"} className="flex flex-col gap-2">
             {g.category ? (
-              <h2 className="text-sm font-semibold uppercase tracking-wide text-zinc-400">{g.category}</h2>
+              <h2 className="text-sm font-semibold uppercase tracking-wide text-zinc-500">{g.category}</h2>
             ) : null}
             <ul className="flex flex-col divide-y divide-zinc-200 overflow-hidden rounded-xl border border-zinc-200 dark:divide-zinc-800 dark:border-zinc-800">
               {g.items.map((item) => {
@@ -67,7 +67,7 @@ export function FaqView({ items }: { items: FaqItem[] }) {
                         fill="none"
                         stroke="currentColor"
                         strokeWidth="2"
-                        className={`shrink-0 text-zinc-400 transition-transform ${isOpen ? "rotate-180" : ""}`}
+                        className={`shrink-0 text-zinc-500 transition-transform ${isOpen ? "rotate-180" : ""}`}
                         aria-hidden="true"
                       >
                         <path d="m6 9 6 6 6-6" />

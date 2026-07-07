@@ -39,18 +39,18 @@ export function ArtistTabs({ ratedTracks, albums }: { ratedTracks: ArtistRatedTr
             className={`-mb-px border-b-2 pb-2.5 text-sm font-medium ${
               tab === tb.key
                 ? "border-zinc-900 text-zinc-900 dark:border-zinc-100 dark:text-zinc-100"
-                : "border-transparent text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300"
+                : "border-transparent text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-300"
             }`}
           >
             {tb.label}
             {tb.key === "tracks" && ratedTracks.length > 0 && (
-              <span className="ml-1 text-zinc-400">({ratedTracks.length})</span>
+              <span className="ml-1 text-zinc-500">({ratedTracks.length})</span>
             )}
             {tb.key === "albums" && ratedAlbums.length > 0 && (
-              <span className="ml-1 text-zinc-400">({ratedAlbums.length})</span>
+              <span className="ml-1 text-zinc-500">({ratedAlbums.length})</span>
             )}
             {tb.key === "discography" && albums.length > 0 && (
-              <span className="ml-1 text-zinc-400">({albums.length})</span>
+              <span className="ml-1 text-zinc-500">({albums.length})</span>
             )}
           </button>
         ))}
@@ -104,7 +104,7 @@ function Grid({ children }: { children: React.ReactNode }) {
 }
 
 function Empty({ text }: { text: string }) {
-  return <p className="py-10 text-center text-sm text-zinc-400">{text}</p>;
+  return <p className="py-10 text-center text-sm text-zinc-500">{text}</p>;
 }
 
 function AlbumCard({ album, typeLabel }: { album: ArtistAlbum; typeLabel: string }) {
@@ -114,7 +114,7 @@ function AlbumCard({ album, typeLabel }: { album: ArtistAlbum; typeLabel: string
       <img src={album.imageUrl ?? "/placeholder.svg"} alt="" className="aspect-square w-full rounded-lg bg-zinc-100 object-cover dark:bg-zinc-800" />
       <div className="min-w-0">
         <p className="truncate text-sm font-medium text-zinc-900 dark:text-zinc-50">{album.name}</p>
-        <p className="truncate text-xs text-zinc-400">
+        <p className="truncate text-xs text-zinc-500">
           {album.releaseDate?.slice(0, 4)} · {typeLabel}
         </p>
         {album.rating && (

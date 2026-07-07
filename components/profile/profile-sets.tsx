@@ -13,7 +13,7 @@ export async function ProfileSets({ sets, isSelf }: { sets: DjSetSummary[]; isSe
       <div className="mb-3 flex items-baseline justify-between gap-3">
         <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">
           {t("믹스")}
-          <span className="text-zinc-400"> ({sets.length})</span>
+          <span className="text-zinc-500"> ({sets.length})</span>
         </h2>
         {isSelf && (
           <Link href="/mixes/new" className="text-sm font-medium text-indigo-600 hover:underline dark:text-indigo-400">
@@ -22,7 +22,7 @@ export async function ProfileSets({ sets, isSelf }: { sets: DjSetSummary[]; isSe
         )}
       </div>
       {sets.length === 0 ? (
-        <p className="text-sm text-zinc-400">{t("아직 믹스가 없습니다.")}</p>
+        <p className="text-sm text-zinc-500">{t("아직 믹스가 없습니다.")}</p>
       ) : (
         <ul className="flex flex-col gap-2">
           {sets.map((s) => (
@@ -33,7 +33,7 @@ export async function ProfileSets({ sets, isSelf }: { sets: DjSetSummary[]; isSe
               >
                 <span className="min-w-0 flex-1">
                   <span className="block truncate font-medium text-zinc-900 dark:text-zinc-50">{s.title}</span>
-                  {s.note && <span className="block truncate text-xs text-zinc-400">{s.note}</span>}
+                  {s.note && <span className="block truncate text-xs text-zinc-500">{s.note}</span>}
                 </span>
                 <MixCovers covers={s.covers} trackCount={s.trackCount} />
               </Link>

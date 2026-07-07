@@ -61,12 +61,12 @@ export function ProfileReviews({ reviews }: { reviews: ProfileReview[] }) {
             return (
               <li key={r.id}>
                 <div className="flex items-center gap-3 py-3 opacity-60">
-                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-md bg-zinc-100 text-zinc-400 dark:bg-zinc-900">
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-md bg-zinc-100 text-zinc-500 dark:bg-zinc-900">
                     ✕
                   </div>
                   <div className="min-w-0 flex-1">
                     <p className="truncate text-sm text-zinc-500">{t("관리자에 의해 삭제되었습니다.")}</p>
-                    <p className="truncate text-xs text-zinc-400">{formatRelativeTime(r.createdAt, locale)}</p>
+                    <p className="truncate text-xs text-zinc-500">{formatRelativeTime(r.createdAt, locale)}</p>
                   </div>
                 </div>
               </li>
@@ -102,7 +102,7 @@ export function ProfileReviews({ reviews }: { reviews: ProfileReview[] }) {
                   <Stars value={r.score} size={12} />
                   <span className="text-sm font-semibold text-zinc-700 dark:text-zinc-200">{r.score.toFixed(1)}</span>
                 </span>
-                <span className="text-xs text-zinc-400">
+                <span className="text-xs text-zinc-500">
                   ♥ {r.likeCount} · {formatRelativeTime(r.createdAt, locale)}
                 </span>
               </div>

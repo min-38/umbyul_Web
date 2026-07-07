@@ -22,7 +22,7 @@ export function ChartList({
         const c = toCover(x);
         return (
           <li key={c.key} className="flex items-center gap-3 py-3">
-            <span className="w-6 shrink-0 text-right text-sm font-semibold tabular-nums text-zinc-400">{i + 1}</span>
+            <span className="w-6 shrink-0 text-right text-sm font-semibold tabular-nums text-zinc-500">{i + 1}</span>
             <Link href={c.href} className="shrink-0" aria-label={c.name ?? ""}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
@@ -42,7 +42,7 @@ export function ChartList({
                 </Link>
                 {x.explicit && <ExplicitBadge />}
               </div>
-              <p className="truncate text-xs text-zinc-400">
+              <p className="truncate text-xs text-zinc-500">
                 {c.artists.length > 0
                   ? c.artists.map((a, j) => (
                       <span key={j}>
@@ -62,7 +62,7 @@ export function ChartList({
             <div className="flex shrink-0 items-center gap-1.5">
               <Stars value={x.average} size={13} />
               <span className="text-sm font-semibold text-zinc-700 dark:text-zinc-200">{x.average.toFixed(1)}</span>
-              <span className="text-xs text-zinc-400">({x.count})</span>
+              <span className="text-xs text-zinc-500">({x.count})</span>
             </div>
           </li>
         );

@@ -74,7 +74,7 @@ export function SetView({
       </Link>
       <header className="flex flex-col gap-3 border-b border-zinc-200 pb-5 dark:border-zinc-800">
         <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-50">{set.title}</h1>
-        <div className="flex items-center justify-between gap-3 text-xs text-zinc-400">
+        <div className="flex items-center justify-between gap-3 text-xs text-zinc-500">
           <Link href={`/u/${set.ownerUsername}`} className="flex items-center gap-1.5 hover:underline">
             <span className="flex h-5 w-5 items-center justify-center overflow-hidden rounded-full bg-zinc-200 text-[9px] font-medium text-zinc-500 dark:bg-zinc-800 dark:text-zinc-300">
               {set.ownerAvatarUrl ? (
@@ -124,7 +124,7 @@ export function SetView({
 
       {/* 곡 수 (리스트 우측 상단) */}
       <div className="mt-5 mb-1 flex justify-end">
-        <span className="text-xs font-medium text-zinc-400">{t("{count}곡", { count: tracks.length })}</span>
+        <span className="text-xs font-medium text-zinc-500">{t("{count}곡", { count: tracks.length })}</span>
       </div>
 
       <ul className="flex flex-col divide-y divide-zinc-100 dark:divide-zinc-800/70">
@@ -139,7 +139,7 @@ export function SetView({
                 <span className="truncate">{tr.name}</span>
                 {tr.explicit && <ExplicitBadge />}
               </Link>
-              <p className="truncate text-xs text-zinc-400">
+              <p className="truncate text-xs text-zinc-500">
                 {tr.artists.length > 0
                   ? tr.artists.map((a, k) => (
                       <span key={a.id}>
@@ -188,7 +188,7 @@ export function SetView({
         ))}
       </ul>
 
-      {tracks.length === 0 && <p className="py-8 text-center text-sm text-zinc-400">{t("아직 담긴 곡이 없습니다.")}</p>}
+      {tracks.length === 0 && <p className="py-8 text-center text-sm text-zinc-500">{t("아직 담긴 곡이 없습니다.")}</p>}
 
       {/* 플레이리스트 링크 (하단) */}
       {listenUrl && (

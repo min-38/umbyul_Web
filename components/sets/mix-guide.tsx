@@ -18,7 +18,7 @@ export function MixGuide() {
         type="button"
         onClick={() => setOpen((o) => !o)}
         aria-label={t("안내")}
-        className="text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300"
+        className="text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-300"
       >
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
           <circle cx="12" cy="12" r="10" />

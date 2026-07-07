@@ -149,11 +149,11 @@ export function AccountSettings({
       <Section title={t("계정 정보")}>
         <dl className="flex flex-col gap-3 text-sm">
           <div className="flex gap-3">
-            <dt className="w-20 shrink-0 text-zinc-400">{t("가입일")}</dt>
+            <dt className="w-20 shrink-0 text-zinc-500">{t("가입일")}</dt>
             <dd className="text-zinc-800 dark:text-zinc-200">{new Date(joinedAt).toLocaleDateString(dateLocale(locale))}</dd>
           </div>
           <div className="flex gap-3">
-            <dt className="w-20 shrink-0 text-zinc-400">{t("연동 계정")}</dt>
+            <dt className="w-20 shrink-0 text-zinc-500">{t("연동 계정")}</dt>
             <dd className="flex flex-wrap items-start gap-1.5">
               {providers.length === 0 ? (
                 <span className="text-zinc-500">-</span>
@@ -192,7 +192,7 @@ export function AccountSettings({
             >
               {avatarBusy ? t("업로드 중…") : t("이미지 변경")}
             </button>
-            <p className="text-xs text-zinc-400">{t("jpg, png, webp · 최대 5MB")}</p>
+            <p className="text-xs text-zinc-500">{t("jpg, png, webp · 최대 5MB")}</p>
             <input ref={fileRef} type="file" accept="image/jpeg,image/png,image/webp" onChange={onFile} className="hidden" />
           </div>
         </div>
@@ -222,7 +222,7 @@ export function AccountSettings({
       {/* 비밀번호 */}
       <Section title={hasPassword ? t("비밀번호 변경") : t("비밀번호 설정")}>
         {!hasPassword && (
-          <p className="mb-2 text-xs text-zinc-400">
+          <p className="mb-2 text-xs text-zinc-500">
             {t("소셜 로그인 계정입니다. 비밀번호를 설정하면 이메일로도 로그인할 수 있습니다.")}
           </p>
         )}
@@ -271,13 +271,13 @@ export function AccountSettings({
             {emailBusy ? t("처리 중…") : t("변경")}
           </button>
         </div>
-        <p className="mt-1 text-xs text-zinc-400">{t("변경하려면 새 이메일로 온 확인 링크를 눌러야 합니다.")}</p>
+        <p className="mt-1 text-xs text-zinc-500">{t("변경하려면 새 이메일로 온 확인 링크를 눌러야 합니다.")}</p>
         <NoteText note={emailNote} />
       </Section>
 
       {/* 데이터 내보내기 */}
       <Section title={t("데이터 내보내기")}>
-        <p className="mb-2 text-xs text-zinc-400">{t("내 프로필·평가·팔로우·댓글을 JSON 파일로 내려받습니다.")}</p>
+        <p className="mb-2 text-xs text-zinc-500">{t("내 프로필·평가·팔로우·댓글을 JSON 파일로 내려받습니다.")}</p>
         <button
           type="button"
           onClick={doExport}
@@ -291,7 +291,7 @@ export function AccountSettings({
 
       {/* 탈퇴 */}
       <Section title={t("회원 탈퇴")}>
-        <p className="mb-2 text-xs text-zinc-400">{t("계정과 모든 데이터가 영구 삭제됩니다.")}</p>
+        <p className="mb-2 text-xs text-zinc-500">{t("계정과 모든 데이터가 영구 삭제됩니다.")}</p>
         <button
           type="button"
           onClick={doDelete}

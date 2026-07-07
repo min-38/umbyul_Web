@@ -16,7 +16,7 @@ const inputBase =
 
 function Req({ ok, children }: { ok: boolean; children: React.ReactNode }) {
   return (
-    <span className={ok ? "text-green-600 dark:text-green-400" : "text-zinc-400"}>
+    <span className={ok ? "text-green-600 dark:text-green-400" : "text-zinc-500"}>
       {ok ? "✓" : "·"} {children}
     </span>
   );

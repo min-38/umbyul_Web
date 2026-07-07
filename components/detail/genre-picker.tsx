@@ -67,7 +67,7 @@ export function GenrePicker({
                 disabled={busy}
                 className={`${base} flex items-center gap-1 bg-zinc-100 text-zinc-600 hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700`}
               >
-                {parent.name} <span className="text-zinc-400">›</span>
+                {parent.name} <span className="text-zinc-500">›</span>
               </button>
             )}
             {open && childrenOf(parent.id).map((k) => subChip(k, selected.has(k.id)))}

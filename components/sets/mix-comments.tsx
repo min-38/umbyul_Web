@@ -63,7 +63,7 @@ export function MixComments({ setId, currentUserId }: { setId: string; currentUs
     <div className="mx-auto w-full max-w-2xl px-4 pb-12">
       <h2 className="mb-3 text-lg font-semibold text-zinc-900 dark:text-zinc-50">
         {t("댓글")}
-        {comments.length > 0 && <span className="text-zinc-400"> ({comments.length})</span>}
+        {comments.length > 0 && <span className="text-zinc-500"> ({comments.length})</span>}
       </h2>
 
       {currentUserId ? (
@@ -93,7 +93,7 @@ export function MixComments({ setId, currentUserId }: { setId: string; currentUs
       {err && <p className="mt-2 text-xs text-red-600 dark:text-red-400">{err}</p>}
 
       {comments.length === 0 ? (
-        <p className="mt-4 text-sm text-zinc-400">{t("첫 댓글을 남겨보세요.")}</p>
+        <p className="mt-4 text-sm text-zinc-500">{t("첫 댓글을 남겨보세요.")}</p>
       ) : (
         <ul className="mt-4 flex flex-col gap-3">
           {comments.map((c) => (
@@ -111,7 +111,7 @@ export function MixComments({ setId, currentUserId }: { setId: string; currentUs
                   <Link href={`/u/${c.username}`} className="font-medium text-zinc-800 hover:underline dark:text-zinc-100">
                     {c.username}
                   </Link>
-                  <span className="text-zinc-400" suppressHydrationWarning>{formatRelativeTime(c.createdAt, locale)}</span>
+                  <span className="text-zinc-500" suppressHydrationWarning>{formatRelativeTime(c.createdAt, locale)}</span>
                 </p>
                 {editingId === c.id ? (
                   <div className="mt-1 flex items-end gap-2">
@@ -123,7 +123,7 @@ export function MixComments({ setId, currentUserId }: { setId: string; currentUs
                       autoFocus
                       className="min-h-9 flex-1 resize-none rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 focus:border-zinc-500 focus:outline-none dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100"
                     />
-                    <button type="button" onClick={() => setEditingId(null)} className="shrink-0 px-1 py-2 text-xs text-zinc-400 hover:text-zinc-600">
+                    <button type="button" onClick={() => setEditingId(null)} className="shrink-0 px-1 py-2 text-xs text-zinc-500 hover:text-zinc-600">
                       {t("취소")}
                     </button>
                     <button type="button" onClick={() => saveEdit(c.id)} disabled={editDraft.trim() === ""} className="shrink-0 rounded-lg bg-zinc-900 px-3 py-2 text-sm font-medium text-white hover:bg-zinc-700 disabled:opacity-50 dark:bg-zinc-100 dark:text-black">
@@ -133,7 +133,7 @@ export function MixComments({ setId, currentUserId }: { setId: string; currentUs
                 ) : (
                   <p className="whitespace-pre-wrap text-sm text-zinc-700 dark:text-zinc-200">
                     {c.body}
-                    {c.edited && <span className="ml-1 text-xs text-zinc-400">{t("(수정됨)")}</span>}
+                    {c.edited && <span className="ml-1 text-xs text-zinc-500">{t("(수정됨)")}</span>}
                   </p>
                 )}
               </div>

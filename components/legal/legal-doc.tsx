@@ -25,7 +25,7 @@ export async function LegalDoc({ type, langParam }: { type: "terms" | "privacy";
       </div>
       {doc ? (
         <>
-          <p className="mt-1 text-xs text-zinc-400">
+          <p className="mt-1 text-xs text-zinc-500">
             {doc.version ? <span className="font-mono">{doc.version}</span> : null}
             {doc.version ? " · " : ""}
             {t("시행일")}: {new Date(doc.effectiveDate ?? doc.updatedAt).toLocaleDateString(dateLocale(locale), { dateStyle: "long" })}

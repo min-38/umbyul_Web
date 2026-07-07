@@ -103,7 +103,7 @@ export function EditTrackModal({
                             <span className="truncate">{tr.name}</span>
                             {tr.explicit && <ExplicitBadge />}
                           </span>
-                          <span className="block truncate text-xs text-zinc-400">{tr.artist}</span>
+                          <span className="block truncate text-xs text-zinc-500">{tr.artist}</span>
                         </span>
                       </button>
                     </li>
@@ -120,7 +120,7 @@ export function EditTrackModal({
                   <span className="truncate">{picked.name}</span>
                   {picked.explicit && <ExplicitBadge />}
                 </span>
-                <span className="block truncate text-xs text-zinc-400">{picked.artist}</span>
+                <span className="block truncate text-xs text-zinc-500">{picked.artist}</span>
               </span>
               <button type="button" onClick={() => setChanging(true)} className="shrink-0 text-xs font-medium text-indigo-600 hover:underline dark:text-indigo-400">
                 {t("노래 변경")}

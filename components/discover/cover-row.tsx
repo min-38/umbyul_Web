@@ -62,7 +62,7 @@ export function CoverRow({ items, empty }: { items: CoverItem[]; empty: string }
                 {x.explicit && <ExplicitBadge />}
               </Link>
               {x.artists.length > 0 ? (
-                <p className="truncate text-xs text-zinc-400">
+                <p className="truncate text-xs text-zinc-500">
                   {x.artists.map((a, i) => (
                     <span key={i}>
                       {i > 0 ? ", " : ""}
@@ -77,7 +77,7 @@ export function CoverRow({ items, empty }: { items: CoverItem[]; empty: string }
                   ))}
                 </p>
               ) : (
-                <p className="truncate text-xs text-zinc-400">{x.artist ?? ""}</p>
+                <p className="truncate text-xs text-zinc-500">{x.artist ?? ""}</p>
               )}
             </div>
           </div>

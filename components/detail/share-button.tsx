@@ -45,7 +45,7 @@ export function ShareButton({
       type="button"
       onClick={onShare}
       aria-label={t("공유")}
-      className="flex items-center gap-1 text-xs text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300"
+      className="flex items-center gap-1 text-xs text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-300"
     >
       <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
         <circle cx="18" cy="5" r="3" />

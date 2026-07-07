@@ -40,7 +40,7 @@ export function MentionMuteToggle({
       disabled={busy}
       title={muted ? t("이 페이지의 멘션 알림이 꺼져 있습니다") : t("이 페이지에서 멘션 알림 끄기")}
       className={`flex items-center gap-1 text-xs disabled:opacity-50 ${
-        muted ? "text-rose-500" : "text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300"
+        muted ? "text-rose-500" : "text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-300"
       }`}
     >
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">

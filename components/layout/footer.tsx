@@ -19,14 +19,14 @@ export async function Footer() {
     <footer className="border-t border-zinc-200 dark:border-zinc-800">
       <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 px-4 py-8 sm:flex-row sm:justify-between">
         <div className="flex flex-col gap-2">
-          <p className="text-sm text-zinc-400">
+          <p className="text-sm text-zinc-500">
             <span className="glitter-text text-lg font-bold tracking-tight">Glitter</span> v1.0
           </p>
           <a
             href="https://www.spotify.com"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-1.5 text-xs text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-300"
+            className="flex items-center gap-1.5 text-xs text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300"
           >
             <SpotifyLogo />
             Powered by Spotify
@@ -55,7 +55,7 @@ function SpotifyLogo() {
 function FooterCol({ title, links }: { title: string; links: { label: string; href: string }[] }) {
   return (
     <div className="flex flex-col gap-1.5">
-      <h4 className="text-xs font-medium text-zinc-400">{title}</h4>
+      <h4 className="text-xs font-medium text-zinc-500">{title}</h4>
       {links.map((l) => (
         <Link key={l.label} href={l.href} className="text-sm text-zinc-600 hover:underline dark:text-zinc-400">
           {l.label}

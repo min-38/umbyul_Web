@@ -7,7 +7,7 @@ export function UserChartList({ items, metricLabel }: { items: UserRankItem[]; m
     <ol className="flex flex-col divide-y divide-zinc-200 dark:divide-zinc-800">
       {items.map((u, i) => (
         <li key={u.userId} className="flex items-center gap-3 py-3">
-          <span className="w-6 shrink-0 text-right text-sm font-semibold tabular-nums text-zinc-400">{i + 1}</span>
+          <span className="w-6 shrink-0 text-right text-sm font-semibold tabular-nums text-zinc-500">{i + 1}</span>
           <Link href={`/u/${u.username}`} className="shrink-0">
             <span className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-full bg-zinc-200 text-xs font-medium text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300">
               {u.avatarUrl ? (

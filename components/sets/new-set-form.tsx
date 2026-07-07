@@ -67,7 +67,7 @@ export function NewSetForm() {
             <span className={labelCls}>{t("곡")}</span>
             <MixGuide />
           </span>
-          <span className="text-xs tabular-nums text-zinc-400">{tracks.length}/{MAX_TRACKS}</span>
+          <span className="text-xs tabular-nums text-zinc-500">{tracks.length}/{MAX_TRACKS}</span>
         </div>
         {tracks.length > 0 && (
           <ul className="flex flex-col divide-y divide-zinc-100 rounded-lg border border-zinc-200 dark:divide-zinc-800/70 dark:border-zinc-800">
@@ -77,7 +77,7 @@ export function NewSetForm() {
                 <img src={coverThumb(tr.imageUrl, "sm") ?? "/placeholder.svg"} alt="" className="h-9 w-9 rounded bg-zinc-100 object-cover dark:bg-zinc-800" />
                 <span className="min-w-0 flex-1">
                   <span className="block truncate text-sm text-zinc-800 dark:text-zinc-100">{tr.name}</span>
-                  <span className="block truncate text-xs text-zinc-400">{tr.artist}</span>
+                  <span className="block truncate text-xs text-zinc-500">{tr.artist}</span>
                 </span>
                 {tr.youtubeUrl && (
                   <span className="shrink-0 text-red-600" title={t("유튜브에서 보기")}>

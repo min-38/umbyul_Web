@@ -83,7 +83,7 @@ export function SearchBar() {
       {open && suggestions.length > 0 && (
         <div className="absolute left-0 right-0 z-30 mt-1 overflow-hidden rounded-2xl border border-zinc-200 bg-white py-1 shadow-lg dark:border-zinc-800 dark:bg-zinc-950">
           {!typed && (
-            <p className="px-4 py-1 text-xs font-semibold text-zinc-400">{t("최근 검색")}</p>
+            <p className="px-4 py-1 text-xs font-semibold text-zinc-500">{t("최근 검색")}</p>
           )}
           {suggestions.map((s) => (
             <div key={s} className="flex items-center">
@@ -102,7 +102,7 @@ export function SearchBar() {
                   strokeLinecap="round"
                   strokeLinejoin="round"
                   aria-hidden="true"
-                  className="shrink-0 text-zinc-400"
+                  className="shrink-0 text-zinc-500"
                 >
                   <circle cx="12" cy="12" r="9" />
                   <path d="M12 7v5l3 2" />
@@ -113,7 +113,7 @@ export function SearchBar() {
                 type="button"
                 onClick={() => removeRecent(s)}
                 aria-label={t("삭제")}
-                className="px-3 py-2 text-lg leading-none text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300"
+                className="px-3 py-2 text-lg leading-none text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-300"
               >
                 ×
               </button>

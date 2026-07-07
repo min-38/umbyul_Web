@@ -8,7 +8,7 @@ export function ArtistChartList({ items }: { items: ArtistRankItem[] }) {
     <ol className="flex flex-col divide-y divide-zinc-200 dark:divide-zinc-800">
       {items.map((a, i) => (
         <li key={a.artistId} className="flex items-center gap-3 py-3">
-          <span className="w-6 shrink-0 text-right text-sm font-semibold tabular-nums text-zinc-400">{i + 1}</span>
+          <span className="w-6 shrink-0 text-right text-sm font-semibold tabular-nums text-zinc-500">{i + 1}</span>
           <Link
             href={`/artist/${a.artistId}`}
             className="min-w-0 flex-1 truncate text-sm font-medium text-zinc-900 hover:underline dark:text-zinc-50"
@@ -18,7 +18,7 @@ export function ArtistChartList({ items }: { items: ArtistRankItem[] }) {
           <div className="flex shrink-0 items-center gap-1.5">
             <Stars value={a.average} size={13} />
             <span className="text-sm font-semibold text-zinc-700 dark:text-zinc-200">{a.average.toFixed(1)}</span>
-            <span className="text-xs text-zinc-400">({a.count})</span>
+            <span className="text-xs text-zinc-500">({a.count})</span>
           </div>
         </li>
       ))}

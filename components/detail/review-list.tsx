@@ -102,7 +102,7 @@ export function ReviewList({
               <Link href={`/u/${r.username}`} className="text-sm font-medium text-zinc-800 hover:underline dark:text-zinc-100">
                 {r.username}
               </Link>
-              <span className="text-xs text-zinc-400">{formatRelativeTime(r.createdAt, locale)}</span>
+              <span className="text-xs text-zinc-500">{formatRelativeTime(r.createdAt, locale)}</span>
               <span className="ml-auto flex items-center gap-1.5">
                 <Stars value={r.score} size={14} />
                 <span className="text-sm font-semibold text-zinc-700 dark:text-zinc-200">{r.score.toFixed(1)}</span>

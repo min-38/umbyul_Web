@@ -59,7 +59,7 @@ export function MixList({ initial }: { initial: DjSetSummary[] }) {
     <div className="flex flex-col gap-4">
       <div className="flex items-center gap-2">
         <div className="relative flex-1">
-          <svg className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
+          <svg className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
             <circle cx="11" cy="11" r="7" />
             <path d="M21 21l-4.3-4.3" />
           </svg>
@@ -95,12 +95,12 @@ export function MixList({ initial }: { initial: DjSetSummary[] }) {
               >
                 <span className="min-w-0 flex-1">
                   <span className="block truncate font-medium text-zinc-900 dark:text-zinc-50">{s.title}</span>
-                  <span className="block truncate text-xs text-zinc-400">
+                  <span className="block truncate text-xs text-zinc-500">
                     {s.ownerUsername}
                     {s.note ? ` · ${s.note}` : ""}
                   </span>
                   {s.likeCount > 0 && (
-                    <span className="mt-1 flex items-center gap-1 text-xs text-zinc-400">
+                    <span className="mt-1 flex items-center gap-1 text-xs text-zinc-500">
                       <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                         <path d="M7 10v11M2 13v6a2 2 0 002 2h13.5a2 2 0 001.97-1.64l1.3-7A2 2 0 0019.8 10H14V4a2 2 0 00-2-2l-3 7v11" />
                       </svg>

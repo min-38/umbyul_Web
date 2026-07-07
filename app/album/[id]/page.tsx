@@ -68,7 +68,7 @@ export default async function AlbumPage({ params }: { params: Promise<{ id: stri
             </span>
             <span className="flex flex-col">
               <Stars value={album.rating.average ?? 0} size={18} />
-              <span className="text-xs text-zinc-400">{t("{count}개 평가", { count: album.rating.count })}</span>
+              <span className="text-xs text-zinc-500">{t("{count}개 평가", { count: album.rating.count })}</span>
             </span>
             <span className="ml-auto">
               <RateButton
@@ -100,7 +100,7 @@ export default async function AlbumPage({ params }: { params: Promise<{ id: stri
       <section className="mt-10">
         <div className="mb-4 flex items-center justify-between gap-3">
           <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">
-            {t("리뷰")} <span className="text-zinc-400">({album.rating.count})</span>
+            {t("리뷰")} <span className="text-zinc-500">({album.rating.count})</span>
           </h2>
           <MentionMuteToggle targetType="album" spotifyId={album.spotifyId} loggedIn={!!user} />
         </div>

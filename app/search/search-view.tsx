@@ -76,11 +76,11 @@ function TrackCard({ t }: { t: TrackResult }) {
       </Link>
       {t.albumName &&
         (t.albumId ? (
-          <Link href={`/album/${t.albumId}`} className="block truncate text-xs text-zinc-400 hover:text-zinc-600 hover:underline dark:hover:text-zinc-300">
+          <Link href={`/album/${t.albumId}`} className="block truncate text-xs text-zinc-500 hover:text-zinc-600 hover:underline dark:hover:text-zinc-300">
             {t.albumName}
           </Link>
         ) : (
-          <p className="truncate text-xs text-zinc-400">{t.albumName}</p>
+          <p className="truncate text-xs text-zinc-500">{t.albumName}</p>
         ))}
     </div>
   );
@@ -93,7 +93,7 @@ function AlbumCard({ a }: { a: AlbumResult }) {
       <div className="min-w-0">
         <p className="truncate text-sm font-medium text-black dark:text-zinc-50">{a.name}</p>
         <p className="truncate text-xs text-zinc-500">{a.artist}</p>
-        {a.releaseDate && <p className="truncate text-xs text-zinc-400">{a.releaseDate}</p>}
+        {a.releaseDate && <p className="truncate text-xs text-zinc-500">{a.releaseDate}</p>}
       </div>
     </Link>
   );

@@ -62,7 +62,7 @@ export function GenreTags({
     <div className="flex flex-col gap-2">
       <div className="flex flex-wrap items-center gap-1.5">
         {top.length === 0 && proposed.length === 0 && !editing && (
-          <span className="text-xs text-zinc-400">{t("아직 장르 태그가 없습니다.")}</span>
+          <span className="text-xs text-zinc-500">{t("아직 장르 태그가 없습니다.")}</span>
         )}
         {top.map((g) => (
           <span
@@ -73,7 +73,7 @@ export function GenreTags({
                 : "bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300"
             }`}
           >
-            {displayLabel(g)} <span className="text-zinc-400">{g.count}</span>
+            {displayLabel(g)} <span className="text-zinc-500">{g.count}</span>
           </span>
         ))}
         {/* 내 선택(아직 2표 미만) — 투표가 먹혔음을 확인시키되 "제안됨" 상태로 구분(점선). */}

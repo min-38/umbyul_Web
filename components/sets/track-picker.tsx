@@ -100,7 +100,7 @@ export function TrackPicker({
     }
   };
 
-  if (disabledHint) return <p className="text-center text-xs text-zinc-400">{disabledHint}</p>;
+  if (disabledHint) return <p className="text-center text-xs text-zinc-500">{disabledHint}</p>;
 
   return (
     <div className="flex flex-col gap-2">
@@ -113,9 +113,9 @@ export function TrackPicker({
               <span className="truncate">{selected.name}</span>
               {selected.explicit && <ExplicitBadge />}
             </span>
-            <span className="block truncate text-xs text-zinc-400">{selected.artist}</span>
+            <span className="block truncate text-xs text-zinc-500">{selected.artist}</span>
           </span>
-          <button type="button" onClick={() => setSelected(null)} aria-label={t("취소")} className="shrink-0 text-zinc-400 hover:text-zinc-600">
+          <button type="button" onClick={() => setSelected(null)} aria-label={t("취소")} className="shrink-0 text-zinc-500 hover:text-zinc-600">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
               <path d="M18 6 6 18M6 6l12 12" />
             </svg>
@@ -144,7 +144,7 @@ export function TrackPicker({
                         <span className="truncate">{tr.name}</span>
                         {tr.explicit && <ExplicitBadge />}
                       </span>
-                      <span className="block truncate text-xs text-zinc-400">{tr.artist}</span>
+                      <span className="block truncate text-xs text-zinc-500">{tr.artist}</span>
                     </span>
                   </button>
                 </li>

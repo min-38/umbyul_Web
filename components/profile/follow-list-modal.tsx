@@ -36,9 +36,9 @@ export function FollowListModal({
         {kind === "followers" ? t("팔로워") : t("팔로잉")}
       </h2>
       {users === null ? (
-        <p className="py-8 text-center text-sm text-zinc-400">{t("불러오는 중…")}</p>
+        <p className="py-8 text-center text-sm text-zinc-500">{t("불러오는 중…")}</p>
       ) : users.length === 0 ? (
-        <p className="py-8 text-center text-sm text-zinc-400">{t("아직 없습니다.")}</p>
+        <p className="py-8 text-center text-sm text-zinc-500">{t("아직 없습니다.")}</p>
       ) : (
         <ul className="flex flex-col gap-1 overflow-y-auto">
           {users.map((u) => (

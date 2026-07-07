@@ -35,11 +35,11 @@ export function AlbumTabs({ album, loggedIn, points }: { album: AlbumDetail; log
             className={`-mb-px border-b-2 pb-2.5 text-sm font-medium ${
               tab === tb.key
                 ? "border-zinc-900 text-zinc-900 dark:border-zinc-100 dark:text-zinc-100"
-                : "border-transparent text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300"
+                : "border-transparent text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-300"
             }`}
           >
             {t(tb.label)}
-            {tb.key === "tracklist" && <span className="ml-1 text-zinc-400">({album.totalTracks})</span>}
+            {tb.key === "tracklist" && <span className="ml-1 text-zinc-500">({album.totalTracks})</span>}
           </button>
         ))}
       </div>
@@ -51,7 +51,7 @@ export function AlbumTabs({ album, loggedIn, points }: { album: AlbumDetail; log
             <ol className="flex max-h-96 flex-col overflow-y-auto pr-1">
               {album.tracks.map((tr) => (
                 <li key={tr.id} className="flex items-center gap-3 border-b border-zinc-100 py-2.5 last:border-0 dark:border-zinc-900">
-                  <span className="w-6 text-right text-sm tabular-nums text-zinc-400">{tr.trackNumber}</span>
+                  <span className="w-6 text-right text-sm tabular-nums text-zinc-500">{tr.trackNumber}</span>
                   <Link href={`/track/${tr.id}`} className="flex min-w-0 flex-1 items-center gap-1.5 text-sm text-zinc-800 hover:underline dark:text-zinc-100">
                     <span className="truncate">{tr.name}</span>
                     {tr.explicit && <ExplicitBadge />}
@@ -64,11 +64,11 @@ export function AlbumTabs({ album, loggedIn, points }: { album: AlbumDetail; log
                       </span>
                     </span>
                   )}
-                  <span className="w-10 text-right text-xs tabular-nums text-zinc-400">{formatDuration(tr.durationMs)}</span>
+                  <span className="w-10 text-right text-xs tabular-nums text-zinc-500">{formatDuration(tr.durationMs)}</span>
                 </li>
               ))}
             </ol>
-            <div className="mt-3 flex justify-between border-t border-zinc-200 pt-3 text-xs text-zinc-400 dark:border-zinc-800">
+            <div className="mt-3 flex justify-between border-t border-zinc-200 pt-3 text-xs text-zinc-500 dark:border-zinc-800">
               <span>{t("{count}곡", { count: album.totalTracks })}</span>
               <span>{formatTotalDuration(album.tracks.map((tr) => tr.durationMs))}</span>
             </div>
@@ -79,20 +79,20 @@ export function AlbumTabs({ album, loggedIn, points }: { album: AlbumDetail; log
           <dl className="flex flex-col gap-4">
             <div className="grid grid-cols-2 gap-4">
               <div className="flex flex-col gap-1">
-                <dt className="text-xs text-zinc-400">{t("발매일")}</dt>
+                <dt className="text-xs text-zinc-500">{t("발매일")}</dt>
                 <dd className="text-sm text-zinc-800 dark:text-zinc-200">{formatReleaseDate(album.releaseDate)}</dd>
               </div>
               <div className="flex flex-col gap-1">
-                <dt className="text-xs text-zinc-400">{t("트랙 수")}</dt>
+                <dt className="text-xs text-zinc-500">{t("트랙 수")}</dt>
                 <dd className="text-sm text-zinc-800 dark:text-zinc-200">{t("{count}곡", { count: album.totalTracks })}</dd>
               </div>
             </div>
             <div className="flex flex-col gap-1">
-              <dt className="text-xs text-zinc-400">{t("저작권")}</dt>
+              <dt className="text-xs text-zinc-500">{t("저작권")}</dt>
               <dd className="text-sm leading-relaxed text-zinc-600 dark:text-zinc-300">{album.copyright ?? "-"}</dd>
             </div>
             <div className="flex flex-col gap-1">
-              <dt className="text-xs text-zinc-400">{t("장르")}</dt>
+              <dt className="text-xs text-zinc-500">{t("장르")}</dt>
               <dd><GenreTags targetType="album" id={album.spotifyId} loggedIn={loggedIn} /></dd>
             </div>
           </dl>
@@ -102,7 +102,7 @@ export function AlbumTabs({ album, loggedIn, points }: { album: AlbumDetail; log
           (enoughChart ? (
             <RatingChart points={points} label={t("평점 추이")} />
           ) : (
-            <p className="rounded-lg border border-dashed border-zinc-300 px-4 py-8 text-center text-sm text-zinc-400 dark:border-zinc-700">
+            <p className="rounded-lg border border-dashed border-zinc-300 px-4 py-8 text-center text-sm text-zinc-500 dark:border-zinc-700">
               {t("평가가 더 쌓이면 추이가 표시됩니다.")}
             </p>
           ))}

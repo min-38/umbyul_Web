@@ -83,7 +83,7 @@ export default async function TrackPage({ params }: { params: Promise<{ id: stri
             </span>
             <span className="flex flex-col">
               <Stars value={track.rating.average ?? 0} size={18} />
-              <span className="text-xs text-zinc-400">{t("{count}개 평가", { count: track.rating.count })}</span>
+              <span className="text-xs text-zinc-500">{t("{count}개 평가", { count: track.rating.count })}</span>
             </span>
             <span className="ml-auto">
               <RateButton
@@ -118,22 +118,22 @@ export default async function TrackPage({ params }: { params: Promise<{ id: stri
           <dl className="flex flex-col gap-4">
             <div className="grid grid-cols-2 gap-4">
               <div className="flex flex-col gap-1">
-                <dt className="text-xs text-zinc-400">{t("발매일")}</dt>
+                <dt className="text-xs text-zinc-500">{t("발매일")}</dt>
                 <dd className="text-sm text-zinc-800 dark:text-zinc-200">{formatReleaseDate(track.releaseDate)}</dd>
               </div>
               <div className="flex flex-col gap-1">
-                <dt className="text-xs text-zinc-400">{t("길이")}</dt>
+                <dt className="text-xs text-zinc-500">{t("길이")}</dt>
                 <dd className="text-sm text-zinc-800 dark:text-zinc-200">{formatDuration(track.durationMs)}</dd>
               </div>
             </div>
             {track.copyright && (
               <div className="flex flex-col gap-1">
-                <dt className="text-xs text-zinc-400">{t("저작권")}</dt>
+                <dt className="text-xs text-zinc-500">{t("저작권")}</dt>
                 <dd className="text-xs leading-relaxed text-zinc-500 dark:text-zinc-400">{track.copyright}</dd>
               </div>
             )}
             <div className="flex flex-col gap-1">
-              <dt className="text-xs text-zinc-400">{t("장르")}</dt>
+              <dt className="text-xs text-zinc-500">{t("장르")}</dt>
               <dd><GenreTags targetType="track" id={track.spotifyId} loggedIn={!!user} /></dd>
             </div>
           </dl>
@@ -143,7 +143,7 @@ export default async function TrackPage({ params }: { params: Promise<{ id: stri
       <section className="mt-10">
         <div className="mb-4 flex items-center justify-between gap-3">
           <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">
-            {t("리뷰")} <span className="text-zinc-400">({track.rating.count})</span>
+            {t("리뷰")} <span className="text-zinc-500">({track.rating.count})</span>
           </h2>
           <MentionMuteToggle targetType="track" spotifyId={track.spotifyId} loggedIn={!!user} />
         </div>

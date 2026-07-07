@@ -131,7 +131,7 @@ export function MixEditor({ detail }: { detail: DjSetDetail }) {
             <span className={labelCls}>{t("곡")}</span>
             <MixGuide />
           </span>
-          <span className="text-xs tabular-nums text-zinc-400">{tracks.length}/{MAX_TRACKS}</span>
+          <span className="text-xs tabular-nums text-zinc-500">{tracks.length}/{MAX_TRACKS}</span>
         </div>
 
         <TrackPicker onAdd={addTrack} disabledHint={tracks.length >= MAX_TRACKS ? t("최대 {count}곡까지 담을 수 있어요.", { count: MAX_TRACKS }) : null} />
@@ -154,7 +154,7 @@ export function MixEditor({ detail }: { detail: DjSetDetail }) {
                   <span className="truncate">{tr.name}</span>
                   {tr.explicit && <ExplicitBadge />}
                 </span>
-                <span className="block truncate text-xs text-zinc-400">
+                <span className="block truncate text-xs text-zinc-500">
                   {tr.artist}
                   {tr.albumName ? ` · ${tr.albumName}` : ""}
                 </span>

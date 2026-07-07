@@ -8,7 +8,7 @@ export function ScoreBadge({ rating }: { rating: RatingBadge | null }) {
     <span className="flex shrink-0 items-center gap-1">
       <Stars value={rating.average} size={12} />
       <span className="text-xs font-semibold text-zinc-700 dark:text-zinc-200">{rating.average.toFixed(1)}</span>
-      <span className="text-xs text-zinc-400">({rating.count})</span>
+      <span className="text-xs text-zinc-500">({rating.count})</span>
     </span>
   );
 }

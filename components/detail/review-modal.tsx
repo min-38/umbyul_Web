@@ -94,7 +94,7 @@ export function ReviewModal({
         />
 
         {/* 리뷰 작성 가이드 (NON-91) */}
-        <ul className="mt-2 space-y-0.5 text-xs leading-relaxed text-zinc-400">
+        <ul className="mt-2 space-y-0.5 text-xs leading-relaxed text-zinc-500">
           <li>· {t("최소 10자 이상 작성해주세요.")}</li>
           <li>· {t("욕설·비방은 금지됩니다. 비판은 좋지만 비난은 안 됩니다.")}</li>
           <li>· {t("부적절한 리뷰는 신고 없이도 관리자가 삭제하고 제재할 수 있습니다.")}</li>
