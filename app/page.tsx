@@ -41,6 +41,7 @@ export default async function Home({
 
   return (
     <div className="mx-auto flex w-full max-w-2xl flex-col gap-4 px-4 py-6">
+      <h1 className="sr-only">{t("홈")}</h1>
       <FeedControls sort={sort} scope={scope} view={view} loggedIn={loggedIn} />
 
       {items.length === 0 ? (

@@ -93,6 +93,7 @@ export function SetView({
           <button
             type="button"
             onClick={toggleLike}
+            aria-label={t("좋아요")}
             aria-pressed={liked}
             className={`flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-sm transition ${
               liked
@@ -129,7 +130,7 @@ export function SetView({
       <ul className="flex flex-col divide-y divide-zinc-100 dark:divide-zinc-800/70">
         {tracks.map((tr) => (
           <li key={tr.spotifyId} className="flex items-center gap-2.5 py-3">
-            <Link href={`/track/${tr.spotifyId}`} className="shrink-0">
+            <Link href={`/track/${tr.spotifyId}`} className="shrink-0" aria-label={tr.name}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={coverThumb(tr.imageUrl, "sm") ?? "/placeholder.svg"} alt="" className="h-14 w-14 rounded bg-zinc-100 object-cover dark:bg-zinc-800" />
             </Link>

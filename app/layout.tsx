@@ -34,7 +34,7 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const locale = await getLocale();
+  const [locale, t] = await Promise.all([getLocale(), getT()]);
 
   return (
     <html
@@ -46,10 +46,14 @@ export default async function RootLayout({
         <Script id="theme-init" strategy="beforeInteractive">
           {themeScript}
         </Script>
+        {/* 키보드 사용자용 본문 바로가기(A11Y-12) — 포커스 시에만 노출 */}
+        <a href="#main" className="sr-only focus:not-sr-only focus:absolute focus:left-2 focus:top-2 focus:z-50 focus:rounded focus:bg-white focus:px-3 focus:py-2 focus:text-sm focus:font-medium focus:text-zinc-900 focus:shadow dark:focus:bg-zinc-900 dark:focus:text-zinc-100">
+          {t("본문으로 건너뛰기")}
+        </a>
         <I18nProvider locale={locale}>
           <Header />
           <SanctionBanner />
-          <main className="flex flex-1 flex-col">{children}</main>
+          <main id="main" className="flex flex-1 flex-col">{children}</main>
           <Footer />
         </I18nProvider>
       </body>

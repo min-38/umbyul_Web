@@ -4,10 +4,11 @@ import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import type { Reaction } from "@/lib/api";
 import { toggleReaction, type ReactionState } from "@/app/actions/social";
+import { useT } from "@/components/i18n-provider";
 
 function ThumbUp({ filled }: { filled: boolean }) {
   return (
-    <svg width="15" height="15" viewBox="0 0 24 24" fill={filled ? "currentColor" : "none"} stroke="currentColor" strokeWidth="2" strokeLinejoin="round">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill={filled ? "currentColor" : "none"} stroke="currentColor" strokeWidth="2" strokeLinejoin="round" aria-hidden="true">
       <path d="M7 10v11M2 13v6a2 2 0 002 2h13.5a2 2 0 001.97-1.64l1.3-7A2 2 0 0019.8 10H14V4a2 2 0 00-2-2l-3 7v11" />
     </svg>
   );
@@ -22,6 +23,7 @@ export function ReactionBar({
   loggedIn: boolean;
   initial: ReactionState;
 }) {
+  const t = useT();
   const router = useRouter();
   const [state, setState] = useState<ReactionState>(initial);
   const [pending, start] = useTransition();
@@ -43,6 +45,7 @@ export function ReactionBar({
         type="button"
         onClick={() => react("like")}
         disabled={pending}
+        aria-label={t("좋아요")}
         aria-pressed={state.myReaction === "like"}
         className={`flex items-center gap-1 text-xs disabled:opacity-50 ${
           state.myReaction === "like"
