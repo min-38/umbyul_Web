@@ -55,7 +55,7 @@ export async function getMySanction(): Promise<MySanction | null> {
 }
 
 // 국가/성별 정정용 조회(LEG-11). canChangeAt 이 미래면 쿨다운 중. 비로그인·오류면 null.
-export type MyDemographics = { country: string | null; gender: string | null; canChangeAt: string | null };
+export type MyDemographics = { country: string | null; gender: string | null; birthDate: string | null; canChangeAt: string | null };
 
 export async function getMyDemographics(): Promise<MyDemographics | null> {
   const supabase = await createClient();

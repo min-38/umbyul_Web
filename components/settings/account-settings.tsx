@@ -19,6 +19,25 @@ const PROVIDER_LABELS: Record<string, string> = {
   discord: "Discord",
 };
 
+// 생년월일 선택 옵션(만 14세 이상). 온보딩과 동일 규칙.
+const BIRTH_YEARS = Array.from({ length: 100 }, (_, i) => new Date().getFullYear() - 14 - i);
+const BIRTH_MONTHS = Array.from({ length: 12 }, (_, i) => i + 1);
+const BIRTH_DAYS = Array.from({ length: 31 }, (_, i) => i + 1);
+
+function parseBirth(s: string | null): { y: string; m: string; d: string } {
+  if (!s) return { y: "", m: "", d: "" };
+  const [y, m, d] = s.split("-");
+  return { y: y ?? "", m: m ? String(Number(m)) : "", d: d ? String(Number(d)) : "" };
+}
+
+// 유효한 날짜면 yyyy-MM-dd, 아니면 null (온보딩 buildBirth와 동일).
+function buildBirth(y: string, m: string, d: string): string | null {
+  if (!y || !m || !d) return null;
+  const dt = new Date(Number(y), Number(m) - 1, Number(d));
+  if (dt.getFullYear() !== Number(y) || dt.getMonth() !== Number(m) - 1 || dt.getDate() !== Number(d)) return null;
+  return `${y}-${m.padStart(2, "0")}-${d.padStart(2, "0")}`;
+}
+
 export function AccountSettings({
   initialUsername,
   initialEmail,
@@ -28,6 +47,7 @@ export function AccountSettings({
   providers,
   initialCountry,
   initialGender,
+  initialBirthDate,
   demographicsCanChangeAt,
 }: {
   initialUsername: string;
@@ -38,6 +58,7 @@ export function AccountSettings({
   providers: string[];
   initialCountry: string;
   initialGender: string | null;
+  initialBirthDate: string | null;
   demographicsCanChangeAt: string | null;
 }) {
   const t = useT();
@@ -119,9 +140,13 @@ export function AccountSettings({
     setEmailNote({ ok: true, text: t("새 이메일로 확인 메일을 보냈습니다. 링크를 눌러야 변경이 완료됩니다.") });
   };
 
-  // 국가·성별 정정(LEG-11) — 잦은 변경 방지 쿨다운
+  // 국가·성별·생년월일 정정(LEG-11) — 잦은 변경 방지 쿨다운(셋을 한 번에 저장)
+  const initBirth = parseBirth(initialBirthDate);
   const [country, setCountry] = useState(initialCountry);
   const [gender, setGender] = useState(initialGender ?? "");
+  const [birthY, setBirthY] = useState(initBirth.y);
+  const [birthM, setBirthM] = useState(initBirth.m);
+  const [birthD, setBirthD] = useState(initBirth.d);
   const [demoBusy, setDemoBusy] = useState(false);
   const [demoNote, setDemoNote] = useState<Note>(null);
   const countries = useMemo(() => {
@@ -130,15 +155,20 @@ export function AccountSettings({
   }, [locale]);
   const cooldownUntil = demographicsCanChangeAt ? new Date(demographicsCanChangeAt) : null;
   const inCooldown = cooldownUntil ? cooldownUntil.getTime() > Date.now() : false;
-  const demoChanged = country !== initialCountry || (gender || null) !== (initialGender ?? null);
+  const builtBirth = buildBirth(birthY, birthM, birthD);
+  const demoChanged =
+    country !== initialCountry || (gender || null) !== (initialGender ?? null) || builtBirth !== initialBirthDate;
 
   const saveDemo = async () => {
+    if (!builtBirth) return setDemoNote({ ok: false, text: t("생년월일을 확인하세요.") });
     setDemoBusy(true);
     setDemoNote(null);
-    const r = await updateDemographics(country, gender || null);
+    const r = await updateDemographics(country, gender || null, builtBirth);
     setDemoBusy(false);
     setDemoNote(r.ok ? { ok: true, text: t("변경되었습니다.") } : { ok: false, text: msg(r.code, locale) });
   };
+  const selectClass =
+    "rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 focus:border-zinc-500 focus:outline-none disabled:opacity-60 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100";
 
   // 데이터 내보내기 — JSON 다운로드
   const [exportBusy, setExportBusy] = useState(false);
@@ -307,27 +337,30 @@ export function AccountSettings({
         <NoteText note={emailNote} />
       </Section>
 
-      {/* 국가·성별 정정 (LEG-11) */}
-      <Section title={t("국가·성별")}>
+      {/* 국가·성별·생년월일 정정 (LEG-11) */}
+      <Section title={t("기본 정보")}>
         <div className="flex max-w-xs flex-col gap-2">
-          <select
-            value={country}
-            onChange={(e) => setCountry(e.target.value)}
-            disabled={inCooldown}
-            aria-label={t("국가")}
-            className="rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 focus:border-zinc-500 focus:outline-none disabled:opacity-60 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100"
-          >
+          {/* 생년월일 */}
+          <div className="flex gap-2">
+            <select value={birthY} onChange={(e) => setBirthY(e.target.value)} disabled={inCooldown} aria-label={t("년")} className={`${selectClass} flex-1`}>
+              <option value="">{t("년")}</option>
+              {BIRTH_YEARS.map((y) => (<option key={y} value={y}>{y}</option>))}
+            </select>
+            <select value={birthM} onChange={(e) => setBirthM(e.target.value)} disabled={inCooldown} aria-label={t("월")} className={`${selectClass} flex-1`}>
+              <option value="">{t("월")}</option>
+              {BIRTH_MONTHS.map((m) => (<option key={m} value={m}>{m}</option>))}
+            </select>
+            <select value={birthD} onChange={(e) => setBirthD(e.target.value)} disabled={inCooldown} aria-label={t("일")} className={`${selectClass} flex-1`}>
+              <option value="">{t("일")}</option>
+              {BIRTH_DAYS.map((d) => (<option key={d} value={d}>{d}</option>))}
+            </select>
+          </div>
+          <select value={country} onChange={(e) => setCountry(e.target.value)} disabled={inCooldown} aria-label={t("국가")} className={selectClass}>
             {countries.map(({ code, name }) => (
               <option key={code} value={code}>{name}</option>
             ))}
           </select>
-          <select
-            value={gender}
-            onChange={(e) => setGender(e.target.value)}
-            disabled={inCooldown}
-            aria-label={t("성별")}
-            className="rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 focus:border-zinc-500 focus:outline-none disabled:opacity-60 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100"
-          >
+          <select value={gender} onChange={(e) => setGender(e.target.value)} disabled={inCooldown} aria-label={t("성별")} className={selectClass}>
             <option value="">{t("성별 (선택)")}</option>
             {GENDERS.map((g) => (
               <option key={g.v} value={g.v}>{t(g.l)}</option>

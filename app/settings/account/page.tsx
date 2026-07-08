@@ -24,6 +24,7 @@ export default async function AccountTabPage() {
       providers={providers}
       initialCountry={demographics?.country ?? profile.country ?? "KR"}
       initialGender={demographics?.gender ?? null}
+      initialBirthDate={demographics?.birthDate ?? null}
       demographicsCanChangeAt={demographics?.canChangeAt ?? null}
     />
   );

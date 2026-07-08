@@ -30,7 +30,7 @@ export async function updateUsername(username: string): Promise<Result & { usern
 }
 
 // 국가/성별 정정(LEG-11). 쿨다운 내 재변경은 서버가 DEMOGRAPHICS_COOLDOWN 로 거부.
-export async function updateDemographics(country: string, gender: string | null): Promise<Result> {
+export async function updateDemographics(country: string, gender: string | null, birthDate: string): Promise<Result> {
   const supabase = await createClient();
   const {
     data: { session },
@@ -41,7 +41,7 @@ export async function updateDemographics(country: string, gender: string | null)
     const res = await fetch(`${API_URL}/me/demographics`, {
       method: "POST",
       headers: { Authorization: `Bearer ${session.access_token}`, "Content-Type": "application/json" },
-      body: JSON.stringify({ country, gender }),
+      body: JSON.stringify({ country, gender, birthDate }),
       cache: "no-store",
     });
     const json = await res.json().catch(() => null);
