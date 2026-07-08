@@ -8,6 +8,7 @@ import { ReportDialog } from "@/components/detail/report-control";
 import { ShareButton } from "@/components/detail/share-button";
 import { FeedCommentsModal } from "@/components/feed/feed-comments-modal";
 import { MeatballMenu } from "@/components/ui/meatball-menu";
+import { InfiniteScroll } from "@/components/ui/infinite-scroll";
 import { TargetBadge } from "@/components/ui/target-badge";
 import { ExplicitBadge } from "@/components/detail/explicit-badge";
 import { dismissReview, loadMoreFeed } from "@/app/actions/social";
@@ -210,18 +211,14 @@ export function FeedList({
     </div>
   ) : null;
 
-  const moreButton = hasMore ? (
-    <div className="mt-4 text-center">
-      <button
-        type="button"
-        onClick={loadMore}
-        disabled={loadingMore}
-        className="rounded-full border border-zinc-300 px-5 py-2 text-sm font-medium text-zinc-600 hover:bg-zinc-100 disabled:opacity-50 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800"
-      >
-        {loadingMore ? t("불러오는 중…") : t("더 보기")}
-      </button>
-    </div>
-  ) : null;
+  const moreArea = (
+    <InfiniteScroll
+      hasMore={hasMore}
+      loading={loadingMore}
+      onLoadMore={loadMore}
+      endLabel={visible.length > 0 ? t("모두 확인했어요") : null}
+    />
+  );
 
   if (view === "compact") {
     return (
@@ -261,7 +258,7 @@ export function FeedList({
             </li>
           ))}
         </ul>
-        {moreButton}
+        {moreArea}
         {reportDialog}
         {commentsModal}
         {undoToasts}
@@ -326,7 +323,7 @@ export function FeedList({
           </article>
         ))}
       </div>
-      {moreButton}
+      {moreArea}
       {reportDialog}
       {commentsModal}
       {undoToasts}

@@ -6,6 +6,7 @@ import type { DjSetSummary } from "@/lib/api";
 import { loadMixes } from "@/app/actions/sets";
 import { MixCovers } from "@/components/sets/mix-covers";
 import { SortDropdown } from "@/components/feed/sort-dropdown";
+import { InfiniteScroll } from "@/components/ui/infinite-scroll";
 import { useT } from "@/components/i18n-provider";
 
 const PAGE = 30;
@@ -115,18 +116,12 @@ export function MixList({ initial }: { initial: DjSetSummary[] }) {
         </ul>
       )}
 
-      {hasMore && (
-        <div className="text-center">
-          <button
-            type="button"
-            onClick={loadMore}
-            disabled={loading}
-            className="rounded-full border border-zinc-300 px-5 py-2 text-sm font-medium text-zinc-600 hover:bg-zinc-100 disabled:opacity-50 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800"
-          >
-            {loading ? t("불러오는 중…") : t("더 보기")}
-          </button>
-        </div>
-      )}
+      <InfiniteScroll
+        hasMore={hasMore}
+        loading={loading}
+        onLoadMore={loadMore}
+        endLabel={items.length > 0 ? t("모두 확인했어요") : null}
+      />
     </div>
   );
 }
