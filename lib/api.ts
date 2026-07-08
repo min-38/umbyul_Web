@@ -419,7 +419,7 @@ export async function getFeed(sort: FeedSort, scope: FeedScope, offset = 0, limi
 // Discover(NON-81/85). 전부 대상 커버(DiscoverItem). artistId 있으면 아티스트 링크(NON-85).
 export type DiscoverItem = TrendingItem & { artists: ArtistRef[] | null };
 export type RisingWindows = { day: DiscoverItem[]; week: DiscoverItem[]; month: DiscoverItem[]; year: DiscoverItem[] };
-export type DiscoverData = { rising: RisingWindows; new: DiscoverItem[]; myRecent: DiscoverItem[] };
+export type DiscoverData = { rising: RisingWindows; new: DiscoverItem[]; myRecent: DiscoverItem[]; recommend: DiscoverItem[] };
 
 // Chart(NON-82). 랭킹 아이템은 DiscoverItem 과 동일 형태.
 export type ChartType = "all" | "album" | "track" | "artist" | "user";
@@ -489,7 +489,7 @@ export async function getChart(
 
 /** Discover (공개, 로그인 시 내 최근 리뷰 포함). 실패·형태 불일치 시 빈 데이터(페이지가 죽지 않게). */
 export async function getDiscover(): Promise<DiscoverData> {
-  const empty: DiscoverData = { rising: { day: [], week: [], month: [], year: [] }, new: [], myRecent: [] };
+  const empty: DiscoverData = { rising: { day: [], week: [], month: [], year: [] }, new: [], myRecent: [], recommend: [] };
   try {
     const res = await fetch(`${API_URL}/discover`, { headers: await detailHeaders(), cache: "no-store" });
     if (!res.ok) return empty;
@@ -500,6 +500,7 @@ export async function getDiscover(): Promise<DiscoverData> {
       rising: { day: r.day ?? [], week: r.week ?? [], month: r.month ?? [], year: r.year ?? [] },
       new: d.new ?? [],
       myRecent: d.myRecent ?? [],
+      recommend: d.recommend ?? [],
     };
   } catch {
     return empty;
