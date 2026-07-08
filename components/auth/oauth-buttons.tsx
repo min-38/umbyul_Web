@@ -3,7 +3,8 @@
 import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { Spinner } from "@/components/ui/spinner";
-import { useT } from "@/components/i18n-provider";
+import { authMessage } from "@/lib/messages";
+import { useT, useLocale } from "@/components/i18n-provider";
 
 type Provider = "google" | "discord";
 
@@ -40,6 +41,7 @@ function DiscordIcon() {
 
 export function OAuthButtons({ disabled = false }: { disabled?: boolean } = {}) {
   const t = useT();
+  const locale = useLocale();
   const [error, setError] = useState<string | null>(null);
   const [loadingProvider, setLoadingProvider] = useState<Provider | null>(null);
   const loading = loadingProvider !== null;
@@ -54,7 +56,7 @@ export function OAuthButtons({ disabled = false }: { disabled?: boolean } = {}) 
       options: { redirectTo: `${window.location.origin}/auth/callback` },
     });
     if (error) {
-      setError(error.message);
+      setError(authMessage(error, locale));
       setLoadingProvider(null);
     }
     // 성공 시 provider로 리다이렉트되므로 별도 처리 없음.

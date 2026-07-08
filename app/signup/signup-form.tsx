@@ -8,7 +8,8 @@ import { Spinner } from "@/components/ui/spinner";
 import { BrandMark } from "@/components/ui/brand-mark";
 import { PasswordInput } from "@/components/ui/password-input";
 import { isEmail, passwordChecks, borderClass, type FieldStatus } from "@/lib/validation";
-import { useT } from "@/components/i18n-provider";
+import { authMessage } from "@/lib/messages";
+import { useT, useLocale } from "@/components/i18n-provider";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -27,6 +28,7 @@ type EmailState = "idle" | "checking" | "available" | "taken" | "invalid";
 
 export function SignupForm() {
   const t = useT();
+  const locale = useLocale();
   const [step, setStep] = useState<"form" | "verify">("form");
   const [email, setEmail] = useState("");
   const [emailState, setEmailState] = useState<EmailState>("idle");
@@ -97,7 +99,7 @@ export function SignupForm() {
     setLoading(false);
 
     if (error) {
-      setError(error.message);
+      setError(authMessage(error, locale));
       return;
     }
     // 제출 시 재확인: 이미 가입된 이메일이면 identities 가 빈 배열(열거 방지)

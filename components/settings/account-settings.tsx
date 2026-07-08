@@ -3,7 +3,7 @@
 import { useMemo, useRef, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { updateUsername, uploadAvatar, deleteAccount, exportMyData, updateDemographics } from "@/app/actions/account";
-import { msg } from "@/lib/messages";
+import { msg, authMessage } from "@/lib/messages";
 import { isUsername } from "@/lib/validation";
 import { dateLocale } from "@/lib/format";
 import { COUNTRY_CODES } from "@/lib/countries";
@@ -119,7 +119,7 @@ export function AccountSettings({
     setPwNote(null);
     const { error } = await createClient().auth.updateUser({ password: pw });
     setPwBusy(false);
-    if (error) return setPwNote({ ok: false, text: error.message });
+    if (error) return setPwNote({ ok: false, text: authMessage(error, locale) });
     setPw("");
     setPw2("");
     setPwNote({ ok: true, text: hasPassword ? t("변경되었습니다.") : t("설정되었습니다.") });
@@ -138,7 +138,7 @@ export function AccountSettings({
     setEmailNote(null);
     const { error } = await createClient().auth.updateUser({ email: next });
     setEmailBusy(false);
-    if (error) return setEmailNote({ ok: false, text: error.message });
+    if (error) return setEmailNote({ ok: false, text: authMessage(error, locale) });
     setEmailNote({ ok: true, text: t("새 이메일로 확인 메일을 보냈습니다. 링크를 눌러야 변경이 완료됩니다.") });
   };
 

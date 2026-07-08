@@ -7,7 +7,8 @@ import { createClient } from "@/lib/supabase/client";
 import { BrandMark } from "@/components/ui/brand-mark";
 import { Spinner } from "@/components/ui/spinner";
 import { PasswordInput } from "@/components/ui/password-input";
-import { useT } from "@/components/i18n-provider";
+import { authMessage } from "@/lib/messages";
+import { useT, useLocale } from "@/components/i18n-provider";
 
 const inputBase =
   "w-full rounded-lg border border-zinc-300 px-3 py-2.5 text-sm text-black outline-none focus:ring-1 focus:ring-zinc-300 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50";
@@ -15,6 +16,7 @@ const inputBase =
 export default function ResetPasswordPage() {
   const router = useRouter();
   const t = useT();
+  const locale = useLocale();
   const [ready, setReady] = useState<boolean | null>(null); // 복구 세션 존재 여부
   const [pw, setPw] = useState("");
   const [pw2, setPw2] = useState("");
@@ -51,7 +53,7 @@ export default function ResetPasswordPage() {
     const { error } = await supabase.auth.updateUser({ password: pw });
     if (error) {
       setLoading(false);
-      setError(error.message);
+      setError(authMessage(error, locale));
       return;
     }
     // 변경 성공 → 복구 세션 로그아웃(재로그인 강제)

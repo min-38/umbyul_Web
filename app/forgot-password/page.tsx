@@ -5,13 +5,15 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import { BrandMark } from "@/components/ui/brand-mark";
 import { Spinner } from "@/components/ui/spinner";
-import { useT } from "@/components/i18n-provider";
+import { authMessage } from "@/lib/messages";
+import { useT, useLocale } from "@/components/i18n-provider";
 
 const inputBase =
   "w-full rounded-lg border border-zinc-300 px-3 py-2.5 text-sm text-black outline-none focus:ring-1 focus:ring-zinc-300 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50";
 
 export default function ForgotPasswordPage() {
   const t = useT();
+  const locale = useLocale();
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [sent, setSent] = useState(false);
@@ -25,7 +27,7 @@ export default function ForgotPasswordPage() {
       redirectTo: `${window.location.origin}/auth/callback?next=/reset-password`,
     });
     setLoading(false);
-    if (error) setError(error.message);
+    if (error) setError(authMessage(error, locale));
     else setSent(true);
   };
 

@@ -8,13 +8,15 @@ import { OAuthButtons } from "@/components/auth/oauth-buttons";
 import { Spinner } from "@/components/ui/spinner";
 import { BrandMark } from "@/components/ui/brand-mark";
 import { PasswordInput } from "@/components/ui/password-input";
-import { useT } from "@/components/i18n-provider";
+import { authMessage } from "@/lib/messages";
+import { useT, useLocale } from "@/components/i18n-provider";
 
 const inputBase =
   "w-full rounded-lg border px-3 py-2.5 text-sm text-black outline-none focus:ring-1 focus:ring-zinc-300 dark:bg-zinc-900 dark:text-zinc-50";
 
 export function LoginForm() {
   const t = useT();
+  const locale = useLocale();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -30,7 +32,7 @@ export function LoginForm() {
     const { error } = await supabase.auth.signInWithPassword({ email, password });
     setLoading(false);
     if (error) {
-      setError(error.message);
+      setError(authMessage(error, locale));
       return;
     }
     router.push("/");

@@ -2,6 +2,25 @@
 import type { Locale } from "./i18n";
 
 const KO: Record<string, string> = {
+  // Supabase 클라이언트 auth 에러 코드(로그인·회원가입·비번재설정·이메일변경·OAuth). 원본 메시지는 영어라 코드로 매핑.
+  invalid_credentials: "이메일 또는 비밀번호가 올바르지 않습니다.",
+  email_not_confirmed: "이메일 인증이 필요합니다. 메일함을 확인해주세요.",
+  email_exists: "이미 가입된 이메일입니다.",
+  user_already_exists: "이미 가입된 이메일입니다.",
+  email_address_invalid: "이메일 형식이 올바르지 않습니다.",
+  weak_password: "비밀번호가 너무 약합니다. 더 복잡하게 설정해주세요.",
+  same_password: "이전과 다른 비밀번호를 사용해주세요.",
+  otp_expired: "인증 코드가 만료되었습니다. 다시 요청해주세요.",
+  over_email_send_rate_limit: "메일 요청이 너무 많습니다. 잠시 후 다시 시도해주세요.",
+  over_request_rate_limit: "요청이 너무 많습니다. 잠시 후 다시 시도해주세요.",
+  signup_disabled: "현재 회원가입을 받지 않습니다.",
+  user_banned: "정지된 계정입니다.",
+  user_not_found: "계정을 찾을 수 없습니다.",
+  session_expired: "세션이 만료되었습니다. 다시 로그인해주세요.",
+  refresh_token_not_found: "세션이 만료되었습니다. 다시 로그인해주세요.",
+  validation_failed: "입력값을 확인해주세요.",
+  captcha_failed: "봇 확인에 실패했습니다. 다시 시도해주세요.",
+  AUTH_FAILED: "인증 중 문제가 발생했습니다. 잠시 후 다시 시도해주세요.",
   USERNAME_TAKEN: "이미 사용 중인 username입니다.",
   INVALID_USERNAME: "username 형식을 확인하세요.",
   INVALID_COUNTRY: "국가 값이 올바르지 않습니다.",
@@ -46,6 +65,24 @@ const KO: Record<string, string> = {
 };
 
 const EN: Record<string, string> = {
+  invalid_credentials: "Incorrect email or password.",
+  email_not_confirmed: "Please confirm your email — check your inbox.",
+  email_exists: "This email is already registered.",
+  user_already_exists: "This email is already registered.",
+  email_address_invalid: "That email address isn't valid.",
+  weak_password: "That password is too weak. Please choose a stronger one.",
+  same_password: "Please use a different password from before.",
+  otp_expired: "The code has expired. Please request a new one.",
+  over_email_send_rate_limit: "Too many email requests. Please try again shortly.",
+  over_request_rate_limit: "Too many requests. Please try again shortly.",
+  signup_disabled: "Sign-ups are currently disabled.",
+  user_banned: "This account is suspended.",
+  user_not_found: "Account not found.",
+  session_expired: "Your session has expired. Please log in again.",
+  refresh_token_not_found: "Your session has expired. Please log in again.",
+  validation_failed: "Please check your input.",
+  captcha_failed: "Bot verification failed. Please try again.",
+  AUTH_FAILED: "Something went wrong during authentication. Please try again shortly.",
   USERNAME_TAKEN: "That username is already taken.",
   INVALID_USERNAME: "Check the username format.",
   INVALID_COUNTRY: "Invalid country value.",
@@ -84,6 +121,24 @@ const EN: Record<string, string> = {
 };
 
 const JA: Record<string, string> = {
+  invalid_credentials: "メールアドレスまたはパスワードが正しくありません。",
+  email_not_confirmed: "メール認証が必要です。受信トレイをご確認ください。",
+  email_exists: "このメールアドレスは既に登録されています。",
+  user_already_exists: "このメールアドレスは既に登録されています。",
+  email_address_invalid: "メールアドレスの形式が正しくありません。",
+  weak_password: "パスワードが弱すぎます。より複雑なものを設定してください。",
+  same_password: "以前と異なるパスワードを使用してください。",
+  otp_expired: "コードの有効期限が切れました。もう一度リクエストしてください。",
+  over_email_send_rate_limit: "メールのリクエストが多すぎます。しばらくしてからお試しください。",
+  over_request_rate_limit: "リクエストが多すぎます。しばらくしてからお試しください。",
+  signup_disabled: "現在、新規登録を受け付けていません。",
+  user_banned: "停止されたアカウントです。",
+  user_not_found: "アカウントが見つかりません。",
+  session_expired: "セッションの有効期限が切れました。再度ログインしてください。",
+  refresh_token_not_found: "セッションの有効期限が切れました。再度ログインしてください。",
+  validation_failed: "入力内容をご確認ください。",
+  captcha_failed: "ボット確認に失敗しました。もう一度お試しください。",
+  AUTH_FAILED: "認証中に問題が発生しました。しばらくしてからお試しください。",
   USERNAME_TAKEN: "そのユーザー名は既に使われています。",
   INVALID_USERNAME: "ユーザー名の形式を確認してください。",
   INVALID_COUNTRY: "国の値が正しくありません。",
@@ -122,6 +177,24 @@ const JA: Record<string, string> = {
 };
 
 const ES: Record<string, string> = {
+  invalid_credentials: "Correo o contraseña incorrectos.",
+  email_not_confirmed: "Debes confirmar tu correo — revisa tu bandeja de entrada.",
+  email_exists: "Este correo ya está registrado.",
+  user_already_exists: "Este correo ya está registrado.",
+  email_address_invalid: "Esa dirección de correo no es válida.",
+  weak_password: "Esa contraseña es demasiado débil. Elige una más segura.",
+  same_password: "Usa una contraseña diferente a la anterior.",
+  otp_expired: "El código ha caducado. Solicita uno nuevo.",
+  over_email_send_rate_limit: "Demasiadas solicitudes de correo. Inténtalo de nuevo en un momento.",
+  over_request_rate_limit: "Demasiadas solicitudes. Inténtalo de nuevo en un momento.",
+  signup_disabled: "El registro está deshabilitado por ahora.",
+  user_banned: "Esta cuenta está suspendida.",
+  user_not_found: "Cuenta no encontrada.",
+  session_expired: "Tu sesión ha caducado. Inicia sesión de nuevo.",
+  refresh_token_not_found: "Tu sesión ha caducado. Inicia sesión de nuevo.",
+  validation_failed: "Revisa los datos introducidos.",
+  captcha_failed: "Falló la verificación anti-bot. Inténtalo de nuevo.",
+  AUTH_FAILED: "Ocurrió un problema durante la autenticación. Inténtalo de nuevo en un momento.",
   USERNAME_TAKEN: "Ese nombre de usuario ya está en uso.",
   INVALID_USERNAME: "Revisa el formato del nombre de usuario.",
   INVALID_COUNTRY: "Valor de país no válido.",
@@ -163,4 +236,10 @@ const ES: Record<string, string> = {
 export function msg(code?: string | null, locale: Locale = "ko"): string {
   const dict = locale === "ko" ? KO : locale === "ja" ? JA : locale === "es" ? ES : EN;
   return (code && dict[code]) || dict.UNKNOWN;
+}
+
+/** Supabase 클라이언트 auth 에러(원본 영어)를 로케일 문구로. error.code 우선, 미지의 code·code 없음은 AUTH_FAILED. */
+export function authMessage(error?: { code?: string } | null, locale: Locale = "ko"): string {
+  const dict = locale === "ko" ? KO : locale === "ja" ? JA : locale === "es" ? ES : EN;
+  return (error?.code && dict[error.code]) || dict.AUTH_FAILED;
 }
