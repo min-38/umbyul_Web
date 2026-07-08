@@ -309,6 +309,26 @@ export async function getGenres(): Promise<Genre[]> {
   }
 }
 
+/** 내 선호 장르 id 목록(NON-150). 미로그인·마이그레이션 미적용 시 빈 목록. */
+export async function getMyGenrePreferences(): Promise<number[]> {
+  const supabase = await createClient();
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+  if (!session) return [];
+  try {
+    const res = await fetch(`${API_URL}/me/genre-preferences`, {
+      headers: { Authorization: `Bearer ${session.access_token}` },
+      cache: "no-store",
+    });
+    if (!res.ok) return [];
+    const json = await res.json();
+    return (json?.data?.genreIds ?? []) as number[];
+  } catch {
+    return [];
+  }
+}
+
 /** 대상의 상위 장르(투표수) + 로그인 시 내 선택. 토큰 있으면 실어 보냄(mine 포함). */
 export async function getGenresFor(type: "track" | "album", id: string): Promise<GenresFor> {
   const empty: GenresFor = { top: [], mine: [] };

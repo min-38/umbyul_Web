@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import { getProfile } from "@/lib/api";
+import { getProfile, getGenres } from "@/lib/api";
 import { OnboardingForm } from "./onboarding-form";
 
 export default async function OnboardingPage() {
@@ -18,11 +18,12 @@ export default async function OnboardingPage() {
   // 이메일 가입 유저는 회원가입에서 이미 동의(metadata) → 온보딩 동의 UI 불필요. OAuth 유저만 필요.
   const meta = (user.user_metadata ?? {}) as Record<string, unknown>;
   const needsConsent = meta.terms_accepted !== true;
+  const genres = await getGenres(); // 선호 장르 선택용(NON-150). 실패 시 빈 목록 → 단계 생략.
 
   return (
     <div className="flex flex-1 items-center justify-center bg-zinc-50 px-6 dark:bg-black">
       <div className="w-full max-w-sm rounded-2xl border border-zinc-200 bg-white p-8 dark:border-zinc-800 dark:bg-zinc-950">
-        <OnboardingForm needsConsent={needsConsent} />
+        <OnboardingForm needsConsent={needsConsent} genres={genres} />
       </div>
     </div>
   );

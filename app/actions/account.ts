@@ -52,6 +52,29 @@ export async function updateDemographics(country: string, gender: string | null,
   }
 }
 
+// 선호 장르 저장(NON-150). 세트 전체 교체. 추천(NON-155) 신호로 쓰임.
+export async function updateGenrePreferences(genreIds: number[]): Promise<Result> {
+  const supabase = await createClient();
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+  if (!session) return { ok: false, code: "UNAUTHORIZED" };
+
+  try {
+    const res = await fetch(`${API_URL}/me/genre-preferences`, {
+      method: "PUT",
+      headers: { Authorization: `Bearer ${session.access_token}`, "Content-Type": "application/json" },
+      body: JSON.stringify({ genreIds }),
+      cache: "no-store",
+    });
+    const json = await res.json().catch(() => null);
+    if (res.ok) revalidatePath("/settings/account");
+    return { ok: res.ok, code: json?.code ?? (res.ok ? "OK" : "UNKNOWN") };
+  } catch {
+    return { ok: false, code: "DB_UNAVAILABLE" };
+  }
+}
+
 // 내 데이터 내보내기 (NON-111) — /me/export JSON. 클라가 파일로 저장.
 export async function exportMyData(): Promise<{ ok: boolean; code: string; data: unknown }> {
   const supabase = await createClient();

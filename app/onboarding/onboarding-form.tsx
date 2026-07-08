@@ -6,6 +6,8 @@ import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { Spinner } from "@/components/ui/spinner";
 import { BrandMark } from "@/components/ui/brand-mark";
+import { GenrePicker } from "@/components/detail/genre-picker";
+import type { Genre } from "@/lib/api";
 import { COUNTRY_CODES } from "@/lib/countries";
 import { GENDERS } from "@/lib/demographics";
 import { isUsername, borderClass, type FieldStatus } from "@/lib/validation";
@@ -41,7 +43,7 @@ function ageOf(birth: string): number {
 
 type Availability = "idle" | "checking" | "available" | "taken" | "invalid";
 
-export function OnboardingForm({ needsConsent }: { needsConsent: boolean }) {
+export function OnboardingForm({ needsConsent, genres }: { needsConsent: boolean; genres: Genre[] }) {
   const t = useT();
   const locale = useLocale();
   const countries = useMemo(() => {
@@ -57,6 +59,7 @@ export function OnboardingForm({ needsConsent }: { needsConsent: boolean }) {
   const [day, setDay] = useState("");
   const [country, setCountry] = useState("KR");
   const [gender, setGender] = useState("");
+  const [genreSel, setGenreSel] = useState<Set<number>>(new Set());
   const [agreedTerms, setAgreedTerms] = useState(false);
   const [agreedPrivacy, setAgreedPrivacy] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -131,6 +134,7 @@ export function OnboardingForm({ needsConsent }: { needsConsent: boolean }) {
         birthDate: birth,
         gender: gender || null,
         termsAccepted: consentOk,
+        genreIds: [...genreSel],
       }),
     });
     setLoading(false);
@@ -237,6 +241,24 @@ export function OnboardingForm({ needsConsent }: { needsConsent: boolean }) {
             ))}
           </select>
         </div>
+
+        {genres.length > 0 && (
+          <div className="flex flex-col gap-1.5">
+            <p className="text-xs text-zinc-500">{t("좋아하는 장르 (선택) — 추천에 반영돼요.")}</p>
+            <GenrePicker
+              genres={genres}
+              selected={genreSel}
+              onToggle={(id) =>
+                setGenreSel((prev) => {
+                  const n = new Set(prev);
+                  if (n.has(id)) n.delete(id);
+                  else n.add(id);
+                  return n;
+                })
+              }
+            />
+          </div>
+        )}
 
         {needsConsent && (
           <div className="flex flex-col gap-2 pt-1">
