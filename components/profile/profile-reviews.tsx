@@ -79,6 +79,7 @@ export function ProfileReviews({ reviews }: { reviews: ProfileReview[] }) {
               <img
                 src={r.imageUrl ?? "/placeholder.svg"}
                 alt=""
+                loading="lazy"
                 className="h-12 w-12 shrink-0 rounded-md bg-zinc-100 object-cover dark:bg-zinc-900"
               />
               <span

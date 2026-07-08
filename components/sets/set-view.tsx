@@ -134,7 +134,7 @@ export function SetView({
           <li key={tr.spotifyId} className="flex items-center gap-2.5 py-3">
             <Link href={`/track/${tr.spotifyId}`} className="shrink-0" aria-label={tr.name}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={coverThumb(tr.imageUrl, "sm") ?? "/placeholder.svg"} alt="" className="h-14 w-14 rounded bg-zinc-100 object-cover dark:bg-zinc-800" />
+              <img src={coverThumb(tr.imageUrl, "sm") ?? "/placeholder.svg"} alt="" loading="lazy" className="h-14 w-14 rounded bg-zinc-100 object-cover dark:bg-zinc-800" />
             </Link>
             <div className="min-w-0 flex-1">
               <Link href={`/track/${tr.spotifyId}`} className="flex items-center gap-1.5 text-sm font-medium text-zinc-900 hover:underline dark:text-zinc-50">

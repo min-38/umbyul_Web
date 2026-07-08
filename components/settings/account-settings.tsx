@@ -8,6 +8,7 @@ import { isUsername } from "@/lib/validation";
 import { dateLocale } from "@/lib/format";
 import { COUNTRY_CODES } from "@/lib/countries";
 import { GENDERS } from "@/lib/demographics";
+import { resizeAvatar } from "@/lib/avatar-resize";
 import { PasswordInput } from "@/components/ui/password-input";
 import { useT, useLocale } from "@/components/i18n-provider";
 
@@ -75,8 +76,9 @@ export function AccountSettings({
     if (!f) return;
     setAvatarBusy(true);
     setAvatarNote(null);
+    const resized = await resizeAvatar(f); // 업로드 전 256px webp로 축소(NON-106)
     const fd = new FormData();
-    fd.append("file", f);
+    fd.append("file", resized, resized.type === "image/webp" ? "avatar.webp" : f.name);
     const r = await uploadAvatar(fd);
     setAvatarBusy(false);
     if (r.ok && r.avatarUrl) {

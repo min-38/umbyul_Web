@@ -28,6 +28,7 @@ export function ChartList({
               <img
                 src={coverThumb(c.imageUrl, "sm") ?? "/placeholder.svg"}
                 alt=""
+                loading="lazy"
                 className="h-12 w-12 rounded-md bg-zinc-100 object-cover dark:bg-zinc-800"
               />
             </Link>

@@ -50,6 +50,7 @@ export function CoverRow({ items, empty }: { items: CoverItem[]; empty: string }
               <img
                 src={coverThumb(x.imageUrl, "md") ?? "/placeholder.svg"}
                 alt=""
+                loading="lazy"
                 className="aspect-square w-full rounded-lg bg-zinc-100 object-cover dark:bg-zinc-800"
               />
             </Link>
