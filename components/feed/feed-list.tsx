@@ -18,7 +18,7 @@ import { coverThumb } from "@/lib/image";
 import type { FeedItem, FeedSort, FeedScope } from "@/lib/api";
 import type { Locale } from "@/lib/i18n";
 
-const PAGE_SIZE = 50;
+const PAGE_SIZE = 20;
 
 // 홈 피드(NON-88) 렌더. view=card 카드형 / compact 축약형.
 // 카드마다 반응(ReactionBar) + ⋯메뉴(관심 없음·신고) — NON-114. 더 보기 페이지네이션 — NON-107.

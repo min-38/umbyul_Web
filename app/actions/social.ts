@@ -87,7 +87,7 @@ export async function toggleGenreTag(input: { targetType: "track" | "album"; spo
 
 // 피드 더 보기 (NON-107) — 클라가 offset 늘려 호출, 다음 페이지 append.
 export async function loadMoreFeed(sort: FeedSort, scope: FeedScope, offset: number) {
-  return getFeed(sort, scope, offset, 50);
+  return getFeed(sort, scope, offset, 20);
 }
 
 // 팔로워/팔로잉 목록 (모달에서 클라가 호출)

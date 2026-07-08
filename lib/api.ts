@@ -404,7 +404,7 @@ export type FeedItem = {
 };
 
 /** 홈 피드 v2 (공개, following은 로그인 필요). 실패 시 빈 목록. */
-export async function getFeed(sort: FeedSort, scope: FeedScope, offset = 0, limit = 50): Promise<FeedItem[]> {
+export async function getFeed(sort: FeedSort, scope: FeedScope, offset = 0, limit = 20): Promise<FeedItem[]> {
   try {
     const qs = new URLSearchParams({ sort, scope, offset: String(offset), limit: String(limit) });
     const res = await fetch(`${API_URL}/feed?${qs}`, { headers: await detailHeaders(), cache: "no-store" });
