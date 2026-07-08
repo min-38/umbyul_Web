@@ -243,3 +243,17 @@ export function authMessage(error?: { code?: string } | null, locale: Locale = "
   const dict = locale === "ko" ? KO : locale === "ja" ? JA : locale === "es" ? ES : EN;
   return (error?.code && dict[error.code]) || dict.AUTH_FAILED;
 }
+
+// 에러를 "번역된 문자열"이 아니라 코드/키로 보관 → 렌더에서 해석해야 언어 전환(router.refresh) 시 함께 바뀐다.
+// code: Supabase auth 코드(authMessage로) · key: t() 한글 키(클라 검증 메시지).
+export type ErrText = { code: string } | { key: string } | null;
+
+/** ErrText를 현재 로케일로 해석. key는 t()로, code는 authMessage로. */
+export function errText(
+  e: ErrText,
+  locale: Locale,
+  t: (ko: string) => string,
+): string | null {
+  if (!e) return null;
+  return "key" in e ? t(e.key) : authMessage({ code: e.code }, locale);
+}

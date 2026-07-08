@@ -7,7 +7,7 @@ import { createClient } from "@/lib/supabase/client";
 import { BrandMark } from "@/components/ui/brand-mark";
 import { Spinner } from "@/components/ui/spinner";
 import { PasswordInput } from "@/components/ui/password-input";
-import { authMessage } from "@/lib/messages";
+import { errText, type ErrText } from "@/lib/messages";
 import { useT, useLocale } from "@/components/i18n-provider";
 
 const inputBase =
@@ -21,7 +21,7 @@ export default function ResetPasswordPage() {
   const [pw, setPw] = useState("");
   const [pw2, setPw2] = useState("");
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [err, setErr] = useState<ErrText>(null);
   const [done, setDone] = useState(false);
   const completed = useRef(false); // 재설정 완료 여부 (이탈 시 정리 판단)
 
@@ -44,16 +44,16 @@ export default function ResetPasswordPage() {
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (pw.length < 8) return setError(t("비밀번호는 8자 이상이어야 합니다."));
-    if (pw !== pw2) return setError(t("비밀번호가 일치하지 않습니다."));
-    setError(null);
+    if (pw.length < 8) return setErr({ key: "비밀번호는 8자 이상이어야 합니다." });
+    if (pw !== pw2) return setErr({ key: "비밀번호가 일치하지 않습니다." });
+    setErr(null);
     setLoading(true);
 
     const supabase = createClient();
     const { error } = await supabase.auth.updateUser({ password: pw });
     if (error) {
       setLoading(false);
-      setError(authMessage(error, locale));
+      setErr({ code: error.code ?? "" });
       return;
     }
     // 변경 성공 → 복구 세션 로그아웃(재로그인 강제)
@@ -63,6 +63,8 @@ export default function ResetPasswordPage() {
     setDone(true);
     router.refresh();
   };
+
+  const errorText = errText(err, locale, t);
 
   return (
     <div className="flex flex-1 items-center justify-center bg-zinc-50 px-6 dark:bg-black">
@@ -103,7 +105,7 @@ export default function ResetPasswordPage() {
                 value={pw}
                 onChange={(e) => {
                   setPw(e.target.value);
-                  setError(null);
+                  setErr(null);
                 }}
                 placeholder={t("새 비밀번호 (8자 이상)")}
                 className={inputBase}
@@ -112,7 +114,7 @@ export default function ResetPasswordPage() {
                 value={pw2}
                 onChange={(e) => {
                   setPw2(e.target.value);
-                  setError(null);
+                  setErr(null);
                 }}
                 placeholder={t("새 비밀번호 확인")}
                 className={inputBase}
@@ -124,7 +126,7 @@ export default function ResetPasswordPage() {
               >
                 {loading ? <><Spinner /><span className="sr-only">{t("비밀번호 변경")}</span></> : t("비밀번호 변경")}
               </button>
-              {error && <p role="alert" className="text-center text-sm text-red-600 dark:text-red-400">{error}</p>}
+              {errorText && <p role="alert" className="text-center text-sm text-red-600 dark:text-red-400">{errorText}</p>}
             </form>
           </div>
         )}

@@ -8,7 +8,7 @@ import { Spinner } from "@/components/ui/spinner";
 import { BrandMark } from "@/components/ui/brand-mark";
 import { PasswordInput } from "@/components/ui/password-input";
 import { isEmail, passwordChecks, borderClass, type FieldStatus } from "@/lib/validation";
-import { authMessage } from "@/lib/messages";
+import { errText, type ErrText } from "@/lib/messages";
 import { useT, useLocale } from "@/components/i18n-provider";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -37,7 +37,7 @@ export function SignupForm() {
   const [agreedTerms, setAgreedTerms] = useState(false);
   const [agreedPrivacy, setAgreedPrivacy] = useState(false);
   const [code, setCode] = useState("");
-  const [error, setError] = useState<string | null>(null);
+  const [err, setErr] = useState<ErrText>(null);
   const [loading, setLoading] = useState(false);
 
   const router = useRouter();
@@ -87,7 +87,7 @@ export function SignupForm() {
 
   const onSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError(null);
+    setErr(null);
     if (!canSubmit) return;
 
     setLoading(true);
@@ -99,7 +99,7 @@ export function SignupForm() {
     setLoading(false);
 
     if (error) {
-      setError(authMessage(error, locale));
+      setErr({ code: error.code ?? "" });
       return;
     }
     // 제출 시 재확인: 이미 가입된 이메일이면 identities 가 빈 배열(열거 방지)
@@ -112,22 +112,24 @@ export function SignupForm() {
 
   const onVerify = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError(null);
+    setErr(null);
     if (code.length !== 6) {
-      setError(t("6자리 코드를 입력하세요."));
+      setErr({ key: "6자리 코드를 입력하세요." });
       return;
     }
     setLoading(true);
     const { error } = await supabase.auth.verifyOtp({ email, token: code, type: "signup" });
     setLoading(false);
     if (error) {
-      setError(t("코드가 올바르지 않거나 만료되었습니다."));
+      setErr({ key: "코드가 올바르지 않거나 만료되었습니다." });
       return;
     }
     // 인증 완료 → 세션 생성됨 → 프로필 설정(온보딩)으로
     router.push("/onboarding");
     router.refresh();
   };
+
+  const errorText = errText(err, locale, t);
 
   if (step === "verify") {
     return (
@@ -158,7 +160,7 @@ export function SignupForm() {
           </button>
         </form>
 
-        {error && <p role="alert" className="text-center text-sm text-red-600 dark:text-red-400">{error}</p>}
+        {errorText && <p role="alert" className="text-center text-sm text-red-600 dark:text-red-400">{errorText}</p>}
 
         <p className="text-center text-xs text-zinc-500">{t("메일이 안 보이면 스팸함을 확인하세요.")}</p>
       </div>
@@ -264,7 +266,7 @@ export function SignupForm() {
         </button>
       </form>
 
-      {error && <p role="alert" className="text-center text-sm text-red-600 dark:text-red-400">{error}</p>}
+      {errorText && <p role="alert" className="text-center text-sm text-red-600 dark:text-red-400">{errorText}</p>}
 
       <p className="text-center text-sm text-zinc-600 dark:text-zinc-400">
         {t("이미 계정이 있으신가요?")}{" "}

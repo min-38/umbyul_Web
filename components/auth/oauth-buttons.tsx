@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { Spinner } from "@/components/ui/spinner";
-import { authMessage } from "@/lib/messages";
+import { errText, type ErrText } from "@/lib/messages";
 import { useT, useLocale } from "@/components/i18n-provider";
 
 type Provider = "google" | "discord";
@@ -42,21 +42,22 @@ function DiscordIcon() {
 export function OAuthButtons({ disabled = false }: { disabled?: boolean } = {}) {
   const t = useT();
   const locale = useLocale();
-  const [error, setError] = useState<string | null>(null);
+  const [err, setErr] = useState<ErrText>(null);
   const [loadingProvider, setLoadingProvider] = useState<Provider | null>(null);
   const loading = loadingProvider !== null;
+  const errorText = errText(err, locale, t);
 
   const supabase = createClient();
 
   const signIn = async (provider: Provider) => {
-    setError(null);
+    setErr(null);
     setLoadingProvider(provider);
     const { error } = await supabase.auth.signInWithOAuth({
       provider,
       options: { redirectTo: `${window.location.origin}/auth/callback` },
     });
     if (error) {
-      setError(authMessage(error, locale));
+      setErr({ code: error.code ?? "" });
       setLoadingProvider(null);
     }
     // 성공 시 provider로 리다이렉트되므로 별도 처리 없음.
@@ -94,9 +95,9 @@ export function OAuthButtons({ disabled = false }: { disabled?: boolean } = {}) 
           </>
         )}
       </button>
-      {error && (
+      {errorText && (
         <p className="text-center text-sm text-red-600 dark:text-red-400">
-          {error}
+          {errorText}
         </p>
       )}
     </div>

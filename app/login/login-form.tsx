@@ -8,7 +8,7 @@ import { OAuthButtons } from "@/components/auth/oauth-buttons";
 import { Spinner } from "@/components/ui/spinner";
 import { BrandMark } from "@/components/ui/brand-mark";
 import { PasswordInput } from "@/components/ui/password-input";
-import { authMessage } from "@/lib/messages";
+import { errText, type ErrText } from "@/lib/messages";
 import { useT, useLocale } from "@/components/i18n-provider";
 
 const inputBase =
@@ -19,7 +19,7 @@ export function LoginForm() {
   const locale = useLocale();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState<string | null>(null);
+  const [err, setErr] = useState<ErrText>(null);
   const [loading, setLoading] = useState(false);
 
   const router = useRouter();
@@ -27,19 +27,20 @@ export function LoginForm() {
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError(null);
+    setErr(null);
     setLoading(true);
     const { error } = await supabase.auth.signInWithPassword({ email, password });
     setLoading(false);
     if (error) {
-      setError(authMessage(error, locale));
+      setErr({ code: error.code ?? "" });
       return;
     }
     router.push("/");
     router.refresh();
   };
 
-  const border = error
+  const errorText = errText(err, locale, t);
+  const border = errorText
     ? "border-red-500 dark:border-red-500"
     : "border-zinc-300 dark:border-zinc-700";
 
@@ -58,7 +59,7 @@ export function LoginForm() {
           value={email}
           onChange={(e) => {
             setEmail(e.target.value);
-            setError(null);
+            setErr(null);
           }}
           placeholder={t("이메일")}
           className={`${inputBase} ${border}`}
@@ -67,7 +68,7 @@ export function LoginForm() {
           value={password}
           onChange={(e) => {
             setPassword(e.target.value);
-            setError(null);
+            setErr(null);
           }}
           placeholder={t("비밀번호")}
           className={`${inputBase} ${border}`}
@@ -79,8 +80,8 @@ export function LoginForm() {
         >
           {loading ? <><Spinner /><span className="sr-only">{t("로그인")}</span></> : t("로그인")}
         </button>
-        {error && (
-          <p role="alert" className="text-center text-sm text-red-600 dark:text-red-400">{error}</p>
+        {errorText && (
+          <p role="alert" className="text-center text-sm text-red-600 dark:text-red-400">{errorText}</p>
         )}
       </form>
 

@@ -5,7 +5,7 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import { BrandMark } from "@/components/ui/brand-mark";
 import { Spinner } from "@/components/ui/spinner";
-import { authMessage } from "@/lib/messages";
+import { errText, type ErrText } from "@/lib/messages";
 import { useT, useLocale } from "@/components/i18n-provider";
 
 const inputBase =
@@ -17,17 +17,18 @@ export default function ForgotPasswordPage() {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [sent, setSent] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [err, setErr] = useState<ErrText>(null);
+  const errorText = errText(err, locale, t);
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError(null);
+    setErr(null);
     setLoading(true);
     const { error } = await createClient().auth.resetPasswordForEmail(email, {
       redirectTo: `${window.location.origin}/auth/callback?next=/reset-password`,
     });
     setLoading(false);
-    if (error) setError(authMessage(error, locale));
+    if (error) setErr({ code: error.code ?? "" });
     else setSent(true);
   };
 
@@ -68,7 +69,7 @@ export default function ForgotPasswordPage() {
                 value={email}
                 onChange={(e) => {
                   setEmail(e.target.value);
-                  setError(null);
+                  setErr(null);
                 }}
                 placeholder={t("이메일")}
                 className={inputBase}
@@ -80,7 +81,7 @@ export default function ForgotPasswordPage() {
               >
                 {loading ? <><Spinner /><span className="sr-only">{t("재설정 링크 보내기")}</span></> : t("재설정 링크 보내기")}
               </button>
-              {error && <p role="alert" className="text-center text-sm text-red-600 dark:text-red-400">{error}</p>}
+              {errorText && <p role="alert" className="text-center text-sm text-red-600 dark:text-red-400">{errorText}</p>}
             </form>
 
             <Link href="/login" className="text-center text-sm text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300">
