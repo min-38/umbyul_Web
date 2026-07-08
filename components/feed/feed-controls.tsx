@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useT } from "@/components/i18n-provider";
 import { SortDropdown } from "./sort-dropdown";
@@ -9,7 +8,7 @@ const SORTS = ["hot", "newest", "likes", "ratio", "rising"] as const;
 const KEY = "glitter.feedPrefs";
 
 // 홈 피드 컨트롤(NON-90). 범위(피드)·정렬·보기 모두 SortDropdown으로 통일(NON-127).
-// 상태를 localStorage에 저장하고, 빈 URL 진입 시 복원(새로고침·재방문 유지).
+// 선호를 쿠키에 저장 → page.tsx가 서버에서 읽어 첫 렌더부터 일치(하이드레이션 깜빡임 제거, NON-151).
 export function FeedControls({
   sort,
   scope,
@@ -24,28 +23,10 @@ export function FeedControls({
   const t = useT();
   const router = useRouter();
 
-  useEffect(() => {
-    if (window.location.search !== "") return; // URL에 상태가 있으면 그대로 사용
-    const raw = localStorage.getItem(KEY);
-    if (!raw) return;
-    try {
-      const p = JSON.parse(raw) as { sort?: string; scope?: string; view?: string };
-      const sc = p.scope === "following" && loggedIn ? "following" : "all";
-      const qs = new URLSearchParams({ sort: p.sort ?? sort, scope: sc, view: p.view ?? view });
-      router.replace(`/?${qs}`);
-    } catch {
-      /* 무시 */
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   const go = (patch: Partial<{ sort: string; scope: string; view: string }>) => {
     const next = { sort, scope, view, ...patch };
-    try {
-      localStorage.setItem(KEY, JSON.stringify(next));
-    } catch {
-      /* 무시 */
-    }
+    // 서버(page.tsx)가 빈 URL 진입 시 읽는 선호 쿠키. 1년 유지.
+    document.cookie = `${KEY}=${encodeURIComponent(JSON.stringify(next))}; path=/; max-age=31536000; samesite=lax`;
     router.push(`/?${new URLSearchParams(next)}`);
   };
 

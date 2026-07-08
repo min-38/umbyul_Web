@@ -2,37 +2,29 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useClickOutside } from "@/lib/use-click-outside";
-import { type Theme, THEME_LABELS, resolveDark, applyTheme, getStoredTheme, setStoredTheme } from "@/lib/theme";
+import { type Theme, THEME_LABELS, applyTheme, getStoredTheme, setStoredTheme } from "@/lib/theme";
 import { useT } from "@/components/i18n-provider";
 
 export function ThemeToggle() {
   const t = useT();
   const [theme, setTheme] = useState<Theme>("system");
-  const [isDark, setIsDark] = useState(false);
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   useClickOutside(ref, () => setOpen(false), open);
 
   useEffect(() => {
-    const sync = () => {
-      const stored = getStoredTheme();
-      setTheme(stored);
-      setIsDark(resolveDark(stored));
-    };
+    const sync = () => setTheme(getStoredTheme());
     sync();
     // 설정(Display 탭)에서 테마를 바꾸면 헤더 아이콘도 동기화
     window.addEventListener("themechange", sync);
     return () => window.removeEventListener("themechange", sync);
   }, []);
 
-  // 시스템 모드일 때 OS 변경 반영
+  // 시스템 모드일 때 OS 변경 반영(.dark 클래스 토글 → 아이콘은 CSS로 따라감)
   useEffect(() => {
     if (theme !== "system") return;
     const mq = matchMedia("(prefers-color-scheme: dark)");
-    const handler = () => {
-      applyTheme("system");
-      setIsDark(resolveDark("system"));
-    };
+    const handler = () => applyTheme("system");
     mq.addEventListener("change", handler);
     return () => mq.removeEventListener("change", handler);
   }, [theme]);
@@ -40,7 +32,6 @@ export function ThemeToggle() {
   const choose = (next: Theme) => {
     setStoredTheme(next);
     setTheme(next);
-    setIsDark(resolveDark(next));
     setOpen(false);
   };
 
@@ -52,16 +43,14 @@ export function ThemeToggle() {
         aria-label={t("테마")}
         className="flex h-9 w-9 items-center justify-center rounded-lg text-zinc-600 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-900"
       >
-        {isDark ? (
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
-            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
-          </svg>
-        ) : (
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
-            <circle cx="12" cy="12" r="4" />
-            <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" />
-          </svg>
-        )}
+        {/* 해↔달을 CSS(.dark)로 전환 — pre-paint 스크립트가 붙인 클래스와 동기화되어 하이드레이션 깜빡임 없음 */}
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true" className="dark:hidden">
+          <circle cx="12" cy="12" r="4" />
+          <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" />
+        </svg>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true" className="hidden dark:block">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+        </svg>
       </button>
 
       {open && (
