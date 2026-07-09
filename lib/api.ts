@@ -598,6 +598,10 @@ export type ProfileReview = {
   imageUrl: string | null;
   deleted: boolean;
   explicit: boolean;
+  // 아티스트 링크(각 id) + 트랙이면 앨범 링크(NON-24 개선). 해석 실패 시 null.
+  artists: ArtistRef[] | null;
+  albumId: string | null;
+  albumName: string | null;
 };
 export type UserProfile = {
   id: string;
