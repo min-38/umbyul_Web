@@ -47,6 +47,7 @@ export const EN: Record<string, string> = {
   // ── 푸터 ──
   정책: "Policy",
   고객지원: "Support",
+  소식: "News",
   "서비스 소개": "About Us",
   공지사항: "Announcements",
   "등록된 공지가 없습니다.": "No announcements yet.",
@@ -531,6 +532,7 @@ const JA: Record<string, string> = {
 
   정책: "ポリシー",
   고객지원: "サポート",
+  소식: "ニュース",
   "서비스 소개": "サービス紹介",
   공지사항: "お知らせ",
   "등록된 공지가 없습니다.": "お知らせはまだありません。",
@@ -995,6 +997,7 @@ const ES: Record<string, string> = {
 
   정책: "Políticas",
   고객지원: "Soporte",
+  소식: "Novedades",
   "서비스 소개": "Acerca de",
   공지사항: "Anuncios",
   "등록된 공지가 없습니다.": "Aún no hay anuncios.",

@@ -6,9 +6,12 @@ const POLICY = [
   { label: "이용약관", href: "/terms" },
   { label: "개인정보 처리방침", href: "/privacy" },
 ];
+// 소식(News): 팀→유저 알림. 공지사항 + 패치노트(추후).
+const NEWS = [
+  { label: "공지사항", href: "/announcements" },
+];
 const INFO = [
   { label: "서비스 소개", href: "/about" },
-  { label: "공지사항", href: "/announcements" },
   { label: "FAQ", href: "/faq" },
   { label: "문의", href: "/contact" },
 ];
@@ -38,6 +41,7 @@ export async function Footer() {
         </div>
         <div className="flex gap-12">
           <FooterCol title={t("정책")} links={tr(POLICY)} />
+          <FooterCol title={t("소식")} links={tr(NEWS)} />
           <FooterCol title={t("고객지원")} links={tr(INFO)} />
         </div>
       </div>
