@@ -214,11 +214,16 @@ function NotifRow({
   const textCls = n.read ? "text-zinc-500 dark:text-zinc-500" : "text-zinc-700 dark:text-zinc-200";
 
   const isWarning = n.type === "warning";
+  const isAnnouncement = n.type === "announcement";
   const inner = (
     <div className="flex items-center gap-2.5">
       {isWarning ? (
         <span className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-amber-100 text-sm text-amber-700 dark:bg-amber-950 dark:text-amber-300 ${n.read ? "opacity-60" : ""}`}>
           ⚠
+        </span>
+      ) : isAnnouncement ? (
+        <span className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-indigo-100 text-sm text-indigo-700 dark:bg-indigo-950 dark:text-indigo-300 ${n.read ? "opacity-60" : ""}`}>
+          📢
         </span>
       ) : (
         <span className={`flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-full bg-zinc-200 text-xs font-medium text-zinc-500 dark:bg-zinc-800 dark:text-zinc-300 ${n.read ? "opacity-60" : ""}`}>
@@ -236,6 +241,11 @@ function NotifRow({
             <span className={nameCls}>{t("경고를 받았습니다.")}</span>
             <span className="ml-1 text-xs text-zinc-500">{formatRelativeTime(n.createdAt, locale)}</span>
             {n.detail ? <span className="mt-0.5 block">{t("사유")}: {n.detail}</span> : null}
+          </>
+        ) : isAnnouncement ? (
+          <>
+            <span className={nameCls}>{t("새 공지사항이 등록되었어요.")}</span>
+            <span className="ml-1 text-xs text-zinc-500">{formatRelativeTime(n.createdAt, locale)}</span>
           </>
         ) : (
           <>

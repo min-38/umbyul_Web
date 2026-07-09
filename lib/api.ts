@@ -681,7 +681,7 @@ export const getFollowing = (username: string) => fetchFollowList(username, "fol
 // ── 알림 (NON-26) ──
 export type NotificationItem = {
   id: string;
-  type: "follow" | "review_like" | "warning" | "mention";
+  type: "follow" | "review_like" | "warning" | "mention" | "announcement";
   actorUsername: string;
   actorAvatarUrl: string | null;
   createdAt: string;
