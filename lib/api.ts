@@ -603,6 +603,11 @@ export type UserProfile = {
   joinedAt: string;
   reviewCount: number;
   totalLikes: number;
+  // 리뷰어 레벨(NON-153) — 서버 집계. xpIntoLevel/xpForLevel로 진행바(레벨업 시 0부터).
+  xp: number;
+  level: number;
+  xpIntoLevel: number;
+  xpForLevel: number;
   followerCount: number;
   followingCount: number;
   isFollowing: boolean;
