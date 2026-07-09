@@ -153,6 +153,7 @@ export type TrackResult = {
   imageUrl: string | null;
   isrc: string | null;
   explicit: boolean;
+  rating: RatingSummary | null; // 집계 평점(NON-8). null = 평가 없음
 };
 export type AlbumResult = {
   id: string;
@@ -160,6 +161,7 @@ export type AlbumResult = {
   artist: string;
   imageUrl: string | null;
   releaseDate: string | null;
+  rating: RatingSummary | null; // 집계 평점(NON-8)
 };
 export type ArtistResult = { id: string; name: string; imageUrl: string | null };
 export type UserResult = { id: string; username: string; avatarUrl: string | null };

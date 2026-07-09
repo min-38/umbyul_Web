@@ -11,6 +11,20 @@ import type {
 } from "@/lib/api";
 import { useT } from "@/components/i18n-provider";
 import { ExplicitBadge } from "@/components/detail/explicit-badge";
+import { Stars } from "@/components/detail/stars";
+import type { RatingSummary } from "@/lib/api";
+
+// 검색 카드 집계 평점(NON-8) — 별점 + 평균 + (평가 수). 평가 없으면 미표시.
+function RatingLine({ rating }: { rating: RatingSummary | null }) {
+  if (!rating || rating.count === 0) return null;
+  return (
+    <p className="flex items-center gap-1 text-xs text-zinc-500">
+      <Stars value={rating.average ?? 0} size={11} />
+      <span className="font-medium text-zinc-600 dark:text-zinc-300">{(rating.average ?? 0).toFixed(1)}</span>
+      <span className="text-zinc-400">({rating.count})</span>
+    </p>
+  );
+}
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 const PAGE = 10;
@@ -72,6 +86,7 @@ function TrackCard({ t }: { t: TrackResult }) {
             {t.explicit && <ExplicitBadge />}
           </p>
           <p className="truncate text-xs text-zinc-500">{t.artist}</p>
+          <RatingLine rating={t.rating} />
         </div>
       </Link>
       {t.albumName &&
@@ -94,6 +109,7 @@ function AlbumCard({ a }: { a: AlbumResult }) {
         <p className="truncate text-sm font-medium text-black dark:text-zinc-50">{a.name}</p>
         <p className="truncate text-xs text-zinc-500">{a.artist}</p>
         {a.releaseDate && <p className="truncate text-xs text-zinc-500">{a.releaseDate}</p>}
+        <RatingLine rating={a.rating} />
       </div>
     </Link>
   );
