@@ -462,7 +462,7 @@ export type DailyPick = {
   upc: string | null;
   youtubeUrl: string | null;
 };
-export type DiscoverData = { rising: RisingWindows; new: DiscoverItem[]; myRecent: DiscoverItem[]; recommend: DiscoverItem[]; dailyPick: DailyPick | null };
+export type DiscoverData = { rising: RisingWindows; new: DiscoverItem[]; myRecent: DiscoverItem[]; recommend: DiscoverItem[]; dailyPick: DailyPick | null; preferredGenreItems: DiscoverItem[] };
 
 // Chart(NON-82). 랭킹 아이템은 DiscoverItem 과 동일 형태.
 export type ChartType = "all" | "album" | "track" | "artist" | "user";
@@ -532,7 +532,7 @@ export async function getChart(
 
 /** Discover (공개, 로그인 시 내 최근 리뷰 포함). 실패·형태 불일치 시 빈 데이터(페이지가 죽지 않게). */
 export async function getDiscover(): Promise<DiscoverData> {
-  const empty: DiscoverData = { rising: { day: [], week: [], month: [], year: [] }, new: [], myRecent: [], recommend: [], dailyPick: null };
+  const empty: DiscoverData = { rising: { day: [], week: [], month: [], year: [] }, new: [], myRecent: [], recommend: [], dailyPick: null, preferredGenreItems: [] };
   try {
     const res = await fetch(`${API_URL}/discover`, { headers: await detailHeaders(), cache: "no-store" });
     if (!res.ok) return empty;
@@ -544,6 +544,7 @@ export async function getDiscover(): Promise<DiscoverData> {
       new: d.new ?? [],
       myRecent: d.myRecent ?? [],
       recommend: d.recommend ?? [],
+      preferredGenreItems: d.preferredGenreItems ?? [],
       // 구 Api 스큐(평점·장르·링크 필드 부재) 방어 — 기본값 정규화.
       dailyPick: d.dailyPick
         ? {

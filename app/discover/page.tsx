@@ -9,10 +9,11 @@ import { GenreSection } from "@/components/discover/genre-section";
 // Discover(NON-81/85) — 앨범 커버 가로 스크롤 섹션: Recommend · Rising · New · Recent.
 // Recommend(NON-155): 취향 장르 기반 콘텐츠 추천, 신호 없으면 전체 인기. Genre(NON-84)는 데이터·설계 확보 후.
 export default async function DiscoverPage() {
-  const [{ rising, new: newItems, myRecent, recommend, dailyPick }, genres, t] = await Promise.all([getDiscover(), getGenres(), getT()]);
+  const [{ rising, new: newItems, myRecent, recommend, dailyPick, preferredGenreItems }, genres, t] = await Promise.all([getDiscover(), getGenres(), getT()]);
   const newCovers = newItems.map(toCover);
   const myCovers = myRecent.map(toCover);
   const recommendCovers = recommend.map(toCover);
+  const preferredGenreCovers = preferredGenreItems.map(toCover);
   const empty = t("아직 없습니다.");
 
   return (
@@ -35,6 +36,13 @@ export default async function DiscoverPage() {
         <section>
           <h2 className="mb-4 text-lg font-semibold text-zinc-900 dark:text-zinc-50">{t("추천")}</h2>
           <CoverRow items={recommendCovers} empty={empty} />
+        </section>
+      )}
+
+      {preferredGenreCovers.length > 0 && (
+        <section>
+          <h2 className="mb-4 text-lg font-semibold text-zinc-900 dark:text-zinc-50">{t("당신이 좋아하는 장르들")}</h2>
+          <CoverRow items={preferredGenreCovers} empty={empty} />
         </section>
       )}
 
