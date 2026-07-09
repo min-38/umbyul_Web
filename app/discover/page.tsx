@@ -3,11 +3,12 @@ import { toCover } from "@/lib/discover-cover";
 import { getT } from "@/lib/i18n-server";
 import { RisingSection } from "@/components/discover/rising-section";
 import { CoverRow } from "@/components/discover/cover-row";
+import { DailyPickCard } from "@/components/discover/daily-pick";
 
 // Discover(NON-81/85) — 앨범 커버 가로 스크롤 섹션: Recommend · Rising · New · Recent.
 // Recommend(NON-155): 취향 장르 기반 콘텐츠 추천, 신호 없으면 전체 인기. Genre(NON-84)는 데이터·설계 확보 후.
 export default async function DiscoverPage() {
-  const [{ rising, new: newItems, myRecent, recommend }, t] = await Promise.all([getDiscover(), getT()]);
+  const [{ rising, new: newItems, myRecent, recommend, dailyPick }, t] = await Promise.all([getDiscover(), getT()]);
   const newCovers = newItems.map(toCover);
   const myCovers = myRecent.map(toCover);
   const recommendCovers = recommend.map(toCover);
@@ -16,6 +17,8 @@ export default async function DiscoverPage() {
   return (
     <div className="mx-auto flex w-full max-w-4xl flex-col gap-12 px-6 py-8">
       <h1 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">{t("발견")}</h1>
+
+      {dailyPick && <DailyPickCard pick={dailyPick} label={t("오늘의 음악")} />}
 
       {recommendCovers.length > 0 && (
         <section>
