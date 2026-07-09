@@ -41,16 +41,6 @@ export function GenreTags({
   const displayLabel = (g: { name: string; parentName: string | null }) =>
     g.parentName ? `${g.parentName} › ${g.name}` : g.name;
 
-  // 내 선택 중 아직 대표(≥2표)가 아닌 것 = "제안됨". 본인에게만 보이게 하려는 게 아니라(공개 top은 그대로),
-  // 투표가 먹혔음을 본인이 확인하도록 별도 칩으로 노출. 이름은 전체 장르에서 해석.
-  const genreById = new Map(genres.map((g) => [g.id, g]));
-  const topIds = new Set(top.map((tg) => tg.id));
-  const proposed = genres.filter((g) => mine.has(g.id) && !topIds.has(g.id));
-  const proposedLabel = (g: Genre) => {
-    const parent = g.parentId != null ? genreById.get(g.parentId) : null;
-    return parent ? `${parent.name} › ${g.name}` : g.name;
-  };
-
   const toggle = async (gid: number) => {
     setBusy(true);
     const r = await toggleGenreTag({ targetType, spotifyId: id, genreId: gid });
@@ -61,31 +51,25 @@ export function GenreTags({
   return (
     <div className="flex flex-col gap-2">
       <div className="flex flex-wrap items-center gap-1.5">
-        {top.length === 0 && proposed.length === 0 && !editing && (
+        {top.length === 0 && !editing && (
           <span className="text-xs text-zinc-500">{t("아직 장르 태그가 없습니다.")}</span>
         )}
-        {top.map((g) => (
-          <span
-            key={g.id}
-            className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${
-              mine.has(g.id)
-                ? "bg-indigo-100 text-indigo-700 dark:bg-indigo-950 dark:text-indigo-300"
-                : "bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300"
-            }`}
-          >
-            {displayLabel(g)} <span className="text-zinc-500">{g.count}</span>
-          </span>
-        ))}
-        {/* 내 선택(아직 2표 미만) — 투표가 먹혔음을 확인시키되 "제안됨" 상태로 구분(점선). */}
-        {proposed.map((g) => (
-          <span
-            key={g.id}
-            title={t("내 선택 — 2표 이상이면 공개됩니다")}
-            className="rounded-full border border-dashed border-indigo-400/70 px-2.5 py-0.5 text-xs font-medium text-indigo-600 dark:border-indigo-700 dark:text-indigo-400"
-          >
-            {proposedLabel(g)}
-          </span>
-        ))}
+        {/* 1표부터 노출(NON-122). 합의(2표↑)는 솔리드, 단일 표는 점선·흐리게로 구분. */}
+        {top.map((g) => {
+          const consensus = g.count >= 2;
+          return (
+            <span
+              key={g.id}
+              className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${
+                mine.has(g.id)
+                  ? "bg-indigo-100 text-indigo-700 dark:bg-indigo-950 dark:text-indigo-300"
+                  : "bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300"
+              } ${consensus ? "" : "border border-dashed border-current opacity-70"}`}
+            >
+              {displayLabel(g)} <span className="text-zinc-500">{g.count}</span>
+            </span>
+          );
+        })}
         {loggedIn && !editing && (
           <button
             type="button"
