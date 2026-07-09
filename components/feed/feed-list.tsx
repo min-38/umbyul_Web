@@ -11,6 +11,7 @@ import { MeatballMenu } from "@/components/ui/meatball-menu";
 import { InfiniteScroll } from "@/components/ui/infinite-scroll";
 import { TargetBadge } from "@/components/ui/target-badge";
 import { ExplicitBadge } from "@/components/detail/explicit-badge";
+import { LevelBadge } from "@/components/ui/level-badge";
 import { dismissReview, loadMoreFeed } from "@/app/actions/social";
 import { useT } from "@/components/i18n-provider";
 import { formatRelativeTime } from "@/lib/format";
@@ -251,6 +252,8 @@ export function FeedList({
                 </div>
                 <p className="text-xs text-zinc-500">
                   <Link href={`/u/${it.username}`} className="hover:underline">{it.username}</Link>
+                  {" "}
+                  <LevelBadge level={it.level} />
                   {" · "}
                   <span suppressHydrationWarning>{formatRelativeTime(it.createdAt, locale)}</span>
                 </p>
@@ -293,6 +296,7 @@ export function FeedList({
                 </span>
                 <span className="text-sm font-medium text-zinc-800 hover:underline dark:text-zinc-100">{it.username}</span>
               </Link>
+              <LevelBadge level={it.level} />
               <span className="text-xs text-zinc-500">· <span suppressHydrationWarning>{formatRelativeTime(it.createdAt, locale)}</span></span>
             </div>
 

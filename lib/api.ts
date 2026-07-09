@@ -197,6 +197,7 @@ export type ReviewItem = {
   dislikeCount: number;
   myReaction: Reaction | null;
   commentCount: number;
+  level: number; // 작성자 리뷰어 레벨(NON-163)
 };
 export type ReviewComment = {
   id: string;
@@ -211,6 +212,7 @@ export type ReviewComment = {
   score: number | null; // 작성자가 대상에 매긴 별점, null = 평가 없음
   deleted: boolean;
   edited: boolean; // 수정됨 표시(BUG-11)
+  level: number; // 작성자 리뷰어 레벨(NON-163)
 };
 // 장르는 Spotify 앱 토큰으로 안 내려와 제외. 레이블은 copyrights(℗/©) 텍스트.
 export type TrackDetail = {
@@ -424,6 +426,7 @@ export type FeedItem = {
   commentCount: number;
   explicit: boolean;
   genres: string[];
+  level: number; // 작성자 리뷰어 레벨(NON-163)
 };
 
 /** 홈 피드 v2 (공개, following은 로그인 필요). 실패 시 빈 목록. */
@@ -495,7 +498,7 @@ export async function getArtistChart(
 
 // 유저 차트(NON-86). 리뷰어 랭킹 3축.
 export type ChartUserSort = "reviews" | "likes" | "followers";
-export type UserRankItem = { userId: string; username: string; avatarUrl: string | null; count: number };
+export type UserRankItem = { userId: string; username: string; avatarUrl: string | null; count: number; level: number };
 
 /** 유저 차트 (공개). 실패 시 빈 목록. */
 export async function getUserChart(sort: ChartUserSort, period: ChartPeriod, limit = 50): Promise<UserRankItem[]> {
@@ -740,6 +743,7 @@ export type DjSetSummary = {
   covers: string[];
   likeCount: number;
   likedByMe: boolean;
+  ownerLevel: number; // 소유자 리뷰어 레벨(NON-163)
 };
 export type DjSetTrack = {
   spotifyId: string;
@@ -757,7 +761,7 @@ export type DjSetTrack = {
   myReview: string | null;
 };
 export type DjSetDetail = { set: DjSetSummary; tracks: DjSetTrack[] };
-export type DjSetComment = { id: string; userId: string; username: string; avatarUrl: string | null; body: string; createdAt: string; edited: boolean };
+export type DjSetComment = { id: string; userId: string; username: string; avatarUrl: string | null; body: string; createdAt: string; edited: boolean; level: number };
 
 /** 믹스 상세 (공개, 로그인 시 트랙별 내 평점 포함). 없으면 null. */
 export async function getSet(id: string): Promise<DjSetDetail | null> {

@@ -6,6 +6,7 @@ import type { DjSetComment } from "@/lib/api";
 import { loadSetComments, addSetComment, deleteSetComment, editSetComment } from "@/app/actions/sets";
 import { ReportDialog } from "@/components/detail/report-control";
 import { MeatballMenu } from "@/components/ui/meatball-menu";
+import { LevelBadge } from "@/components/ui/level-badge";
 import { msg } from "@/lib/messages";
 import { formatRelativeTime } from "@/lib/format";
 import { useConfirm } from "@/components/ui/confirm-dialog";
@@ -113,6 +114,7 @@ export function MixComments({ setId, currentUserId }: { setId: string; currentUs
                   <Link href={`/u/${c.username}`} className="font-medium text-zinc-800 hover:underline dark:text-zinc-100">
                     {c.username}
                   </Link>
+                  <LevelBadge level={c.level} />
                   <span className="text-zinc-500" suppressHydrationWarning>{formatRelativeTime(c.createdAt, locale)}</span>
                 </p>
                 {editingId === c.id ? (

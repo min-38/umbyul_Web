@@ -45,6 +45,19 @@ export default async function ProfilePage({ params }: { params: Promise<{ userna
               <ProfileMenu username={profile.username} targetId={profile.id} loggedIn={loggedIn} blocked={profile.blocked} />
             )}
           </div>
+          {/* 본인만: 경험치 강조(크게) — Edit Profile 위(req7). 남에겐 XP 숨기고 레벨만(req1). */}
+          {isSelf && !profile.blocked && (
+            <div className="flex flex-col gap-2 rounded-xl border border-zinc-200 p-3.5 dark:border-zinc-800">
+              <div className="flex items-baseline gap-2">
+                <span className="text-lg font-bold text-zinc-900 dark:text-zinc-50">Lv {profile.level}</span>
+                <span className="text-sm text-zinc-500">{profile.xp.toLocaleString()} XP</span>
+              </div>
+              <div className="h-2.5 w-full overflow-hidden rounded-full bg-zinc-200 dark:bg-zinc-800">
+                <div className="h-full rounded-full bg-indigo-500" style={{ width: `${pct}%` }} />
+              </div>
+              <span className="text-xs text-zinc-500">{t("다음 레벨까지 {xp} XP", { xp: xpToNext.toLocaleString() })}</span>
+            </div>
+          )}
           <ProfileSocial
             username={profile.username}
             isSelf={isSelf}
@@ -54,22 +67,15 @@ export default async function ProfilePage({ params }: { params: Promise<{ userna
             followingCount={profile.followingCount}
             isFollowing={profile.isFollowing}
           />
+          {/* 공개 이력(모두 볼 수 있음, XP 아님): 리뷰·받은 좋아요·가입 */}
           {!profile.blocked && (
-            <div className="flex flex-col gap-1">
-              <div className="flex items-center gap-2">
-                <div className="h-1.5 w-40 overflow-hidden rounded-full bg-zinc-200 dark:bg-zinc-800">
-                  <div className="h-full rounded-full bg-indigo-500" style={{ width: `${pct}%` }} />
-                </div>
-                <span className="text-xs text-zinc-400">{t("다음 레벨까지 {xp} XP", { xp: xpToNext.toLocaleString() })}</span>
-              </div>
-              <p className="text-xs text-zinc-500">
-                {t("리뷰 {count}", { count: profile.reviewCount.toLocaleString() })}
-                {" · "}
-                {t("받은 좋아요 {count}", { count: profile.totalLikes.toLocaleString() })}
-                {" · "}
-                {t("가입일")} {joinedFmt}
-              </p>
-            </div>
+            <p className="text-xs text-zinc-500">
+              {t("리뷰 {count}", { count: profile.reviewCount.toLocaleString() })}
+              {" · "}
+              {t("받은 좋아요 {count}", { count: profile.totalLikes.toLocaleString() })}
+              {" · "}
+              {t("가입일")} {joinedFmt}
+            </p>
           )}
         </div>
       </div>

@@ -247,6 +247,8 @@ export const EN: Record<string, string> = {
   "리뷰를 남겨주세요 (최소 10자)": "Write a review (min 10 characters)",
   "리뷰는 최소 10자 이상 작성해주세요.": "Reviews must be at least 10 characters.",
   "최소 10자 이상 작성해주세요.": "Write at least 10 characters.",
+  "리뷰를 작성하면 경험치 10 XP를 받아요.": "You earn 10 XP for writing a review.",
+  "평가를 삭제하면 경험치 10 XP가 차감돼요. 삭제할까요?": "Deleting this review removes the 10 XP you earned. Delete it?",
   "욕설·비방은 금지됩니다. 비판은 좋지만 비난은 안 됩니다.":
     "No profanity or slander. Criticism is welcome, personal attacks are not.",
   "부적절한 리뷰는 신고 없이도 관리자가 삭제하고 제재할 수 있습니다.":
@@ -720,6 +722,8 @@ const JA: Record<string, string> = {
   "리뷰를 남겨주세요 (최소 10자)": "レビューを書く（10文字以上）",
   "리뷰는 최소 10자 이상 작성해주세요.": "レビューは10文字以上で入力してください。",
   "최소 10자 이상 작성해주세요.": "10文字以上入力してください。",
+  "리뷰를 작성하면 경험치 10 XP를 받아요.": "レビューを書くと経験値10 XPを獲得します。",
+  "평가를 삭제하면 경험치 10 XP가 차감돼요. 삭제할까요?": "レビューを削除すると獲得した経験値10 XPが差し引かれます。削除しますか？",
   "욕설·비방은 금지됩니다. 비판은 좋지만 비난은 안 됩니다.":
     "暴言・中傷は禁止です。批評は歓迎ですが、個人攻撃はいけません。",
   "부적절한 리뷰는 신고 없이도 관리자가 삭제하고 제재할 수 있습니다.":
@@ -1179,6 +1183,8 @@ const ES: Record<string, string> = {
   "리뷰를 남겨주세요 (최소 10자)": "Escribe una reseña (mín. 10 caracteres)",
   "리뷰는 최소 10자 이상 작성해주세요.": "Las reseñas deben tener al menos 10 caracteres.",
   "최소 10자 이상 작성해주세요.": "Escribe al menos 10 caracteres.",
+  "리뷰를 작성하면 경험치 10 XP를 받아요.": "Ganas 10 XP por escribir una reseña.",
+  "평가를 삭제하면 경험치 10 XP가 차감돼요. 삭제할까요?": "Al eliminar la reseña se descuentan los 10 XP obtenidos. ¿Eliminar?",
   "욕설·비방은 금지됩니다. 비판은 좋지만 비난은 안 됩니다.":
     "Nada de insultos ni difamación. La crítica es bienvenida; los ataques personales, no.",
   "부적절한 리뷰는 신고 없이도 관리자가 삭제하고 제재할 수 있습니다.":

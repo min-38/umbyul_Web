@@ -12,6 +12,7 @@ import { ReviewModal } from "@/components/detail/review-modal";
 import { ReportDialog } from "@/components/detail/report-control";
 import { MusicBrainzLink } from "@/components/detail/musicbrainz-link";
 import { ExplicitBadge } from "@/components/detail/explicit-badge";
+import { LevelBadge } from "@/components/ui/level-badge";
 import { coverThumb } from "@/lib/image";
 import { formatRelativeTime } from "@/lib/format";
 import { safeHttpUrl } from "@/lib/validation";
@@ -87,6 +88,7 @@ export function SetView({
               )}
             </span>
             {set.ownerUsername}
+            <LevelBadge level={set.ownerLevel} />
           </Link>
           <span suppressHydrationWarning>{formatRelativeTime(set.updatedAt, locale)}</span>
         </div>

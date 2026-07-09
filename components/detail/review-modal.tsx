@@ -66,7 +66,7 @@ export function ReviewModal({
   };
 
   const remove = async () => {
-    if (!(await confirm({ message: t("평가를 삭제할까요?"), danger: true }))) return;
+    if (!(await confirm({ message: t("평가를 삭제하면 경험치 10 XP가 차감돼요. 삭제할까요?"), danger: true }))) return;
     setBusy(true);
     setError(null);
     const r = await deleteRating({ targetType, targetId, path });
@@ -94,6 +94,11 @@ export function ReviewModal({
           maxLength={5000}
           className="mt-4 w-full resize-none rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 placeholder:text-zinc-400 focus:border-zinc-500 focus:outline-none dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100"
         />
+
+        {/* 첫 작성 시 경험치 안내(NON-163). 수정은 XP 변동 없음 → 신규만 노출. */}
+        {!editing && (
+          <p className="mt-2 text-xs font-medium text-indigo-600 dark:text-indigo-400">{t("리뷰를 작성하면 경험치 10 XP를 받아요.")}</p>
+        )}
 
         {/* 리뷰 작성 가이드 (NON-91) */}
         <ul className="mt-2 space-y-0.5 text-xs leading-relaxed text-zinc-500">

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { UserRankItem } from "@/lib/api";
+import { LevelBadge } from "@/components/ui/level-badge";
 
 // 유저 차트(NON-86) 순위 리스트. 순위·아바타·username(→프로필)·수치(축 라벨).
 export function UserChartList({ items, metricLabel }: { items: UserRankItem[]; metricLabel: string }) {
@@ -18,12 +19,15 @@ export function UserChartList({ items, metricLabel }: { items: UserRankItem[]; m
               )}
             </span>
           </Link>
-          <Link
-            href={`/u/${u.username}`}
-            className="min-w-0 flex-1 truncate text-sm font-medium text-zinc-900 hover:underline dark:text-zinc-50"
-          >
-            {u.username}
-          </Link>
+          <div className="flex min-w-0 flex-1 items-center gap-1.5">
+            <Link
+              href={`/u/${u.username}`}
+              className="min-w-0 truncate text-sm font-medium text-zinc-900 hover:underline dark:text-zinc-50"
+            >
+              {u.username}
+            </Link>
+            <LevelBadge level={u.level} />
+          </div>
           <span className="shrink-0 text-sm text-zinc-500">
             <span className="font-semibold text-zinc-700 dark:text-zinc-200">{u.count}</span> {metricLabel}
           </span>

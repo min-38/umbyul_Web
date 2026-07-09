@@ -8,6 +8,7 @@ import { ReactionBar } from "./reaction-bar";
 import { ReportControl } from "./report-control";
 import { ReviewComments } from "./review-comments";
 import { ShareButton } from "./share-button";
+import { LevelBadge } from "@/components/ui/level-badge";
 import { formatRelativeTime } from "@/lib/format";
 import { useT, useLocale } from "@/components/i18n-provider";
 
@@ -102,6 +103,7 @@ export function ReviewList({
               <Link href={`/u/${r.username}`} className="text-sm font-medium text-zinc-800 hover:underline dark:text-zinc-100">
                 {r.username}
               </Link>
+              <LevelBadge level={r.level} />
               <span className="text-xs text-zinc-500">{formatRelativeTime(r.createdAt, locale)}</span>
               <span className="ml-auto flex items-center gap-1.5">
                 <Stars value={r.score} size={14} />

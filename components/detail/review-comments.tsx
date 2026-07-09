@@ -10,6 +10,8 @@ import { useConfirm } from "@/components/ui/confirm-dialog";
 import { useT, useLocale } from "@/components/i18n-provider";
 import { ReportDialog } from "@/components/detail/report-control";
 import { MentionTextarea } from "@/components/detail/mention-textarea";
+import { Stars } from "@/components/detail/stars";
+import { LevelBadge } from "@/components/ui/level-badge";
 
 const REPLY_COLLAPSE_THRESHOLD = 2;
 
@@ -186,10 +188,10 @@ export function ReviewComments({
           <Link href={`/u/${c.username}`} className="font-medium text-zinc-800 hover:underline dark:text-zinc-100">
             {c.username}
           </Link>
+          <LevelBadge level={c.level} />
           {c.score !== null ? (
-            <span className="rounded bg-amber-100 px-1 text-[10px] font-medium text-amber-700 dark:bg-amber-950 dark:text-amber-400">
-              ★ {c.score.toFixed(1)}
-            </span>
+            // 우리 기본 UI인 별 5개로 표시(NON-163). 숫자는 접근성용 라벨(Stars aria-label).
+            <Stars value={c.score} size={12} />
           ) : (
             <span className="text-[10px] text-zinc-500">{t("평가 없음")}</span>
           )}
