@@ -227,6 +227,7 @@ export type TrackDetail = {
   explicit: boolean;
   rating: RatingSummary;
   reviews: ReviewItem[];
+  youtubeUrl: string | null;
 };
 export type AlbumDetail = {
   spotifyId: string;
@@ -242,6 +243,7 @@ export type AlbumDetail = {
   tracks: TrackRef[];
   rating: RatingSummary;
   reviews: ReviewItem[];
+  youtubeUrl: string | null;
 };
 
 // 로그인 시 토큰을 실어 보내면 상세 응답에 내 반응(myReaction)이 포함된다(공개 엔드포인트라 옵셔널).

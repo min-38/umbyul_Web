@@ -24,6 +24,7 @@ import { Stars } from "@/components/detail/stars";
 import { RateButton } from "@/components/detail/rate-button";
 import { SpotifyLink } from "@/components/detail/detail-bits";
 import { MusicBrainzLink } from "@/components/detail/musicbrainz-link";
+import { YouTubeLink } from "@/components/detail/youtube-link";
 import { ShareButton } from "@/components/detail/share-button";
 import { ArtistLinks } from "@/components/detail/artist-links";
 import { AlbumTabs } from "@/components/detail/album-tabs";
@@ -89,6 +90,7 @@ export default async function AlbumPage({ params }: { params: Promise<{ id: stri
           </div>
           <div className="mt-1 flex items-center gap-4">
             <SpotifyLink url={album.spotifyUrl} label={t("Spotify에서 듣기")} />
+            <YouTubeLink url={album.youtubeUrl} label={t("YouTube에서 보기")} />
             <MusicBrainzLink upc={album.upc} label={t("MusicBrainz에서 보기")} />
             <ShareButton path={`/album/${album.spotifyId}`} title={album.name} size={24} />
           </div>
