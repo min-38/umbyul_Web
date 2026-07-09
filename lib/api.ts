@@ -560,6 +560,23 @@ export async function getDiscover(): Promise<DiscoverData> {
   }
 }
 
+// Genre 브라우즈(NON-84). 부모 장르 페이지: 롤업 추천(top) + 서브장르별 목록(subs). 크라우드 태깅 기반.
+export type GenreRef = { id: number; slug: string; name: string };
+export type GenreSubSection = { genre: GenreRef; items: DiscoverItem[] };
+export type GenreDiscoverData = { genre: GenreRef; top: DiscoverItem[]; subs: GenreSubSection[] };
+
+/** 부모 장르 슬러그의 브라우즈 데이터. 미존재·실패 시 null(404 → notFound). */
+export async function getGenreDiscover(slug: string): Promise<GenreDiscoverData | null> {
+  try {
+    const res = await fetch(`${API_URL}/discover/genre/${encodeURIComponent(slug)}`, { cache: "no-store" });
+    if (!res.ok) return null;
+    const json = await res.json();
+    return (json?.data ?? null) as GenreDiscoverData | null;
+  } catch {
+    return null;
+  }
+}
+
 // ── 유저 프로필 (NON-24) ──
 export type ProfileReview = {
   id: string;
