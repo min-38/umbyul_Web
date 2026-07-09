@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createSet, addSetTrack } from "@/app/actions/sets";
-import { TrackPicker, YoutubeIcon, MAX_TRACKS, type PickedTrack } from "@/components/sets/track-picker";
+import { TrackPicker, MAX_TRACKS, type PickedTrack } from "@/components/sets/track-picker";
 import { MixGuide } from "@/components/sets/mix-guide";
 import { coverThumb } from "@/lib/image";
 import { safeHttpUrl } from "@/lib/validation";
@@ -79,11 +79,6 @@ export function NewSetForm() {
                   <span className="block truncate text-sm text-zinc-800 dark:text-zinc-100">{tr.name}</span>
                   <span className="block truncate text-xs text-zinc-500">{tr.artist}</span>
                 </span>
-                {tr.youtubeUrl && (
-                  <span className="shrink-0 text-red-600" title={t("유튜브에서 보기")}>
-                    <YoutubeIcon size={15} />
-                  </span>
-                )}
                 <button type="button" onClick={() => removeTrack(tr.spotifyId)} aria-label={t("삭제")} className="shrink-0 text-zinc-300 hover:text-red-500">
                   <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
                     <path d="M18 6 6 18M6 6l12 12" />

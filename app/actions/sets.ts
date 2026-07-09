@@ -82,7 +82,6 @@ export async function addSetTrack(
     albumId: string | null;
     albumName: string | null;
     imageUrl: string | null;
-    youtubeUrl: string | null;
     explicit: boolean;
   },
 ) {
@@ -102,7 +101,7 @@ export async function toggleSetLike(setId: string) {
   return { ok: r.ok, code: r.code, data: r.data };
 }
 
-// 트랙 교체(수정) — 노래 변경/유튜브 링크 변경. position 유지.
+// 트랙 교체(수정) — 노래 변경. position 유지.
 export async function replaceSetTrack(
   setId: string,
   oldSpotifyId: string,
@@ -115,7 +114,6 @@ export async function replaceSetTrack(
     albumId: string | null;
     albumName: string | null;
     imageUrl: string | null;
-    youtubeUrl: string | null;
     explicit: boolean;
   },
 ) {
@@ -147,12 +145,6 @@ export async function deleteSetComment(setId: string, commentId: string) {
 
 export async function editSetComment(setId: string, commentId: string, body: string) {
   const r = await authed("POST", `/me/sets/${setId}/comments/${commentId}/edit`, { body });
-  return { ok: r.ok, code: r.code };
-}
-
-// 트랙의 유튜브 링크 설정/제거(빈 문자열이면 제거).
-export async function updateTrackYoutube(setId: string, spotifyId: string, youtubeUrl: string | null) {
-  const r = await authed("POST", `/me/sets/${setId}/tracks/${encodeURIComponent(spotifyId)}/link`, { youtubeUrl });
   return { ok: r.ok, code: r.code };
 }
 

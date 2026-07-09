@@ -8,7 +8,6 @@ import { ExplicitBadge } from "@/components/detail/explicit-badge";
 import { useT } from "@/components/i18n-provider";
 
 export const MAX_TRACKS = 15;
-export const YT_RE = /^https?:\/\/([\w-]+\.)?(youtube\.com|youtu\.be)\/\S+$/i;
 
 // 유튜브 로고(빨간 플레이 버튼). currentColor 로 색 상속.
 export function YoutubeIcon({ size = 16 }: { size?: number }) {
@@ -37,14 +36,13 @@ export type PickedTrack = {
   albumId: string | null;
   albumName: string | null;
   imageUrl: string | null;
-  youtubeUrl: string | null;
   explicit: boolean;
 };
 
 const inputCls =
   "w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 placeholder:text-zinc-400 focus:border-zinc-500 focus:outline-none dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100";
 
-// 한 폼에서 곡 검색 → 선택 → (선택)유튜브 링크 → 담기. onAdd가 true면 폼 리셋.
+// 한 폼에서 곡 검색 → 선택 → 담기. onAdd가 true면 폼 리셋. (YouTube는 곡 전역 링크에서 표시, 여기서 입력 안 함.)
 export function TrackPicker({
   onAdd,
   disabledHint,
@@ -56,8 +54,6 @@ export function TrackPicker({
   const [q, setQ] = useState("");
   const [hits, setHits] = useState<TrackResult[]>([]);
   const [selected, setSelected] = useState<TrackResult | null>(null);
-  const [yt, setYt] = useState("");
-  const [ytErr, setYtErr] = useState(false);
   const [busy, setBusy] = useState(false);
 
   const search = async (query: string) => {
@@ -72,11 +68,6 @@ export function TrackPicker({
 
   const submit = async () => {
     if (busy || !selected) return;
-    const val = yt.trim();
-    if (val && !YT_RE.test(val)) {
-      setYtErr(true);
-      return;
-    }
     setBusy(true);
     const ok = await onAdd({
       spotifyId: selected.id,
@@ -87,14 +78,11 @@ export function TrackPicker({
       albumId: selected.albumId,
       albumName: selected.albumName,
       imageUrl: selected.imageUrl,
-      youtubeUrl: val || null,
       explicit: selected.explicit,
     });
     setBusy(false);
     if (ok) {
       setSelected(null);
-      setYt("");
-      setYtErr(false);
       setQ("");
       setHits([]);
     }
@@ -154,16 +142,6 @@ export function TrackPicker({
         </div>
       )}
 
-      <input
-        value={yt}
-        onChange={(e) => {
-          setYt(e.target.value);
-          setYtErr(false);
-        }}
-        placeholder={t("유튜브 링크 (선택)")}
-        className={inputCls}
-      />
-      {ytErr && <p className="text-xs text-red-500">{t("유효한 유튜브 링크가 아닙니다.")}</p>}
       <button
         type="button"
         onClick={submit}

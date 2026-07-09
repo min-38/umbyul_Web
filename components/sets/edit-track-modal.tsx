@@ -3,13 +3,13 @@
 import { useState } from "react";
 import type { TrackResult, DjSetTrack } from "@/lib/api";
 import { searchTracks } from "@/app/actions/sets";
-import { YT_RE, type PickedTrack } from "@/components/sets/track-picker";
+import { type PickedTrack } from "@/components/sets/track-picker";
 import { coverThumb } from "@/lib/image";
 import { ExplicitBadge } from "@/components/detail/explicit-badge";
 import { Dialog } from "@/components/ui/dialog";
 import { useT } from "@/components/i18n-provider";
 
-// 트랙 수정 모달: 노래 변경(재검색) + 유튜브 링크 편집.
+// 트랙 수정 모달: 노래 변경(재검색). YouTube는 곡 전역 링크에서 표시 — 여기서 편집 안 함.
 export function EditTrackModal({
   track,
   onSave,
@@ -29,14 +29,11 @@ export function EditTrackModal({
     albumId: track.albumId,
     albumName: track.albumName,
     imageUrl: track.imageUrl,
-    youtubeUrl: track.youtubeUrl,
     explicit: track.explicit,
   });
   const [changing, setChanging] = useState(false);
   const [q, setQ] = useState("");
   const [hits, setHits] = useState<TrackResult[]>([]);
-  const [yt, setYt] = useState(track.youtubeUrl ?? "");
-  const [ytErr, setYtErr] = useState(false);
   const [busy, setBusy] = useState(false);
 
   const inputCls =
@@ -53,7 +50,7 @@ export function EditTrackModal({
   };
 
   const pick = (tr: TrackResult) => {
-    setPicked((p) => ({
+    setPicked(() => ({
       spotifyId: tr.id,
       isrc: tr.isrc,
       name: tr.name,
@@ -62,7 +59,6 @@ export function EditTrackModal({
       albumId: tr.albumId,
       albumName: tr.albumName,
       imageUrl: tr.imageUrl,
-      youtubeUrl: p.youtubeUrl,
       explicit: tr.explicit,
     }));
     setChanging(false);
@@ -72,13 +68,8 @@ export function EditTrackModal({
 
   const save = async () => {
     if (busy) return;
-    const val = yt.trim();
-    if (val && !YT_RE.test(val)) {
-      setYtErr(true);
-      return;
-    }
     setBusy(true);
-    const ok = await onSave({ ...picked, youtubeUrl: val || null });
+    const ok = await onSave(picked);
     setBusy(false);
     if (ok) onClose();
   };
@@ -128,17 +119,6 @@ export function EditTrackModal({
             </div>
           )}
         </div>
-
-        <input
-          value={yt}
-          onChange={(e) => {
-            setYt(e.target.value);
-            setYtErr(false);
-          }}
-          placeholder={t("유튜브 링크 (선택)")}
-          className={`${inputCls} mt-3`}
-        />
-        {ytErr && <p className="mt-1 text-xs text-red-500">{t("유효한 유튜브 링크가 아닙니다.")}</p>}
 
         <div className="mt-5 flex justify-end gap-2">
           <button type="button" onClick={onClose} className="rounded-lg px-4 py-2 text-sm font-medium text-zinc-600 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-900">

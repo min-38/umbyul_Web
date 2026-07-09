@@ -63,7 +63,8 @@ export function MixEditor({ detail }: { detail: DjSetDetail }) {
     if (tracks.some((x) => x.spotifyId === tr.spotifyId)) return false;
     const r = await addSetTrack(set.id, tr);
     if (!r.ok) return false;
-    setTracks((ts) => [...ts, { ...tr, position: 0, myScore: null, myReview: null }]);
+    // youtubeUrl은 곡 전역 링크에서 옴 — 재로드 시 채워짐. 낙관적 추가엔 null.
+    setTracks((ts) => [...ts, { ...tr, youtubeUrl: null, position: 0, myScore: null, myReview: null }]);
     return true;
   };
 
@@ -74,7 +75,7 @@ export function MixEditor({ detail }: { detail: DjSetDetail }) {
     setTracks((ts) =>
       ts.map((x) =>
         x.spotifyId === old.spotifyId
-          ? { ...x, ...picked, myScore: sameSong ? x.myScore : null, myReview: sameSong ? x.myReview : null }
+          ? { ...x, ...picked, youtubeUrl: sameSong ? x.youtubeUrl : null, myScore: sameSong ? x.myScore : null, myReview: sameSong ? x.myReview : null }
           : x,
       ),
     );
