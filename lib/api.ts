@@ -449,6 +449,9 @@ export type DailyPick = {
   artists: ArtistRef[] | null;
   explicit: boolean;
   note: string | null;
+  average: number | null;
+  count: number;
+  genres: string[];
 };
 export type DiscoverData = { rising: RisingWindows; new: DiscoverItem[]; myRecent: DiscoverItem[]; recommend: DiscoverItem[]; dailyPick: DailyPick | null };
 
@@ -532,7 +535,10 @@ export async function getDiscover(): Promise<DiscoverData> {
       new: d.new ?? [],
       myRecent: d.myRecent ?? [],
       recommend: d.recommend ?? [],
-      dailyPick: d.dailyPick ?? null,
+      // 구 Api 스큐(평점·장르 필드 부재) 방어 — 기본값 정규화.
+      dailyPick: d.dailyPick
+        ? { ...d.dailyPick, average: d.dailyPick.average ?? null, count: d.dailyPick.count ?? 0, genres: d.dailyPick.genres ?? [] }
+        : null,
     };
   } catch {
     return empty;

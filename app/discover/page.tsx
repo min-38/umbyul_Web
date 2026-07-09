@@ -18,7 +18,15 @@ export default async function DiscoverPage() {
     <div className="mx-auto flex w-full max-w-4xl flex-col gap-12 px-6 py-8">
       <h1 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">{t("발견")}</h1>
 
-      {dailyPick && <DailyPickCard pick={dailyPick} label={t("오늘의 음악")} />}
+      {dailyPick && (
+        <DailyPickCard
+          pick={dailyPick}
+          label={t("오늘의 음악")}
+          reviewLabel={t("리뷰하기")}
+          ratingsLabel={t("{count}개 평가", { count: dailyPick.count })}
+          emptyLabel={t("아직 평가가 없어요 · 첫 리뷰를 남겨보세요")}
+        />
+      )}
 
       {recommendCovers.length > 0 && (
         <section>
