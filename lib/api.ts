@@ -452,6 +452,10 @@ export type DailyPick = {
   average: number | null;
   count: number;
   genres: string[];
+  spotifyUrl: string | null;
+  isrc: string | null;
+  upc: string | null;
+  youtubeUrl: string | null;
 };
 export type DiscoverData = { rising: RisingWindows; new: DiscoverItem[]; myRecent: DiscoverItem[]; recommend: DiscoverItem[]; dailyPick: DailyPick | null };
 
@@ -535,9 +539,18 @@ export async function getDiscover(): Promise<DiscoverData> {
       new: d.new ?? [],
       myRecent: d.myRecent ?? [],
       recommend: d.recommend ?? [],
-      // 구 Api 스큐(평점·장르 필드 부재) 방어 — 기본값 정규화.
+      // 구 Api 스큐(평점·장르·링크 필드 부재) 방어 — 기본값 정규화.
       dailyPick: d.dailyPick
-        ? { ...d.dailyPick, average: d.dailyPick.average ?? null, count: d.dailyPick.count ?? 0, genres: d.dailyPick.genres ?? [] }
+        ? {
+            ...d.dailyPick,
+            average: d.dailyPick.average ?? null,
+            count: d.dailyPick.count ?? 0,
+            genres: d.dailyPick.genres ?? [],
+            spotifyUrl: d.dailyPick.spotifyUrl ?? null,
+            isrc: d.dailyPick.isrc ?? null,
+            upc: d.dailyPick.upc ?? null,
+            youtubeUrl: d.dailyPick.youtubeUrl ?? null,
+          }
         : null,
     };
   } catch {

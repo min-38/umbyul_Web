@@ -21,10 +21,15 @@ export default async function DiscoverPage() {
       {dailyPick && (
         <DailyPickCard
           pick={dailyPick}
-          label={t("오늘의 음악")}
-          reviewLabel={t("리뷰하기")}
-          ratingsLabel={t("{count}개 평가", { count: dailyPick.count })}
-          emptyLabel={t("아직 평가가 없어요 · 첫 리뷰를 남겨보세요")}
+          labels={{
+            today: t("오늘의 음악"),
+            review: t("리뷰하기"),
+            ratings: t("{count}개 평가", { count: dailyPick.count }),
+            empty: t("아직 평가가 없어요 · 첫 리뷰를 남겨보세요"),
+            spotify: t("Spotify에서 듣기"),
+            youtube: t("YouTube에서 보기"),
+            musicbrainz: t("MusicBrainz에서 보기"),
+          }}
         />
       )}
 
