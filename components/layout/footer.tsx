@@ -8,6 +8,7 @@ const POLICY = [
 ];
 const INFO = [
   { label: "서비스 소개", href: "/about" },
+  { label: "공지사항", href: "/announcements" },
   { label: "FAQ", href: "/faq" },
   { label: "문의", href: "/contact" },
 ];

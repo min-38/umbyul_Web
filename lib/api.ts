@@ -142,6 +142,32 @@ export async function getFaq(locale: string): Promise<FaqItem[]> {
   }
 }
 
+// ── 공지사항 (NON-158) ── 게시된 것만 공개. 본문 로케일은 요청 로케일 우선 en 폴백(API 처리).
+export type AnnouncementListItem = { id: string; title: string; publishedAt: string | null };
+export type AnnouncementDetail = { id: string; locale: string; title: string; body: string; publishedAt: string | null };
+
+export async function getAnnouncements(locale: string): Promise<AnnouncementListItem[]> {
+  try {
+    const res = await fetch(`${API_URL}/announcements?locale=${encodeURIComponent(locale)}`, { cache: "no-store" });
+    if (!res.ok) return [];
+    const json = await res.json();
+    return (json.data?.items ?? []) as AnnouncementListItem[];
+  } catch {
+    return [];
+  }
+}
+
+export async function getAnnouncement(id: string, locale: string): Promise<AnnouncementDetail | null> {
+  try {
+    const res = await fetch(`${API_URL}/announcements/${encodeURIComponent(id)}?locale=${encodeURIComponent(locale)}`, { cache: "no-store" });
+    if (!res.ok) return null;
+    const json = await res.json();
+    return json.data as AnnouncementDetail;
+  } catch {
+    return null;
+  }
+}
+
 // 평점/리뷰수는 NON-7/8 이후. 지금은 메타데이터만.
 export type TrackResult = {
   id: string;
