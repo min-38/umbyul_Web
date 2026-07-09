@@ -30,6 +30,7 @@ export function FeedList({
   currentUserId,
   sort,
   scope,
+  genre,
   trackLabel,
   albumLabel,
 }: {
@@ -40,6 +41,7 @@ export function FeedList({
   currentUserId: string | null;
   sort: FeedSort;
   scope: FeedScope;
+  genre: string | null;
   trackLabel: string;
   albumLabel: string;
 }) {
@@ -60,7 +62,7 @@ export function FeedList({
 
   const loadMore = async () => {
     setLoadingMore(true);
-    const more = await loadMoreFeed(sort, scope, items.length);
+    const more = await loadMoreFeed(sort, scope, items.length, genre);
     // 라이브 정렬(hot/rising)로 창이 밀려 이미 표시된 항목이 다시 올 수 있음 → id 디듑(중복 키·중복 카드 방지, LOG-W-2)
     setItems((prev) => {
       const seen = new Set(prev.map((x) => x.id));
@@ -232,7 +234,7 @@ export function FeedList({
                 aria-label={it.name ?? (it.targetType === "track" ? trackLabel : albumLabel)}
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={coverThumb(it.imageUrl, "sm") ?? "/placeholder.svg"} alt="" loading="lazy" className="h-12 w-12 rounded bg-zinc-100 object-cover dark:bg-zinc-800" />
+                <img src={coverThumb(it.imageUrl, "md") ?? "/placeholder.svg"} alt="" loading="lazy" className="h-16 w-16 rounded bg-zinc-100 object-cover dark:bg-zinc-800" />
               </Link>
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-1.5">
@@ -252,6 +254,13 @@ export function FeedList({
                   {" · "}
                   <span suppressHydrationWarning>{formatRelativeTime(it.createdAt, locale)}</span>
                 </p>
+                {it.genres.length > 0 && (
+                  <div className="mt-0.5 flex flex-wrap gap-1">
+                    {it.genres.slice(0, 2).map((g) => (
+                      <span key={g} className="rounded-full bg-zinc-100 px-1.5 py-0.5 text-[10px] font-medium text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400">{g}</span>
+                    ))}
+                  </div>
+                )}
                 <p className="mt-0.5 line-clamp-2 whitespace-pre-wrap text-sm leading-snug text-zinc-600 dark:text-zinc-300">{it.body}</p>
                 <div className="mt-1">{actions(it)}</div>
               </div>
@@ -295,7 +304,7 @@ export function FeedList({
                 aria-label={it.name ?? (it.targetType === "track" ? trackLabel : albumLabel)}
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={coverThumb(it.imageUrl, "md") ?? "/placeholder.svg"} alt="" loading="lazy" className="h-20 w-20 rounded-lg bg-zinc-100 object-cover dark:bg-zinc-800" />
+                <img src={coverThumb(it.imageUrl, "md") ?? "/placeholder.svg"} alt="" loading="lazy" className="h-28 w-28 rounded-lg bg-zinc-100 object-cover dark:bg-zinc-800" />
               </Link>
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-1.5">
@@ -312,6 +321,13 @@ export function FeedList({
                   <Stars value={it.score} size={14} />
                   <span className="text-sm font-semibold text-zinc-700 dark:text-zinc-200">{it.score.toFixed(1)}</span>
                 </span>
+                {it.genres.length > 0 && (
+                  <div className="mt-1.5 flex flex-wrap gap-1">
+                    {it.genres.slice(0, 2).map((g) => (
+                      <span key={g} className="rounded-full bg-zinc-100 px-2 py-0.5 text-[11px] font-medium text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400">{g}</span>
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
 

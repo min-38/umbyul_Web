@@ -423,16 +423,19 @@ export type FeedItem = {
   myReaction: Reaction | null;
   commentCount: number;
   explicit: boolean;
+  genres: string[];
 };
 
 /** 홈 피드 v2 (공개, following은 로그인 필요). 실패 시 빈 목록. */
-export async function getFeed(sort: FeedSort, scope: FeedScope, offset = 0, limit = 20): Promise<FeedItem[]> {
+export async function getFeed(sort: FeedSort, scope: FeedScope, offset = 0, limit = 20, genre?: string): Promise<FeedItem[]> {
   try {
-    const qs = new URLSearchParams({ sort, scope, offset: String(offset), limit: String(limit) });
-    const res = await fetch(`${API_URL}/feed?${qs}`, { headers: await detailHeaders(), cache: "no-store" });
+    const params: Record<string, string> = { sort, scope, offset: String(offset), limit: String(limit) };
+    if (genre) params.genre = genre;
+    const res = await fetch(`${API_URL}/feed?${new URLSearchParams(params)}`, { headers: await detailHeaders(), cache: "no-store" });
     if (!res.ok) return [];
     const json = await res.json();
-    return (json?.data?.items ?? []) as FeedItem[];
+    const items = (json?.data?.items ?? []) as FeedItem[];
+    return items.map((it) => ({ ...it, genres: it.genres ?? [] })); // 구 Api 스큐 방어(장르 필드 부재)
   } catch {
     return [];
   }

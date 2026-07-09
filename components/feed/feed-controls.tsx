@@ -13,21 +13,26 @@ export function FeedControls({
   sort,
   scope,
   view,
+  genre,
+  hasPreferredGenres,
   loggedIn,
 }: {
   sort: string;
   scope: string;
   view: string;
+  genre: string | null;
+  hasPreferredGenres: boolean;
   loggedIn: boolean;
 }) {
   const t = useT();
   const router = useRouter();
 
-  const go = (patch: Partial<{ sort: string; scope: string; view: string }>) => {
-    const next = { sort, scope, view, ...patch };
-    // 서버(page.tsx)가 빈 URL 진입 시 읽는 선호 쿠키. 1년 유지.
-    document.cookie = `${KEY}=${encodeURIComponent(JSON.stringify(next))}; path=/; max-age=31536000; samesite=lax`;
-    router.push(`/?${new URLSearchParams(next)}`);
+  const go = (patch: Partial<{ sort: string; scope: string; view: string; genre: string | null }>) => {
+    const next = { sort, scope, view, genre, ...patch };
+    // 빈 값(장르 필터 해제 등)은 URL·쿠키에서 제외. 서버(page.tsx)가 빈 URL 진입 시 읽는 선호 쿠키. 1년 유지.
+    const clean = Object.fromEntries(Object.entries(next).filter(([, v]) => v != null && v !== "")) as Record<string, string>;
+    document.cookie = `${KEY}=${encodeURIComponent(JSON.stringify(clean))}; path=/; max-age=31536000; samesite=lax`;
+    router.push(`/?${new URLSearchParams(clean)}`);
   };
 
   const sortLabel: Record<string, string> = {
@@ -54,6 +59,19 @@ export function FeedControls({
       />
 
       <div className="flex items-center gap-2">
+        {hasPreferredGenres && (
+          <button
+            type="button"
+            onClick={() => go({ genre: genre === "preferred" ? null : "preferred" })}
+            className={`rounded-full px-3 py-1.5 text-sm font-medium transition ${
+              genre === "preferred"
+                ? "bg-indigo-600 text-white hover:bg-indigo-500"
+                : "bg-zinc-100 text-zinc-700 hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-200 dark:hover:bg-zinc-700"
+            }`}
+          >
+            {t("내 선호 장르")}
+          </button>
+        )}
         <SortDropdown
           current={sort}
           title={t("정렬 기준")}
