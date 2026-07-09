@@ -1,7 +1,8 @@
 import { cache } from "react";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getAlbumDetail, getMySanction, getRatingHistory } from "@/lib/api";
+import { getAlbumDetail, getMySanction, getRatingHistory, getGenresFor, getGenres } from "@/lib/api";
+import { getMentionMute } from "@/app/actions/mention";
 import { getT } from "@/lib/i18n-server";
 
 // generateMetadata 와 페이지가 같은 요청에서 한 번만 fetch 하도록 dedupe.
@@ -46,6 +47,9 @@ export default async function AlbumPage({ params }: { params: Promise<{ id: stri
   const mine = user ? album.reviews.find((r) => r.userId === user.id) : undefined;
   const sanction = user ? await getMySanction() : null;
   const rateSanction = sanction?.banned ? "banned" : sanction?.suspendedUntil ? "suspended" : null;
+  // 장르·멘션뮤트를 서버에서 미리 받아 시드 — 마운트 후 fetch로 인한 깜빡임/버튼 튐 방지(NON-161).
+  const [genresFor, allGenres] = await Promise.all([getGenresFor("album", album.spotifyId), getGenres()]);
+  const mentionMuted = user ? await getMentionMute("album", album.spotifyId) : null;
   const t = await getT();
 
   return (
@@ -97,14 +101,14 @@ export default async function AlbumPage({ params }: { params: Promise<{ id: stri
         </div>
       </div>
 
-      <AlbumTabs album={album} loggedIn={!!user} points={ratingHistory} />
+      <AlbumTabs album={album} loggedIn={!!user} points={ratingHistory} genresData={genresFor} allGenres={allGenres} />
 
       <section className="mt-10">
         <div className="mb-4 flex items-center justify-between gap-3">
           <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">
             {t("리뷰")} <span className="text-zinc-500">({album.rating.count})</span>
           </h2>
-          <MentionMuteToggle targetType="album" spotifyId={album.spotifyId} loggedIn={!!user} />
+          <MentionMuteToggle targetType="album" spotifyId={album.spotifyId} loggedIn={!!user} initialMuted={mentionMuted} />
         </div>
         <ReviewList reviews={album.reviews} currentUserId={user?.id ?? null} shareBasePath={`/album/${album.spotifyId}`} />
       </section>

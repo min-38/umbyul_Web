@@ -12,25 +12,32 @@ export function GenreTags({
   targetType,
   id,
   loggedIn,
+  initialData = null,
+  initialGenres = [],
 }: {
   targetType: "track" | "album";
   id: string;
   loggedIn: boolean;
+  // 서버에서 미리 받아 첫 페인트부터 칩을 그려 깜빡임 방지(NON-161).
+  initialData?: GenresFor | null;
+  initialGenres?: Genre[];
 }) {
   const t = useT();
-  const [data, setData] = useState<GenresFor | null>(null);
-  const [genres, setGenres] = useState<Genre[]>([]);
+  const [data, setData] = useState<GenresFor | null>(initialData);
+  const [genres, setGenres] = useState<Genre[]>(initialGenres);
   const [editing, setEditing] = useState(false);
   const [busy, setBusy] = useState(false);
 
   const reload = async () => setData(await loadGenresFor(targetType, id));
+  // 서버 시드가 없을 때만 마운트 후 로드 — 시드가 있으면 재조회로 인한 재렌더/깜빡임 방지.
   useEffect(() => {
-    reload();
+    if (initialData === null) reload();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [targetType, id]);
-  // 이름 해석(제안됨 칩) + picker용 전체 장르는 마운트 시 로드.
+  // picker용 전체 장르 목록 — 시드가 없을 때만 로드.
   useEffect(() => {
-    loadGenres().then(setGenres);
+    if (initialGenres.length === 0) loadGenres().then(setGenres);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const openEditor = () => setEditing(true);

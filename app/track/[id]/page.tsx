@@ -2,7 +2,8 @@ import { cache } from "react";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { getTrackDetail, getMySanction, getRatingHistory } from "@/lib/api";
+import { getTrackDetail, getMySanction, getRatingHistory, getGenresFor, getGenres } from "@/lib/api";
+import { getMentionMute } from "@/app/actions/mention";
 import { getT } from "@/lib/i18n-server";
 
 const getTrack = cache(getTrackDetail);
@@ -50,6 +51,9 @@ export default async function TrackPage({ params }: { params: Promise<{ id: stri
   const mine = user ? track.reviews.find((r) => r.userId === user.id) : undefined;
   const sanction = user ? await getMySanction() : null;
   const rateSanction = sanction?.banned ? "banned" : sanction?.suspendedUntil ? "suspended" : null;
+  // 장르·멘션뮤트를 서버에서 미리 받아 시드 — 마운트 후 fetch로 인한 깜빡임/버튼 튐 방지(NON-161).
+  const [genresFor, allGenres] = await Promise.all([getGenresFor("track", track.spotifyId), getGenres()]);
+  const mentionMuted = user ? await getMentionMute("track", track.spotifyId) : null;
   const t = await getT();
 
   return (
@@ -136,7 +140,7 @@ export default async function TrackPage({ params }: { params: Promise<{ id: stri
             )}
             <div className="flex flex-col gap-1">
               <dt className="text-xs text-zinc-500">{t("장르")}</dt>
-              <dd><GenreTags targetType="track" id={track.spotifyId} loggedIn={!!user} /></dd>
+              <dd><GenreTags targetType="track" id={track.spotifyId} loggedIn={!!user} initialData={genresFor} initialGenres={allGenres} /></dd>
             </div>
           </dl>
         }
@@ -147,7 +151,7 @@ export default async function TrackPage({ params }: { params: Promise<{ id: stri
           <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">
             {t("리뷰")} <span className="text-zinc-500">({track.rating.count})</span>
           </h2>
-          <MentionMuteToggle targetType="track" spotifyId={track.spotifyId} loggedIn={!!user} />
+          <MentionMuteToggle targetType="track" spotifyId={track.spotifyId} loggedIn={!!user} initialMuted={mentionMuted} />
         </div>
         <ReviewList reviews={track.reviews} currentUserId={user?.id ?? null} shareBasePath={`/track/${track.spotifyId}`} />
       </section>

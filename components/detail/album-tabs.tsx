@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import type { AlbumDetail, RatingPoint } from "@/lib/api";
+import type { AlbumDetail, RatingPoint, GenresFor, Genre } from "@/lib/api";
 import { formatDuration, formatTotalDuration, formatReleaseDate } from "@/lib/format";
 import { useT } from "@/components/i18n-provider";
 import { Stars } from "./stars";
@@ -19,7 +19,7 @@ const TABS: { key: Tab; label: string }[] = [
   { key: "chart", label: "추이" },
 ];
 
-export function AlbumTabs({ album, loggedIn, points }: { album: AlbumDetail; loggedIn: boolean; points: RatingPoint[] }) {
+export function AlbumTabs({ album, loggedIn, points, genresData, allGenres }: { album: AlbumDetail; loggedIn: boolean; points: RatingPoint[]; genresData: GenresFor; allGenres: Genre[] }) {
   const [tab, setTab] = useState<Tab>("tracklist");
   const t = useT();
   const enoughChart = points.length >= 2 && (points[points.length - 1]?.count ?? 0) >= 5;
@@ -95,7 +95,7 @@ export function AlbumTabs({ album, loggedIn, points }: { album: AlbumDetail; log
             </div>
             <div className="flex flex-col gap-1">
               <dt className="text-xs text-zinc-500">{t("장르")}</dt>
-              <dd><GenreTags targetType="album" id={album.spotifyId} loggedIn={loggedIn} /></dd>
+              <dd><GenreTags targetType="album" id={album.spotifyId} loggedIn={loggedIn} initialData={genresData} initialGenres={allGenres} /></dd>
             </div>
           </dl>
         )}

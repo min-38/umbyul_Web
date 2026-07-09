@@ -15,9 +15,13 @@ export function DisplaySettings() {
   const router = useRouter();
   const [pending, startTransition] = useTransition();
   const [theme, setTheme] = useState<Theme>("system");
+  // 테마는 localStorage에만 있어 SSR 값을 알 수 없음 → 마운트 전엔 하이라이트를 그리지 않아
+  // "시스템"이 선택됐다 실제 값으로 스냅되는 깜빡임을 방지(NON-161).
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     setTheme(getStoredTheme());
+    setMounted(true);
     const sync = () => setTheme(getStoredTheme()); // 헤더 토글에서 바꿔도 동기화
     window.addEventListener("themechange", sync);
     return () => window.removeEventListener("themechange", sync);
@@ -49,7 +53,7 @@ export function DisplaySettings() {
               type="button"
               onClick={() => choose(opt)}
               className={`rounded-md px-4 py-1.5 text-sm font-medium transition-colors ${
-                theme === opt
+                mounted && theme === opt
                   ? "bg-zinc-900 text-white dark:bg-zinc-100 dark:text-black"
                   : "text-zinc-600 hover:text-zinc-900 dark:text-zinc-300 dark:hover:text-zinc-50"
               }`}

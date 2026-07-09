@@ -9,18 +9,22 @@ export function MentionMuteToggle({
   targetType,
   spotifyId,
   loggedIn,
+  initialMuted = null,
 }: {
   targetType: "track" | "album";
   spotifyId: string;
   loggedIn: boolean;
+  // 서버에서 미리 받은 뮤트 상태 — null이면 마운트 후 로드(깜빡임/버튼 튐 방지, NON-161).
+  initialMuted?: boolean | null;
 }) {
   const t = useT();
-  const [muted, setMuted] = useState<boolean | null>(null);
+  const [muted, setMuted] = useState<boolean | null>(initialMuted);
   const [busy, setBusy] = useState(false);
 
   useEffect(() => {
-    if (!loggedIn) return;
+    if (!loggedIn || initialMuted !== null) return;
     getMentionMute(targetType, spotifyId).then(setMuted);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loggedIn, targetType, spotifyId]);
 
   if (!loggedIn || muted === null) return null;
