@@ -1,5 +1,6 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { safeHttpUrl } from "@/lib/validation";
 import type { TrackResult, DjSetComment, DjSetSummary } from "@/lib/api";
@@ -43,12 +44,16 @@ export async function createSet(input: { title: string; note: string | null; lis
   // listenUrl은 http(s)만 허용 — 크래프트된 호출로 javascript: 등이 저장되는 것 차단(SEC-W-1)
   if (input.listenUrl && !safeHttpUrl(input.listenUrl)) return { ok: false, code: "INVALID_URL", id: null };
   const r = await authed<{ id: string }>("POST", "/me/sets", input);
+  // 목록 재검증 + 클라 bfcache 무효화(NON-160): 새 믹스가 뒤로가기 시 안 보이는 문제 방지.
+  if (r.ok) revalidatePath("/mixes");
   return { ok: r.ok, code: r.code, id: r.data?.id ?? null };
 }
 
 export async function updateSet(setId: string, input: { title: string; note: string | null; listenUrl: string | null }) {
   if (input.listenUrl && !safeHttpUrl(input.listenUrl)) return { ok: false, code: "INVALID_URL" };
   const r = await authed("POST", `/me/sets/${setId}/edit`, input);
+  // 수정 반영 + 뒤로가기 stale 방지(NON-160). revalidate가 클라 bfcache 전체를 evict.
+  if (r.ok) revalidatePath(`/mixes/${setId}`);
   return { ok: r.ok, code: r.code };
 }
 
@@ -68,6 +73,10 @@ export async function loadMixes(q: string, sort: string, offset: number): Promis
 
 export async function deleteSet(id: string) {
   const r = await authed("DELETE", `/me/sets/${id}`);
+  if (r.ok) {
+    revalidatePath("/mixes");
+    revalidatePath(`/mixes/${id}`);
+  }
   return { ok: r.ok, code: r.code };
 }
 
@@ -86,12 +95,14 @@ export async function addSetTrack(
   },
 ) {
   const r = await authed("POST", `/me/sets/${setId}/tracks`, track);
+  if (r.ok) revalidatePath(`/mixes/${setId}`);
   return { ok: r.ok, code: r.code };
 }
 
 // 트랙 순서 변경 — 전체 spotifyId 순서 전달.
 export async function reorderSetTracks(setId: string, spotifyIds: string[]) {
   const r = await authed("POST", `/me/sets/${setId}/order`, { spotifyIds });
+  if (r.ok) revalidatePath(`/mixes/${setId}`);
   return { ok: r.ok, code: r.code };
 }
 
@@ -118,6 +129,7 @@ export async function replaceSetTrack(
   },
 ) {
   const r = await authed("POST", `/me/sets/${setId}/tracks/${encodeURIComponent(oldSpotifyId)}/replace`, track);
+  if (r.ok) revalidatePath(`/mixes/${setId}`);
   return { ok: r.ok, code: r.code };
 }
 
@@ -150,5 +162,6 @@ export async function editSetComment(setId: string, commentId: string, body: str
 
 export async function removeSetTrack(setId: string, spotifyId: string) {
   const r = await authed("DELETE", `/me/sets/${setId}/tracks/${encodeURIComponent(spotifyId)}`);
+  if (r.ok) revalidatePath(`/mixes/${setId}`);
   return { ok: r.ok, code: r.code };
 }
