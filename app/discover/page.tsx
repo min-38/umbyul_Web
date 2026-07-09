@@ -47,7 +47,7 @@ export default async function DiscoverPage() {
 
       {myCovers.length > 0 && (
         <section>
-          <h2 className="mb-4 text-lg font-semibold text-zinc-900 dark:text-zinc-50">{t("최근")}</h2>
+          <h2 className="mb-4 text-lg font-semibold text-zinc-900 dark:text-zinc-50">{t("내 최근 리뷰")}</h2>
           <CoverRow items={myCovers} empty={empty} />
         </section>
       )}
