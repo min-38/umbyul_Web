@@ -157,17 +157,17 @@ export function SetView({
                   </>
                 )}
               </p>
-              {/* 듣기 아이콘: 스포티파이 · MusicBrainz · 유튜브 (아티스트·앨범 하단) */}
+              {/* 듣기 아이콘: 스포티파이 · 유튜브 · MusicBrainz (아티스트·앨범 하단) */}
               <div className="mt-1.5 flex items-center gap-3">
                 <a href={`https://open.spotify.com/track/${tr.spotifyId}`} target="_blank" rel="noopener noreferrer" aria-label={t("Spotify에서 듣기")} className="text-[#1DB954] hover:opacity-80">
                   <SpotifyIcon size={16} />
                 </a>
-                <MusicBrainzLink isrc={tr.isrc} size={16} label={t("MusicBrainz에서 보기")} />
                 {tr.youtubeUrl && (
                   <a href={tr.youtubeUrl} target="_blank" rel="noopener noreferrer" aria-label={t("유튜브에서 보기")} className="text-red-600 hover:text-red-500">
                     <YoutubeIcon size={16} />
                   </a>
                 )}
+                <MusicBrainzLink isrc={tr.isrc} size={16} label={t("MusicBrainz에서 보기")} />
               </div>
             </div>
 
