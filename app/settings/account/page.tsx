@@ -21,20 +21,19 @@ export default async function AccountTabPage() {
   const providers = Array.from(new Set(identities.map((i) => i.provider ?? "").filter(Boolean)));
 
   return (
-    <div className="flex flex-col gap-8">
-      <AccountSettings
-        initialUsername={profile.username}
-        initialEmail={user.email ?? ""}
-        initialAvatarUrl={profile.avatarUrl}
-        hasPassword={hasPassword}
-        joinedAt={profile.createdAt}
-        providers={providers}
-        initialCountry={demographics?.country ?? profile.country ?? "KR"}
-        initialGender={demographics?.gender ?? null}
-        initialBirthDate={demographics?.birthDate ?? null}
-        demographicsCanChangeAt={demographics?.canChangeAt ?? null}
-      />
-      {genres.length > 0 && <GenrePreferences genres={genres} initial={genrePrefs} />}
-    </div>
+    <AccountSettings
+      initialUsername={profile.username}
+      initialEmail={user.email ?? ""}
+      initialAvatarUrl={profile.avatarUrl}
+      hasPassword={hasPassword}
+      joinedAt={profile.createdAt}
+      providers={providers}
+      initialCountry={demographics?.country ?? profile.country ?? "KR"}
+      initialGender={demographics?.gender ?? null}
+      initialBirthDate={demographics?.birthDate ?? null}
+      demographicsCanChangeAt={demographics?.canChangeAt ?? null}
+      // 선호 장르는 기본 정보 바로 아래에 렌더되도록 슬롯으로 전달(NON-162).
+      genreSection={genres.length > 0 ? <GenrePreferences genres={genres} initial={genrePrefs} /> : null}
+    />
   );
 }

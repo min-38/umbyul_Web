@@ -10,6 +10,7 @@ import { COUNTRY_CODES } from "@/lib/countries";
 import { GENDERS } from "@/lib/demographics";
 import { resizeAvatar } from "@/lib/avatar-resize";
 import { PasswordInput } from "@/components/ui/password-input";
+import { Dialog } from "@/components/ui/dialog";
 import { useT, useLocale } from "@/components/i18n-provider";
 
 type Note = { ok: boolean; text: string } | null;
@@ -50,6 +51,7 @@ export function AccountSettings({
   initialGender,
   initialBirthDate,
   demographicsCanChangeAt,
+  genreSection,
 }: {
   initialUsername: string;
   initialEmail: string;
@@ -61,6 +63,8 @@ export function AccountSettings({
   initialGender: string | null;
   initialBirthDate: string | null;
   demographicsCanChangeAt: string | null;
+  // 선호 장르 섹션 — 기본 정보 바로 아래에 렌더(NON-162).
+  genreSection?: React.ReactNode;
 }) {
   const t = useT();
   const locale = useLocale();
@@ -192,10 +196,16 @@ export function AccountSettings({
     setExportNote({ ok: true, text: t("내보내기 파일을 저장했습니다.") });
   };
 
-  // 탈퇴 — 재인증 대체로 사용자명 타입-투-컨펌(OAuth·이메일 공통, 실수 방지) (LEG-15)
+  // 탈퇴 — 버튼 → 모달(NON-162). 사용자명 타입-투-컨펌(OAuth·이메일 공통, 실수 방지) (LEG-15)
+  const [delOpen, setDelOpen] = useState(false);
   const [delBusy, setDelBusy] = useState(false);
   const [delConfirm, setDelConfirm] = useState("");
   const delReady = delConfirm.trim() === initialUsername;
+  const closeDel = () => {
+    if (delBusy) return;
+    setDelOpen(false);
+    setDelConfirm("");
+  };
   const doDelete = async () => {
     if (!delReady) return;
     setDelBusy(true);
@@ -385,6 +395,9 @@ export function AccountSettings({
         <NoteText note={demoNote} />
       </Section>
 
+      {/* 선호 장르 — 기본 정보 바로 아래(NON-162) */}
+      {genreSection}
+
       {/* 데이터 내보내기 */}
       <Section title={t("데이터 내보내기")}>
         <p className="mb-2 text-xs text-zinc-500">{t("내 프로필·평가·팔로우·댓글을 JSON 파일로 내려받습니다.")}</p>
@@ -399,30 +412,51 @@ export function AccountSettings({
         <NoteText note={exportNote} />
       </Section>
 
-      {/* 탈퇴 */}
+      {/* 탈퇴 — 제일 하단. 버튼 1개 → 모달(NON-162) */}
       <Section title={t("회원 탈퇴")}>
-        <p className="mb-2 text-xs text-zinc-500">{t("계정과 모든 데이터가 영구 삭제됩니다.")}</p>
-        <p className="mb-1.5 text-xs text-zinc-500">
+        <button
+          type="button"
+          onClick={() => setDelOpen(true)}
+          className="w-fit rounded-lg border border-red-300 px-4 py-2 text-sm font-medium text-red-600 hover:bg-red-50 dark:border-red-900 dark:text-red-400 dark:hover:bg-red-950"
+        >
+          {t("회원 탈퇴")}
+        </button>
+      </Section>
+
+      <Dialog open={delOpen} onClose={closeDel} labelledBy="del-account-title">
+        <h2 id="del-account-title" className="text-base font-semibold text-zinc-900 dark:text-zinc-50">
+          {t("회원 탈퇴")}
+        </h2>
+        <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-300">{t("계정과 모든 데이터가 영구 삭제됩니다.")}</p>
+        <p className="mb-1.5 mt-3 text-xs text-zinc-500">
           {t("확인을 위해 사용자명을 입력하세요")}: <code className="rounded bg-zinc-100 px-1.5 py-0.5 font-mono text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300">{initialUsername}</code>
         </p>
-        <div className="flex gap-2">
-          <input
-            value={delConfirm}
-            onChange={(e) => setDelConfirm(e.target.value)}
-            autoComplete="off"
-            aria-label={t("확인을 위해 사용자명을 입력하세요")}
-            className="w-full max-w-xs rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 focus:border-red-400 focus:outline-none dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100"
-          />
+        <input
+          value={delConfirm}
+          onChange={(e) => setDelConfirm(e.target.value)}
+          autoComplete="off"
+          aria-label={t("확인을 위해 사용자명을 입력하세요")}
+          className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 focus:border-red-400 focus:outline-none dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100"
+        />
+        <div className="mt-4 flex justify-end gap-2">
+          <button
+            type="button"
+            onClick={closeDel}
+            disabled={delBusy}
+            className="rounded-lg border border-zinc-300 px-4 py-2 text-sm font-medium text-zinc-700 hover:bg-zinc-100 disabled:opacity-50 dark:border-zinc-700 dark:text-zinc-200 dark:hover:bg-zinc-900"
+          >
+            {t("취소")}
+          </button>
           <button
             type="button"
             onClick={doDelete}
             disabled={delBusy || !delReady}
-            className="w-fit shrink-0 rounded-lg bg-red-500 px-4 py-2 text-sm font-medium text-white hover:bg-red-600 disabled:cursor-not-allowed disabled:opacity-50"
+            className="shrink-0 rounded-lg bg-red-500 px-4 py-2 text-sm font-medium text-white hover:bg-red-600 disabled:cursor-not-allowed disabled:opacity-50"
           >
             {delBusy ? t("처리 중…") : t("회원 탈퇴")}
           </button>
         </div>
-      </Section>
+      </Dialog>
     </div>
   );
 }
