@@ -8,10 +8,7 @@ import { coverThumb } from "@/lib/image";
 import type { DailyPick } from "@/lib/api";
 
 type Labels = {
-  today: string;
   review: string;
-  ratings: string;
-  empty: string;
   spotify: string;
   youtube: string;
   musicbrainz: string;
@@ -28,7 +25,8 @@ export function DailyPickCard({ pick, labels }: { pick: DailyPick; labels: Label
     <section className="relative overflow-hidden rounded-2xl border border-zinc-200 bg-zinc-50 p-4 dark:border-zinc-800 dark:bg-zinc-900/50 sm:p-5">
       <div className="pick-stars" aria-hidden="true" />
       <div className="relative">
-        <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-indigo-600 dark:text-indigo-400">{labels.today}</p>
+        {/* 라벨은 i18n 미적용 — 항상 TODAY'S PICK */}
+        <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-indigo-600 dark:text-indigo-400">TODAY&apos;S PICK</p>
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
           {/* 커버 + 제목/아티스트/외부 링크/장르 */}
           <Link href={href} className="shrink-0 self-start sm:self-center" aria-label={pick.name ?? undefined}>
@@ -79,13 +77,12 @@ export function DailyPickCard({ pick, labels }: { pick: DailyPick; labels: Label
             )}
           </div>
 
-          {/* 평점 + 리뷰 CTA */}
-          <div className="flex shrink-0 flex-col items-start gap-2 sm:items-end">
+          {/* 별점(개수 미표시)만 크게 + 리뷰 CTA */}
+          <div className="flex shrink-0 flex-col items-start gap-3 sm:items-end">
             <div className="flex items-center gap-2">
-              <Stars value={pick.average ?? 0} size={18} />
-              {pick.average != null && <span className="text-sm font-semibold text-zinc-700 dark:text-zinc-200">{pick.average.toFixed(1)}</span>}
+              <Stars value={pick.average ?? 0} size={28} />
+              {pick.average != null && <span className="text-lg font-bold text-zinc-800 dark:text-zinc-100">{pick.average.toFixed(1)}</span>}
             </div>
-            <p className="text-xs text-zinc-500">{pick.count > 0 ? labels.ratings : labels.empty}</p>
             <Link
               href={href}
               className="mt-1 inline-flex items-center gap-1 rounded-full bg-indigo-600 px-4 py-1.5 text-sm font-medium text-white hover:bg-indigo-500"
