@@ -49,7 +49,7 @@ export const EN: Record<string, string> = {
   고객지원: "Support",
   소식: "News",
   "서비스 소개": "About Us",
-  후원하기: "Support",
+  후원하기: "Donate",
   "Glitter는 한 사람이 운영하는 서비스입니다. 서버비(호스팅·스토리지)에 커피 한 잔이 큰 힘이 됩니다.": "Glitter is run by one person. A cup of coffee toward server costs (hosting & storage) means a lot.",
   "순수 후원이라 어떤 대가나 혜택도 없어요. 부담 갖지 마시고, 마음이 있으실 때만.": "It's a pure donation — no perks or rewards. No pressure, only if you feel like it.",
   "Ko-fi에서 후원하기": "Support on Ko-fi",
