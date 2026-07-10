@@ -169,6 +169,26 @@ export async function getAnnouncement(id: string, locale: string): Promise<Annou
   }
 }
 
+// ── 패치노트 (NON-159) ── 게시된 것만 공개. 본문 로케일 폴백은 API 처리.
+export type PatchNoteItem = {
+  id: string;
+  version: string;
+  status: "released" | "in_progress";
+  releasedAt: string | null;
+  body: string;
+};
+
+export async function getPatchNotes(locale: string): Promise<PatchNoteItem[]> {
+  try {
+    const res = await fetch(`${API_URL}/patch-notes?locale=${encodeURIComponent(locale)}`, { cache: "no-store" });
+    if (!res.ok) return [];
+    const json = await res.json();
+    return (json.data?.items ?? []) as PatchNoteItem[];
+  } catch {
+    return [];
+  }
+}
+
 // 평점/리뷰수는 NON-7/8 이후. 지금은 메타데이터만.
 export type TrackResult = {
   id: string;

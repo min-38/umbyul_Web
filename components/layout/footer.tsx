@@ -6,9 +6,10 @@ const POLICY = [
   { label: "이용약관", href: "/terms" },
   { label: "개인정보 처리방침", href: "/privacy" },
 ];
-// 소식(News): 팀→유저 알림. 공지사항 + 패치노트(추후).
+// 소식(News): 팀→유저 알림. 공지사항 + 패치노트.
 const NEWS = [
   { label: "공지사항", href: "/announcements" },
+  { label: "패치노트", href: "/patch-notes" },
 ];
 const INFO = [
   { label: "서비스 소개", href: "/about" },
