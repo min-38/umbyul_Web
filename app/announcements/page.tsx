@@ -55,7 +55,7 @@ export default async function AnnouncementsPage({ searchParams }: { searchParams
           </ul>
 
           {totalPages > 1 && (
-            <nav className="mt-8 flex items-center justify-center gap-1 text-sm">
+            <nav aria-label={t("페이지 이동")} className="mt-8 flex items-center justify-center gap-1 text-sm">
               {page > 1 && (
                 <Link href={`/announcements?page=${page - 1}`} className="rounded-md px-3 py-1.5 text-zinc-500 hover:bg-zinc-100 dark:hover:bg-zinc-800">
                   {t("이전")}

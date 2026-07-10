@@ -9,7 +9,7 @@ import { dateLocale } from "@/lib/format";
 const MD: Components = {
   h1: (p) => <h4 className="mt-4 text-sm font-bold text-zinc-900 dark:text-zinc-50" {...p} />,
   h2: (p) => <h4 className="mt-4 text-sm font-bold text-zinc-900 dark:text-zinc-50" {...p} />,
-  h3: (p) => <h5 className="mt-3 text-xs font-semibold uppercase tracking-wide text-zinc-500" {...p} />,
+  h3: (p) => <h4 className="mt-3 text-xs font-semibold uppercase tracking-wide text-zinc-500" {...p} />,
   p: (p) => <p className="mt-2 text-sm leading-relaxed text-zinc-600 dark:text-zinc-300" {...p} />,
   ul: (p) => <ul className="mt-2 list-disc space-y-1 pl-5 text-sm text-zinc-600 dark:text-zinc-300" {...p} />,
   ol: (p) => <ol className="mt-2 list-decimal space-y-1 pl-5 text-sm text-zinc-600 dark:text-zinc-300" {...p} />,
@@ -61,7 +61,12 @@ export default async function PatchNotesPage() {
               {inProgress.map(Note)}
             </section>
           )}
-          {released.length > 0 && <section className="flex flex-col gap-8">{released.map(Note)}</section>}
+          {released.length > 0 && (
+            <section className="flex flex-col gap-8">
+              <h2 className="sr-only">{t("릴리스")}</h2>
+              {released.map(Note)}
+            </section>
+          )}
         </div>
       )}
     </div>

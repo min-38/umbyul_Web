@@ -223,11 +223,11 @@ function NotifRow({
   const inner = (
     <div className="flex items-center gap-2.5">
       {isWarning ? (
-        <span className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-amber-100 text-sm text-amber-700 dark:bg-amber-950 dark:text-amber-300 ${n.read ? "opacity-60" : ""}`}>
+        <span aria-hidden="true" className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-amber-100 text-sm text-amber-700 dark:bg-amber-950 dark:text-amber-300 ${n.read ? "opacity-60" : ""}`}>
           ⚠
         </span>
       ) : isAnnouncement ? (
-        <span className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-indigo-100 text-sm text-indigo-700 dark:bg-indigo-950 dark:text-indigo-300 ${n.read ? "opacity-60" : ""}`}>
+        <span aria-hidden="true" className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-indigo-100 text-sm text-indigo-700 dark:bg-indigo-950 dark:text-indigo-300 ${n.read ? "opacity-60" : ""}`}>
           📢
         </span>
       ) : (
