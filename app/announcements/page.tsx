@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { getAnnouncements } from "@/lib/api";
 import { getLocale, getT } from "@/lib/i18n-server";
 import { dateLocale } from "@/lib/format";
@@ -12,6 +13,8 @@ export default async function AnnouncementsPage({ searchParams }: { searchParams
   const locale = await getLocale();
   const t = await getT();
   const { items, total } = await getAnnouncements(locale, (page - 1) * PAGE_SIZE, PAGE_SIZE);
+  // 범위 밖 페이지(?page=99)면 진짜 빈 목록과 혼동돼 복귀 UI가 사라짐 → 마지막 페이지로 리다이렉트(QA5-5).
+  if (items.length === 0 && total > 0 && page > 1) redirect(`/announcements?page=${Math.max(1, Math.ceil(total / PAGE_SIZE))}`);
   // total이 없을 수도 있는 구버전 API에도 안전하게: 최소한 지금 화면에 보이는 만큼은 보장.
   const shownTotal = Math.max(total, (page - 1) * PAGE_SIZE + items.length);
   const totalPages = Math.max(1, Math.ceil(shownTotal / PAGE_SIZE));
