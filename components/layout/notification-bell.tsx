@@ -142,6 +142,8 @@ export function NotificationBell({ items, unreadCount }: { items: NotificationIt
                 <span className="font-semibold">{t("경고를 받았습니다.")}</span>
                 {toast.detail ? ` ${toast.detail}` : ""}
               </>
+            ) : toast.type === "announcement" ? (
+              <span className="font-semibold">{t("새 공지사항이 등록되었어요.")}</span>
             ) : (
               <>
                 <span className="font-semibold">{toast.actorUsername}</span>{t(suffix(toast))}
