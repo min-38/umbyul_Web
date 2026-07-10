@@ -15,6 +15,7 @@ const INFO = [
   { label: "서비스 소개", href: "/about" },
   { label: "FAQ", href: "/faq" },
   { label: "문의", href: "/contact" },
+  { label: "후원하기", href: "/support" },
 ];
 
 export async function Footer() {
