@@ -1,3 +1,5 @@
+import { cache } from "react";
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import ReactMarkdown from "react-markdown";
@@ -7,12 +9,24 @@ import { getLocale, getT } from "@/lib/i18n-server";
 import { dateLocale } from "@/lib/format";
 import { AnnouncementViewPing } from "@/components/announcements/view-ping";
 
+// generateMetadata 와 페이지가 같은 요청에서 한 번만 fetch 하도록 dedupe(album 패턴).
+const getCachedAnnouncement = cache(getAnnouncement);
+
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
+  const { id } = await params;
+  const locale = await getLocale();
+  const a = await getCachedAnnouncement(id, locale);
+  if (!a) return {};
+  const title = `${a.title} | Glitter`;
+  return { title, openGraph: { title } };
+}
+
 // 공지 상세(NON-158). 게시된 것만, en 폴백은 API 처리. 본문은 admin 작성 마크다운(raw HTML 미렌더 = 안전).
 export default async function AnnouncementPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const locale = await getLocale();
   const t = await getT();
-  const a = await getAnnouncement(id, locale);
+  const a = await getCachedAnnouncement(id, locale);
   if (!a) notFound();
 
   return (
