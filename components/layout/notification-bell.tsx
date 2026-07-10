@@ -132,6 +132,9 @@ export function NotificationBell({ items, unreadCount }: { items: NotificationIt
       {/* 신규 알림 토스트 (상단 중앙, 페이드, 3초, x로 즉시 닫기) */}
       {toast && (
         <div
+          role="status"
+          aria-live="polite"
+          aria-atomic="true"
           className={`fixed left-1/2 top-4 z-50 flex max-w-[90vw] -translate-x-1/2 items-center gap-3 rounded-full bg-zinc-900 py-2 pl-4 pr-2 text-sm text-white shadow-lg transition-opacity duration-300 dark:bg-zinc-100 dark:text-black ${
             toastShown ? "opacity-100" : "opacity-0"
           }`}
