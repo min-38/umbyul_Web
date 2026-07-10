@@ -143,17 +143,18 @@ export async function getFaq(locale: string): Promise<FaqItem[]> {
 }
 
 // ── 공지사항 (NON-158) ── 게시된 것만 공개. 본문 로케일은 요청 로케일 우선 en 폴백(API 처리).
-export type AnnouncementListItem = { id: string; title: string; publishedAt: string | null };
-export type AnnouncementDetail = { id: string; locale: string; title: string; body: string; publishedAt: string | null };
+export type AnnouncementListItem = { id: string; title: string; publishedAt: string | null; viewCount: number };
+export type AnnouncementDetail = { id: string; locale: string; title: string; body: string; publishedAt: string | null; viewCount: number };
+export type AnnouncementList = { items: AnnouncementListItem[]; total: number };
 
-export async function getAnnouncements(locale: string): Promise<AnnouncementListItem[]> {
+export async function getAnnouncements(locale: string, offset = 0, limit = 10): Promise<AnnouncementList> {
   try {
-    const res = await fetch(`${API_URL}/announcements?locale=${encodeURIComponent(locale)}`, { cache: "no-store" });
-    if (!res.ok) return [];
+    const res = await fetch(`${API_URL}/announcements?locale=${encodeURIComponent(locale)}&offset=${offset}&limit=${limit}`, { cache: "no-store" });
+    if (!res.ok) return { items: [], total: 0 };
     const json = await res.json();
-    return (json.data?.items ?? []) as AnnouncementListItem[];
+    return { items: (json.data?.items ?? []) as AnnouncementListItem[], total: (json.data?.total ?? 0) as number };
   } catch {
-    return [];
+    return { items: [], total: 0 };
   }
 }
 

@@ -51,6 +51,10 @@ export const EN: Record<string, string> = {
   "서비스 소개": "About Us",
   공지사항: "Announcements",
   "등록된 공지가 없습니다.": "No announcements yet.",
+  운영자: "Operator",
+  "조회 {count}": "{count} views",
+  이전: "Prev",
+  다음: "Next",
   "별점을 매길수록 별이 쌓여 반짝입니다 — 그래서 Glitter.":
     "The more you rate, the more the stars pile up and glitter — that's Glitter.",
   이용약관: "Terms of Service",
@@ -536,6 +540,10 @@ const JA: Record<string, string> = {
   "서비스 소개": "サービス紹介",
   공지사항: "お知らせ",
   "등록된 공지가 없습니다.": "お知らせはまだありません。",
+  운영자: "運営",
+  "조회 {count}": "閲覧 {count}",
+  이전: "前へ",
+  다음: "次へ",
   "별점을 매길수록 별이 쌓여 반짝입니다 — 그래서 Glitter.":
     "評価するほど星が積み重なって輝く — だから Glitter。",
   이용약관: "利用規約",
@@ -1001,6 +1009,10 @@ const ES: Record<string, string> = {
   "서비스 소개": "Acerca de",
   공지사항: "Anuncios",
   "등록된 공지가 없습니다.": "Aún no hay anuncios.",
+  운영자: "Operador",
+  "조회 {count}": "{count} vistas",
+  이전: "Anterior",
+  다음: "Siguiente",
   "별점을 매길수록 별이 쌓여 반짝입니다 — 그래서 Glitter.":
     "Cuanto más calificas, más estrellas se acumulan y brillan — por eso, Glitter.",
   이용약관: "Términos del servicio",

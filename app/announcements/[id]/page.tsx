@@ -16,15 +16,22 @@ export default async function AnnouncementPage({ params }: { params: Promise<{ i
 
   return (
     <div className="mx-auto w-full max-w-3xl px-6 py-12">
-      <Link href="/announcements" className="text-sm text-zinc-500 hover:underline">
-        ← {t("공지사항")}
+      <Link href="/announcements" className="inline-flex w-fit items-center gap-1 text-sm text-zinc-500 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-200">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6" /></svg>
+        {t("공지사항")}
       </Link>
       <h1 className="mt-4 text-2xl font-bold text-zinc-900 dark:text-zinc-50">{a.title}</h1>
-      {a.publishedAt && (
-        <p className="mt-1 text-xs text-zinc-500">
-          {new Date(a.publishedAt).toLocaleDateString(dateLocale(locale), { dateStyle: "long" })}
-        </p>
-      )}
+      <p className="mt-1 flex flex-wrap items-center gap-x-2 text-xs text-zinc-500">
+        <span>{t("운영자")}</span>
+        {a.publishedAt && (
+          <>
+            <span aria-hidden="true">·</span>
+            <span>{new Date(a.publishedAt).toLocaleDateString(dateLocale(locale), { dateStyle: "long" })}</span>
+          </>
+        )}
+        <span aria-hidden="true">·</span>
+        <span>{t("조회 {count}", { count: (a.viewCount ?? 0).toLocaleString() })}</span>
+      </p>
       <article className="mt-6">
         <ReactMarkdown
           remarkPlugins={[remarkGfm]}
