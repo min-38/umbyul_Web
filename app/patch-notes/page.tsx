@@ -57,7 +57,7 @@ export default async function PatchNotesPage() {
         <div className="flex flex-col gap-10">
           {inProgress.length > 0 && (
             <section className="flex flex-col gap-6">
-              <h2 className="text-sm font-semibold uppercase tracking-wide text-amber-600 dark:text-amber-400">{t("작업 중")}</h2>
+              <h2 className="text-sm font-semibold uppercase tracking-wide text-amber-700 dark:text-amber-400">{t("작업 중")}</h2>
               {inProgress.map(Note)}
             </section>
           )}

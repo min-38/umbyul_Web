@@ -3,7 +3,7 @@
 export function LevelBadge({ level, className = "" }: { level: number; className?: string }) {
   return (
     <span
-      className={`shrink-0 rounded-full bg-zinc-100 px-1.5 py-0.5 text-[10px] font-semibold leading-none text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400 ${className}`}
+      className={`shrink-0 rounded-full bg-zinc-100 px-1.5 py-0.5 text-[10px] font-semibold leading-none text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400 ${className}`}
     >
       Lv {level}
     </span>

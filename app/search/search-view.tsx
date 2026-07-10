@@ -21,7 +21,7 @@ function RatingLine({ rating }: { rating: RatingSummary | null }) {
     <p className="flex items-center gap-1 text-xs text-zinc-500">
       <Stars value={rating.average ?? 0} size={11} />
       <span className="font-medium text-zinc-600 dark:text-zinc-300">{(rating.average ?? 0).toFixed(1)}</span>
-      <span className="text-zinc-400">({rating.count})</span>
+      <span className="text-zinc-500">({rating.count})</span>
     </p>
   );
 }

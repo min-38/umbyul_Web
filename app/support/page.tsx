@@ -28,11 +28,11 @@ export default async function SupportPage() {
             {t("Ko-fi에서 후원하기")}
           </a>
         ) : (
-          <p className="text-sm text-zinc-400">{t("후원 창구는 곧 열립니다.")}</p>
+          <p className="text-sm text-zinc-500">{t("후원 창구는 곧 열립니다.")}</p>
         )}
       </div>
 
-      <p className="mt-10 text-xs text-zinc-400">{t("결제·환불은 외부 후원 플랫폼에서 안전하게 처리됩니다.")}</p>
+      <p className="mt-10 text-xs text-zinc-500">{t("결제·환불은 외부 후원 플랫폼에서 안전하게 처리됩니다.")}</p>
     </div>
   );
 }

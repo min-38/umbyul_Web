@@ -38,7 +38,7 @@ export default async function AnnouncementsPage({ searchParams }: { searchParams
                   href={`/announcements/${a.id}`}
                   className="-mx-2 flex items-center gap-3 rounded-lg px-2 py-3.5 hover:bg-zinc-50 dark:hover:bg-zinc-900/50"
                 >
-                  <span className="w-8 shrink-0 text-right text-sm tabular-nums text-zinc-400">{numberAt(i)}</span>
+                  <span className="w-8 shrink-0 text-right text-sm tabular-nums text-zinc-500">{numberAt(i)}</span>
                   <span className="min-w-0 flex-1 truncate text-sm font-medium text-zinc-900 dark:text-zinc-50">{a.title}</span>
                   <span className="shrink-0 text-xs text-zinc-500">{t("조회 {count}", { count: (a.viewCount ?? 0).toLocaleString() })}</span>
                   {a.publishedAt && (
