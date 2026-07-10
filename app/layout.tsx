@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Script from "next/script";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/layout/header";
@@ -11,8 +10,10 @@ import { ReconsentGate } from "@/components/legal/reconsent-gate";
 import { getConsentStatus } from "@/lib/api";
 import { getLocale, getT } from "@/lib/i18n-server";
 
-// 첫 페인트 전에 테마(.dark) 적용 — 깜빡임(FOUC) 방지
-const themeScript = `(function(){try{var t=localStorage.getItem('theme')||'system';var d=t==='dark'||(t==='system'&&matchMedia('(prefers-color-scheme: dark)').matches);if(d)document.documentElement.classList.add('dark');}catch(e){}})();`;
+// 첫 페인트 전에 테마(.dark)·color-scheme 적용 — 깜빡임(FOUC) 방지.
+// raw <script>로 body 최상단에 인라인 → HTML 파싱 중 동기 실행. (next/script beforeInteractive는 App Router에서
+// 첫 페인트 전 실행이 보장되지 않아 다크모드 새로고침 시 흰색 번쩍이 발생했음 — QA5-9.)
+const themeScript = `(function(){try{var t=localStorage.getItem('theme')||'system';var d=t==='dark'||(t==='system'&&matchMedia('(prefers-color-scheme: dark)').matches);var e=document.documentElement;if(d)e.classList.add('dark');e.style.colorScheme=d?'dark':'light';}catch(e){}})();`;
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -49,9 +50,7 @@ export default async function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-        <Script id="theme-init" strategy="beforeInteractive">
-          {themeScript}
-        </Script>
+        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
         {/* 키보드 사용자용 본문 바로가기(A11Y-12) — 포커스 시에만 노출 */}
         <a href="#main" className="sr-only focus:not-sr-only focus:absolute focus:left-2 focus:top-2 focus:z-50 focus:rounded focus:bg-white focus:px-3 focus:py-2 focus:text-sm focus:font-medium focus:text-zinc-900 focus:shadow dark:focus:bg-zinc-900 dark:focus:text-zinc-100">
           {t("본문으로 건너뛰기")}
