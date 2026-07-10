@@ -160,6 +160,7 @@ export async function getAnnouncements(locale: string, offset = 0, limit = 10): 
 
 export async function getAnnouncement(id: string, locale: string): Promise<AnnouncementDetail | null> {
   try {
+    // 조회수 집계는 상세 fetch가 아니라 브라우저의 /view 핑(AnnouncementViewPing)이 담당 — 여기선 인증 불필요.
     const res = await fetch(`${API_URL}/announcements/${encodeURIComponent(id)}?locale=${encodeURIComponent(locale)}`, { cache: "no-store" });
     if (!res.ok) return null;
     const json = await res.json();

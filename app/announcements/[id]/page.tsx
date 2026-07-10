@@ -5,6 +5,7 @@ import remarkGfm from "remark-gfm";
 import { getAnnouncement } from "@/lib/api";
 import { getLocale, getT } from "@/lib/i18n-server";
 import { dateLocale } from "@/lib/format";
+import { AnnouncementViewPing } from "@/components/announcements/view-ping";
 
 // 공지 상세(NON-158). 게시된 것만, en 폴백은 API 처리. 본문은 admin 작성 마크다운(raw HTML 미렌더 = 안전).
 export default async function AnnouncementPage({ params }: { params: Promise<{ id: string }> }) {
@@ -16,6 +17,8 @@ export default async function AnnouncementPage({ params }: { params: Promise<{ i
 
   return (
     <div className="mx-auto w-full max-w-3xl px-6 py-12">
+      {/* 조회수 집계 — 브라우저에서 /view 핑(부수효과 전용, 렌더 없음). */}
+      <AnnouncementViewPing id={a.id} />
       <Link href="/announcements" className="inline-flex w-fit items-center gap-1 text-sm text-zinc-500 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-200">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6" /></svg>
         {t("공지사항")}
