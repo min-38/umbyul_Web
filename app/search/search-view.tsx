@@ -8,11 +8,11 @@ import type {
   AlbumResult,
   ArtistResult,
   UserResult,
+  RatingSummary,
 } from "@/lib/api";
 import { useT } from "@/components/i18n-provider";
 import { ExplicitBadge } from "@/components/detail/explicit-badge";
 import { Stars } from "@/components/detail/stars";
-import type { RatingSummary } from "@/lib/api";
 
 // 검색 카드 집계 평점(NON-8) — 별점 + 평균 + (평가 수). 평가 없으면 미표시.
 function RatingLine({ rating }: { rating: RatingSummary | null }) {

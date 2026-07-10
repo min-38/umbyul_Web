@@ -64,7 +64,7 @@ export default async function AnnouncementPage({ params }: { params: Promise<{ i
             hr: () => <hr className="my-6 border-zinc-200 dark:border-zinc-800" />,
             // 공지 이미지(NON-168) — 반응형. admin 업로드(R2 프록시) 마크다운 이미지.
             // eslint-disable-next-line @next/next/no-img-element, jsx-a11y/alt-text
-            img: (p) => <img className="my-4 h-auto max-w-full rounded-lg" {...p} />,
+            img: (p) => <img loading="lazy" className="my-4 h-auto max-w-full rounded-lg" {...p} />,
           }}
         >
           {a.body}

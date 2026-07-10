@@ -261,7 +261,6 @@ export const EN: Record<string, string> = {
 
   // ── 평가 모달 ──
   "별점을 선택해주세요.": "Please select a rating.",
-  "평가를 삭제할까요?": "Delete this rating?",
   "리뷰를 남겨보세요 (선택)": "Write a review (optional)",
   "리뷰를 남겨주세요 (최소 10자)": "Write a review (min 10 characters)",
   "리뷰는 최소 10자 이상 작성해주세요.": "Reviews must be at least 10 characters.",
@@ -755,7 +754,6 @@ const JA: Record<string, string> = {
   유저: "ユーザー",
 
   "별점을 선택해주세요.": "評価を選んでください。",
-  "평가를 삭제할까요?": "この評価を削除しますか？",
   "리뷰를 남겨보세요 (선택)": "レビューを書く（任意）",
   "리뷰를 남겨주세요 (최소 10자)": "レビューを書く（10文字以上）",
   "리뷰는 최소 10자 이상 작성해주세요.": "レビューは10文字以上で入力してください。",
@@ -1235,7 +1233,6 @@ const ES: Record<string, string> = {
   유저: "Usuario",
 
   "별점을 선택해주세요.": "Selecciona una calificación.",
-  "평가를 삭제할까요?": "¿Eliminar esta calificación?",
   "리뷰를 남겨보세요 (선택)": "Escribe una reseña (opcional)",
   "리뷰를 남겨주세요 (최소 10자)": "Escribe una reseña (mín. 10 caracteres)",
   "리뷰는 최소 10자 이상 작성해주세요.": "Las reseñas deben tener al menos 10 caracteres.",

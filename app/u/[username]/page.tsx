@@ -5,6 +5,7 @@ import { ProfileReviews } from "@/components/profile/profile-reviews";
 import { ProfileSets } from "@/components/profile/profile-sets";
 import { ProfileSocial } from "@/components/profile/profile-social";
 import { ProfileMenu } from "@/components/profile/profile-menu";
+import { LevelBadge } from "@/components/ui/level-badge";
 
 export default async function ProfilePage({ params }: { params: Promise<{ username: string }> }) {
   const { username } = await params;
@@ -35,11 +36,7 @@ export default async function ProfilePage({ params }: { params: Promise<{ userna
           <div className="flex items-start justify-between gap-2">
             <div className="flex items-center gap-2">
               <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-50">{profile.username}</h1>
-              {!profile.blocked && (
-                <span className="rounded-full bg-zinc-100 px-2 py-0.5 text-xs font-semibold text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300">
-                  Lv {profile.level}
-                </span>
-              )}
+              {!profile.blocked && <LevelBadge level={profile.level} size="md" />}
             </div>
             {!isSelf && (
               <ProfileMenu username={profile.username} targetId={profile.id} loggedIn={loggedIn} blocked={profile.blocked} />
