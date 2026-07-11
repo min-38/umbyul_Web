@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { safeSpotifyImageUrl } from "@/lib/validation";
+import { apiFetch } from "@/lib/api";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -17,7 +18,7 @@ async function authedFetch(path: string, init: RequestInit): Promise<Result> {
   if (!session) return { ok: false, code: "UNAUTHORIZED" };
 
   try {
-    const res = await fetch(`${API_URL}${path}`, {
+    const res = await apiFetch(`${API_URL}${path}`, {
       ...init,
       headers: {
         ...init.headers,

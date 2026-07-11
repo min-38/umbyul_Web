@@ -1,5 +1,7 @@
 "use server";
 
+import { apiFetch } from "@/lib/api";
+
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 // 공개 문의 접수(NON-78). 로그인 무관. code 만 돌려주고 표시 문구는 클라가 매핑.
@@ -11,7 +13,7 @@ export async function submitInquiry(input: {
   website: string; // honeypot (봇 차단)
 }): Promise<{ ok: boolean; code: string }> {
   try {
-    const res = await fetch(`${API_URL}/inquiries`, {
+    const res = await apiFetch(`${API_URL}/inquiries`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(input),

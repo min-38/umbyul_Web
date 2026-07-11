@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
+import { apiFetch } from "@/lib/api";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -15,7 +16,7 @@ export async function updateUsername(username: string): Promise<Result & { usern
   if (!session) return { ok: false, code: "UNAUTHORIZED" };
 
   try {
-    const res = await fetch(`${API_URL}/me/username`, {
+    const res = await apiFetch(`${API_URL}/me/username`, {
       method: "POST",
       headers: { Authorization: `Bearer ${session.access_token}`, "Content-Type": "application/json" },
       body: JSON.stringify({ username }),
@@ -38,7 +39,7 @@ export async function updateDemographics(country: string, gender: string | null,
   if (!session) return { ok: false, code: "UNAUTHORIZED" };
 
   try {
-    const res = await fetch(`${API_URL}/me/demographics`, {
+    const res = await apiFetch(`${API_URL}/me/demographics`, {
       method: "POST",
       headers: { Authorization: `Bearer ${session.access_token}`, "Content-Type": "application/json" },
       body: JSON.stringify({ country, gender, birthDate }),
@@ -61,7 +62,7 @@ export async function updateGenrePreferences(genreIds: number[]): Promise<Result
   if (!session) return { ok: false, code: "UNAUTHORIZED" };
 
   try {
-    const res = await fetch(`${API_URL}/me/genre-preferences`, {
+    const res = await apiFetch(`${API_URL}/me/genre-preferences`, {
       method: "PUT",
       headers: { Authorization: `Bearer ${session.access_token}`, "Content-Type": "application/json" },
       body: JSON.stringify({ genreIds }),
@@ -84,7 +85,7 @@ export async function exportMyData(): Promise<{ ok: boolean; code: string; data:
   if (!session) return { ok: false, code: "UNAUTHORIZED", data: null };
 
   try {
-    const res = await fetch(`${API_URL}/me/export`, {
+    const res = await apiFetch(`${API_URL}/me/export`, {
       headers: { Authorization: `Bearer ${session.access_token}` },
       cache: "no-store",
     });
@@ -108,7 +109,7 @@ export async function uploadAvatar(formData: FormData): Promise<Result & { avata
   const fd = new FormData();
   fd.append("file", file);
   try {
-    const res = await fetch(`${API_URL}/me/avatar`, {
+    const res = await apiFetch(`${API_URL}/me/avatar`, {
       method: "POST",
       headers: { Authorization: `Bearer ${session.access_token}` }, // content-type 은 fetch 가 multipart boundary 로 설정
       body: fd,
@@ -130,7 +131,7 @@ export async function deleteAccount(): Promise<Result> {
   if (!session) return { ok: false, code: "UNAUTHORIZED" };
 
   try {
-    const res = await fetch(`${API_URL}/me/account`, {
+    const res = await apiFetch(`${API_URL}/me/account`, {
       method: "DELETE",
       headers: { Authorization: `Bearer ${session.access_token}` },
       cache: "no-store",

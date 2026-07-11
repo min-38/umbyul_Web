@@ -2,7 +2,7 @@
 
 import { createClient } from "@/lib/supabase/server";
 import type { Reaction, FeedSort, FeedScope } from "@/lib/api";
-import { getFollowers, getFollowing, getFeed } from "@/lib/api";
+import { getFollowers, getFollowing, getFeed, apiFetch } from "@/lib/api";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -20,7 +20,7 @@ async function authedRequest<T>(
   if (!session) return { ok: false, code: "UNAUTHORIZED", data: null };
 
   try {
-    const res = await fetch(`${API_URL}${path}`, {
+    const res = await apiFetch(`${API_URL}${path}`, {
       method,
       headers: { Authorization: `Bearer ${session.access_token}`, "Content-Type": "application/json" },
       body: body === undefined ? undefined : JSON.stringify(body),

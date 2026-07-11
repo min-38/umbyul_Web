@@ -3,6 +3,7 @@
 import { cookies } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
 import type { Locale } from "@/lib/i18n";
+import { apiFetch } from "@/lib/api";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -16,7 +17,7 @@ export async function setLocale(locale: Locale) {
   } = await supabase.auth.getSession();
   if (session) {
     try {
-      await fetch(`${API_URL}/me/locale`, {
+      await apiFetch(`${API_URL}/me/locale`, {
         method: "POST",
         headers: { Authorization: `Bearer ${session.access_token}`, "Content-Type": "application/json" },
         body: JSON.stringify({ locale }),

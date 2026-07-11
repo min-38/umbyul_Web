@@ -3,6 +3,14 @@ import { createClient } from "@/lib/supabase/server";
 // 게이트웨이(.NET Api) 호출. 서버 컴포넌트에서 세션 토큰을 실어 호출(서버-서버, CORS 무관).
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
+// API가 "걸리는"(연결은 되나 응답 없음) 상황 방어(NON-216). Node fetch는 기본 타임아웃이 없어
+// 루트 레이아웃의 await가 무한 대기 → 전 사이트 백지. 타임아웃을 걸어 기존 catch/폴백 경로로 흘린다.
+const API_TIMEOUT_MS = 8000;
+
+export function apiFetch(url: string, init?: RequestInit): Promise<Response> {
+  return fetch(url, { ...init, signal: init?.signal ?? AbortSignal.timeout(API_TIMEOUT_MS) });
+}
+
 export type Profile = {
   id: string;
   username: string;
@@ -21,7 +29,7 @@ export async function getProfile(): Promise<Profile | null> {
   } = await supabase.auth.getSession();
   if (!session) return null;
 
-  const res = await fetch(`${API_URL}/me/profile`, {
+  const res = await apiFetch(`${API_URL}/me/profile`, {
     headers: { Authorization: `Bearer ${session.access_token}` },
     cache: "no-store",
   });
@@ -42,7 +50,7 @@ export async function getMySanction(): Promise<MySanction | null> {
   } = await supabase.auth.getSession();
   if (!session) return null;
   try {
-    const res = await fetch(`${API_URL}/me/sanction`, {
+    const res = await apiFetch(`${API_URL}/me/sanction`, {
       headers: { Authorization: `Bearer ${session.access_token}` },
       cache: "no-store",
     });
@@ -64,7 +72,7 @@ export async function getMyDemographics(): Promise<MyDemographics | null> {
   } = await supabase.auth.getSession();
   if (!session) return null;
   try {
-    const res = await fetch(`${API_URL}/me/demographics`, {
+    const res = await apiFetch(`${API_URL}/me/demographics`, {
       headers: { Authorization: `Bearer ${session.access_token}` },
       cache: "no-store",
     });
@@ -95,7 +103,7 @@ export async function getConsentStatus(locale: string): Promise<ConsentStatus | 
   } = await supabase.auth.getSession();
   if (!session) return null;
   try {
-    const res = await fetch(`${API_URL}/me/consent-status?locale=${encodeURIComponent(locale)}`, {
+    const res = await apiFetch(`${API_URL}/me/consent-status?locale=${encodeURIComponent(locale)}`, {
       headers: { Authorization: `Bearer ${session.access_token}` },
       cache: "no-store",
     });
@@ -119,7 +127,7 @@ export type LegalDoc = {
 
 export async function getLegalDoc(type: "terms" | "privacy", locale: string): Promise<LegalDoc | null> {
   try {
-    const res = await fetch(`${API_URL}/legal/${type}?locale=${encodeURIComponent(locale)}`, { cache: "no-store" });
+    const res = await apiFetch(`${API_URL}/legal/${type}?locale=${encodeURIComponent(locale)}`, { cache: "no-store" });
     if (!res.ok) return null;
     const json = await res.json();
     return json.data as LegalDoc;
@@ -133,7 +141,7 @@ export type FaqItem = { category: string; question: string; answer: string };
 
 export async function getFaq(locale: string): Promise<FaqItem[]> {
   try {
-    const res = await fetch(`${API_URL}/faq?locale=${encodeURIComponent(locale)}`, { cache: "no-store" });
+    const res = await apiFetch(`${API_URL}/faq?locale=${encodeURIComponent(locale)}`, { cache: "no-store" });
     if (!res.ok) return [];
     const json = await res.json();
     return (json.data?.items ?? []) as FaqItem[];
@@ -149,7 +157,7 @@ export type AnnouncementList = { items: AnnouncementListItem[]; total: number };
 
 export async function getAnnouncements(locale: string, offset = 0, limit = 10): Promise<AnnouncementList> {
   try {
-    const res = await fetch(`${API_URL}/announcements?locale=${encodeURIComponent(locale)}&offset=${offset}&limit=${limit}`, { cache: "no-store" });
+    const res = await apiFetch(`${API_URL}/announcements?locale=${encodeURIComponent(locale)}&offset=${offset}&limit=${limit}`, { cache: "no-store" });
     if (!res.ok) return { items: [], total: 0 };
     const json = await res.json();
     return { items: (json.data?.items ?? []) as AnnouncementListItem[], total: (json.data?.total ?? 0) as number };
@@ -161,7 +169,7 @@ export async function getAnnouncements(locale: string, offset = 0, limit = 10): 
 export async function getAnnouncement(id: string, locale: string): Promise<AnnouncementDetail | null> {
   try {
     // 조회수 집계는 상세 fetch가 아니라 브라우저의 /view 핑(AnnouncementViewPing)이 담당 — 여기선 인증 불필요.
-    const res = await fetch(`${API_URL}/announcements/${encodeURIComponent(id)}?locale=${encodeURIComponent(locale)}`, { cache: "no-store" });
+    const res = await apiFetch(`${API_URL}/announcements/${encodeURIComponent(id)}?locale=${encodeURIComponent(locale)}`, { cache: "no-store" });
     if (!res.ok) return null;
     const json = await res.json();
     return json.data as AnnouncementDetail;
@@ -181,7 +189,7 @@ export type PatchNoteItem = {
 
 export async function getPatchNotes(locale: string): Promise<PatchNoteItem[]> {
   try {
-    const res = await fetch(`${API_URL}/patch-notes?locale=${encodeURIComponent(locale)}`, { cache: "no-store" });
+    const res = await apiFetch(`${API_URL}/patch-notes?locale=${encodeURIComponent(locale)}`, { cache: "no-store" });
     if (!res.ok) return [];
     const json = await res.json();
     return (json.data?.items ?? []) as PatchNoteItem[];
@@ -223,7 +231,7 @@ export type SearchResults = {
 
 /** 통합 검색 (공개 엔드포인트, 인증 불필요). */
 export async function searchAll(q: string): Promise<SearchResults> {
-  const res = await fetch(`${API_URL}/search?q=${encodeURIComponent(q)}`, { cache: "no-store" });
+  const res = await apiFetch(`${API_URL}/search?q=${encodeURIComponent(q)}`, { cache: "no-store" });
   if (!res.ok) throw new Error(`search failed: ${res.status}`);
   const json = await res.json();
   return json.data as SearchResults;
@@ -309,7 +317,7 @@ async function detailHeaders(): Promise<HeadersInit> {
 
 /** 트랙 상세 (공개). 없으면 null(404). */
 export async function getTrackDetail(id: string): Promise<TrackDetail | null> {
-  const res = await fetch(`${API_URL}/detail/track/${encodeURIComponent(id)}`, {
+  const res = await apiFetch(`${API_URL}/detail/track/${encodeURIComponent(id)}`, {
     headers: await detailHeaders(),
     cache: "no-store",
   });
@@ -321,7 +329,7 @@ export async function getTrackDetail(id: string): Promise<TrackDetail | null> {
 
 /** 앨범 상세 (공개). 없으면 null(404). */
 export async function getAlbumDetail(id: string): Promise<AlbumDetail | null> {
-  const res = await fetch(`${API_URL}/detail/album/${encodeURIComponent(id)}`, {
+  const res = await apiFetch(`${API_URL}/detail/album/${encodeURIComponent(id)}`, {
     headers: await detailHeaders(),
     cache: "no-store",
   });
@@ -337,7 +345,7 @@ export type RatingPoint = { date: string; avg: number; count: number };
 export async function getRatingHistory(type: "track" | "album", targetId: string): Promise<RatingPoint[]> {
   try {
     const qs = new URLSearchParams({ type, id: targetId });
-    const res = await fetch(`${API_URL}/detail/rating-history?${qs}`, { cache: "no-store" });
+    const res = await apiFetch(`${API_URL}/detail/rating-history?${qs}`, { cache: "no-store" });
     if (!res.ok) return [];
     const json = await res.json();
     return (json?.data ?? []) as RatingPoint[];
@@ -354,7 +362,7 @@ export type GenresFor = { top: GenreCount[]; mine: number[] };
 /** 큐레이트 장르 목록(공개). 실패 시 빈 목록. */
 export async function getGenres(): Promise<Genre[]> {
   try {
-    const res = await fetch(`${API_URL}/genres`, { cache: "no-store" });
+    const res = await apiFetch(`${API_URL}/genres`, { cache: "no-store" });
     if (!res.ok) return [];
     const json = await res.json();
     return (json?.data ?? []) as Genre[];
@@ -371,7 +379,7 @@ export async function getMyGenrePreferences(): Promise<number[]> {
   } = await supabase.auth.getSession();
   if (!session) return [];
   try {
-    const res = await fetch(`${API_URL}/me/genre-preferences`, {
+    const res = await apiFetch(`${API_URL}/me/genre-preferences`, {
       headers: { Authorization: `Bearer ${session.access_token}` },
       cache: "no-store",
     });
@@ -388,7 +396,7 @@ export async function getGenresFor(type: "track" | "album", id: string): Promise
   const empty: GenresFor = { top: [], mine: [] };
   try {
     const qs = new URLSearchParams({ type, id });
-    const res = await fetch(`${API_URL}/genres/for?${qs}`, { headers: await detailHeaders(), cache: "no-store" });
+    const res = await apiFetch(`${API_URL}/genres/for?${qs}`, { headers: await detailHeaders(), cache: "no-store" });
     if (!res.ok) return empty;
     const json = await res.json();
     return (json?.data ?? empty) as GenresFor;
@@ -435,7 +443,7 @@ export type ArtistDetail = {
 
 /** 아티스트 상세 (공개). 없으면 null(404). */
 export async function getArtistDetail(id: string): Promise<ArtistDetail | null> {
-  const res = await fetch(`${API_URL}/artist/${encodeURIComponent(id)}`, { cache: "no-store" });
+  const res = await apiFetch(`${API_URL}/artist/${encodeURIComponent(id)}`, { cache: "no-store" });
   if (res.status === 404) return null;
   if (!res.ok) throw new Error(`artist detail failed: ${res.status}`);
   const json = await res.json();
@@ -484,7 +492,7 @@ export async function getFeed(sort: FeedSort, scope: FeedScope, offset = 0, limi
   try {
     const params: Record<string, string> = { sort, scope, offset: String(offset), limit: String(limit) };
     if (genre) params.genre = genre;
-    const res = await fetch(`${API_URL}/feed?${new URLSearchParams(params)}`, { headers: await detailHeaders(), cache: "no-store" });
+    const res = await apiFetch(`${API_URL}/feed?${new URLSearchParams(params)}`, { headers: await detailHeaders(), cache: "no-store" });
     if (!res.ok) return [];
     const json = await res.json();
     const items = (json?.data?.items ?? []) as FeedItem[];
@@ -537,7 +545,7 @@ export async function getArtistChart(
 ): Promise<ArtistRankItem[]> {
   try {
     const qs = new URLSearchParams({ type: "artist", sort, period, gender, age, limit: String(limit) });
-    const res = await fetch(`${API_URL}/chart?${qs}`, { cache: "no-store" });
+    const res = await apiFetch(`${API_URL}/chart?${qs}`, { cache: "no-store" });
     if (!res.ok) return [];
     const json = await res.json();
     return (json?.data?.items ?? []) as ArtistRankItem[];
@@ -554,7 +562,7 @@ export type UserRankItem = { userId: string; username: string; avatarUrl: string
 export async function getUserChart(sort: ChartUserSort, period: ChartPeriod, limit = 50): Promise<UserRankItem[]> {
   try {
     const qs = new URLSearchParams({ sort, period, limit: String(limit) });
-    const res = await fetch(`${API_URL}/chart/users?${qs}`, { cache: "no-store" });
+    const res = await apiFetch(`${API_URL}/chart/users?${qs}`, { cache: "no-store" });
     if (!res.ok) return [];
     const json = await res.json();
     return (json?.data?.items ?? []) as UserRankItem[];
@@ -574,7 +582,7 @@ export async function getChart(
 ): Promise<DiscoverItem[]> {
   try {
     const qs = new URLSearchParams({ type, sort, period, gender, age, limit: String(limit) });
-    const res = await fetch(`${API_URL}/chart?${qs}`, { cache: "no-store" });
+    const res = await apiFetch(`${API_URL}/chart?${qs}`, { cache: "no-store" });
     if (!res.ok) return [];
     const json = await res.json();
     return (json?.data?.items ?? []) as DiscoverItem[];
@@ -587,7 +595,7 @@ export async function getChart(
 export async function getDiscover(): Promise<DiscoverData> {
   const empty: DiscoverData = { rising: { day: [], week: [], month: [], year: [] }, new: [], myRecent: [], recommend: [], dailyPick: null, preferredGenreItems: [] };
   try {
-    const res = await fetch(`${API_URL}/discover`, { headers: await detailHeaders(), cache: "no-store" });
+    const res = await apiFetch(`${API_URL}/discover`, { headers: await detailHeaders(), cache: "no-store" });
     if (!res.ok) return empty;
     const json = await res.json();
     const d = (json?.data ?? {}) as Partial<DiscoverData>;
@@ -625,7 +633,7 @@ export type GenreDiscoverData = { genre: GenreRef; top: DiscoverItem[]; subs: Ge
 /** 부모 장르 슬러그의 브라우즈 데이터. 미존재·실패 시 null(404 → notFound). */
 export async function getGenreDiscover(slug: string): Promise<GenreDiscoverData | null> {
   try {
-    const res = await fetch(`${API_URL}/discover/genre/${encodeURIComponent(slug)}`, { cache: "no-store" });
+    const res = await apiFetch(`${API_URL}/discover/genre/${encodeURIComponent(slug)}`, { cache: "no-store" });
     if (!res.ok) return null;
     const json = await res.json();
     return (json?.data ?? null) as GenreDiscoverData | null;
@@ -674,7 +682,7 @@ export type UserProfile = {
 
 /** 공개 유저 프로필 (비로그인 열람). 로그인 시 토큰 실어 isFollowing 포함. 없으면 null(404). */
 export async function getUserProfile(username: string): Promise<UserProfile | null> {
-  const res = await fetch(`${API_URL}/users/${encodeURIComponent(username)}`, {
+  const res = await apiFetch(`${API_URL}/users/${encodeURIComponent(username)}`, {
     headers: await detailHeaders(),
     cache: "no-store",
   });
@@ -688,7 +696,7 @@ export async function getUserProfile(username: string): Promise<UserProfile | nu
 export type FollowUser = { username: string; avatarUrl: string | null; isFollowing: boolean };
 
 async function fetchFollowList(username: string, kind: "followers" | "following"): Promise<FollowUser[]> {
-  const res = await fetch(`${API_URL}/users/${encodeURIComponent(username)}/${kind}`, {
+  const res = await apiFetch(`${API_URL}/users/${encodeURIComponent(username)}/${kind}`, {
     headers: await detailHeaders(),
     cache: "no-store",
   });
@@ -722,7 +730,7 @@ export async function getNotifications(): Promise<NotificationList> {
   if (!session) return { items: [], unreadCount: 0 };
 
   try {
-    const res = await fetch(`${API_URL}/me/notifications`, {
+    const res = await apiFetch(`${API_URL}/me/notifications`, {
       headers: { Authorization: `Bearer ${session.access_token}` },
       cache: "no-store",
     });
@@ -746,7 +754,7 @@ export async function getBlockedUsers(): Promise<BlockedUser[]> {
   if (!session) return [];
 
   try {
-    const res = await fetch(`${API_URL}/me/blocks`, {
+    const res = await apiFetch(`${API_URL}/me/blocks`, {
       headers: { Authorization: `Bearer ${session.access_token}` },
       cache: "no-store",
     });
@@ -770,7 +778,7 @@ export async function getNotificationPrefs(): Promise<NotificationPrefs> {
   if (!session) return defaults;
 
   try {
-    const res = await fetch(`${API_URL}/me/notification-prefs`, {
+    const res = await apiFetch(`${API_URL}/me/notification-prefs`, {
       headers: { Authorization: `Bearer ${session.access_token}` },
       cache: "no-store",
     });
@@ -819,7 +827,7 @@ export type DjSetComment = { id: string; userId: string; username: string; avata
 
 /** 믹스 상세 (공개, 로그인 시 트랙별 내 평점 포함). 없으면 null. */
 export async function getSet(id: string): Promise<DjSetDetail | null> {
-  const res = await fetch(`${API_URL}/sets/${encodeURIComponent(id)}`, {
+  const res = await apiFetch(`${API_URL}/sets/${encodeURIComponent(id)}`, {
     headers: await detailHeaders(),
     cache: "no-store",
   });
@@ -832,7 +840,7 @@ export async function getSet(id: string): Promise<DjSetDetail | null> {
 /** 유저의 믹스 목록 (공개). 실패 시 빈 목록. */
 export async function getUserSets(username: string): Promise<DjSetSummary[]> {
   try {
-    const res = await fetch(`${API_URL}/users/${encodeURIComponent(username)}/sets`, { cache: "no-store" });
+    const res = await apiFetch(`${API_URL}/users/${encodeURIComponent(username)}/sets`, { cache: "no-store" });
     if (!res.ok) return [];
     const json = await res.json();
     return (json?.data?.items as DjSetSummary[]) ?? [];

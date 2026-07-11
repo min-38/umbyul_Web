@@ -1,7 +1,7 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
-import { getNotifications } from "@/lib/api";
+import { getNotifications, apiFetch } from "@/lib/api";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -18,7 +18,7 @@ export async function deleteNotification(id: string): Promise<{ ok: boolean }> {
   } = await supabase.auth.getSession();
   if (!session) return { ok: false };
   try {
-    const res = await fetch(`${API_URL}/me/notifications/${encodeURIComponent(id)}`, {
+    const res = await apiFetch(`${API_URL}/me/notifications/${encodeURIComponent(id)}`, {
       method: "DELETE",
       headers: { Authorization: `Bearer ${session.access_token}` },
       cache: "no-store",
@@ -38,7 +38,7 @@ export async function markNotificationsRead(): Promise<{ ok: boolean }> {
   if (!session) return { ok: false };
 
   try {
-    const res = await fetch(`${API_URL}/me/notifications/read`, {
+    const res = await apiFetch(`${API_URL}/me/notifications/read`, {
       method: "POST",
       headers: { Authorization: `Bearer ${session.access_token}` },
       cache: "no-store",
@@ -63,7 +63,7 @@ export async function updateNotificationPrefs(prefs: {
   if (!session) return { ok: false };
 
   try {
-    const res = await fetch(`${API_URL}/me/notification-prefs`, {
+    const res = await apiFetch(`${API_URL}/me/notification-prefs`, {
       method: "PUT",
       headers: { Authorization: `Bearer ${session.access_token}`, "Content-Type": "application/json" },
       body: JSON.stringify(prefs),
@@ -84,7 +84,7 @@ export async function clearNotifications(): Promise<{ ok: boolean }> {
   if (!session) return { ok: false };
 
   try {
-    const res = await fetch(`${API_URL}/me/notifications`, {
+    const res = await apiFetch(`${API_URL}/me/notifications`, {
       method: "DELETE",
       headers: { Authorization: `Bearer ${session.access_token}` },
       cache: "no-store",

@@ -2,13 +2,14 @@
 
 import { createClient } from "@/lib/supabase/server";
 import type { ReviewComment } from "@/lib/api";
+import { apiFetch } from "@/lib/api";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 // 공개: 리뷰 댓글 목록(오래된 순). 비로그인도 열람.
 export async function loadComments(ratingId: string): Promise<ReviewComment[]> {
   try {
-    const res = await fetch(`${API_URL}/detail/comments/${ratingId}`, { cache: "no-store" });
+    const res = await apiFetch(`${API_URL}/detail/comments/${ratingId}`, { cache: "no-store" });
     if (!res.ok) return [];
     const json = await res.json();
     return (json?.data?.items as ReviewComment[]) ?? [];
@@ -25,7 +26,7 @@ async function authed(method: string, path: string, body?: unknown) {
   if (!session) return { ok: false, code: "UNAUTHORIZED", data: null as unknown };
 
   try {
-    const res = await fetch(`${API_URL}${path}`, {
+    const res = await apiFetch(`${API_URL}${path}`, {
       method,
       headers: { Authorization: `Bearer ${session.access_token}`, "Content-Type": "application/json" },
       body: body === undefined ? undefined : JSON.stringify(body),

@@ -1,6 +1,7 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
+import { apiFetch } from "@/lib/api";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -10,7 +11,7 @@ export type UserHit = { id: string; username: string; avatarUrl: string | null }
 export async function searchUsers(q: string): Promise<UserHit[]> {
   if (!q.trim()) return [];
   try {
-    const res = await fetch(`${API_URL}/users/search?q=${encodeURIComponent(q)}`, { cache: "no-store" });
+    const res = await apiFetch(`${API_URL}/users/search?q=${encodeURIComponent(q)}`, { cache: "no-store" });
     if (!res.ok) return [];
     const json = await res.json();
     return (json?.data?.items as UserHit[]) ?? [];
@@ -26,7 +27,7 @@ async function authed(method: string, path: string, body?: unknown) {
   } = await supabase.auth.getSession();
   if (!session) return { ok: false, muted: false };
   try {
-    const res = await fetch(`${API_URL}${path}`, {
+    const res = await apiFetch(`${API_URL}${path}`, {
       method,
       headers: { Authorization: `Bearer ${session.access_token}`, "Content-Type": "application/json" },
       body: body === undefined ? undefined : JSON.stringify(body),

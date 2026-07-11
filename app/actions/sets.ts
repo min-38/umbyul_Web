@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { safeHttpUrl } from "@/lib/validation";
 import type { TrackResult, DjSetComment, DjSetSummary } from "@/lib/api";
+import { apiFetch } from "@/lib/api";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -11,7 +12,7 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL;
 export async function searchTracks(q: string): Promise<TrackResult[]> {
   if (q.trim().length < 2) return [];
   try {
-    const res = await fetch(`${API_URL}/search?q=${encodeURIComponent(q)}`, { cache: "no-store" });
+    const res = await apiFetch(`${API_URL}/search?q=${encodeURIComponent(q)}`, { cache: "no-store" });
     if (!res.ok) return [];
     const json = await res.json();
     return (json?.data?.tracks?.items as TrackResult[]) ?? [];
@@ -27,7 +28,7 @@ async function authed<T>(method: string, path: string, body?: unknown): Promise<
   } = await supabase.auth.getSession();
   if (!session) return { ok: false, code: "UNAUTHORIZED", data: null };
   try {
-    const res = await fetch(`${API_URL}${path}`, {
+    const res = await apiFetch(`${API_URL}${path}`, {
       method,
       headers: { Authorization: `Bearer ${session.access_token}`, "Content-Type": "application/json" },
       body: body === undefined ? undefined : JSON.stringify(body),
@@ -62,7 +63,7 @@ export async function loadMixes(q: string, sort: string, offset: number): Promis
   try {
     const params = new URLSearchParams({ sort, offset: String(offset), limit: "30" });
     if (q.trim()) params.set("q", q.trim());
-    const res = await fetch(`${API_URL}/sets?${params}`, { cache: "no-store" });
+    const res = await apiFetch(`${API_URL}/sets?${params}`, { cache: "no-store" });
     if (!res.ok) return [];
     const json = await res.json();
     return (json?.data?.items as DjSetSummary[]) ?? [];
@@ -136,7 +137,7 @@ export async function replaceSetTrack(
 // ── 믹스 댓글 ──
 export async function loadSetComments(setId: string): Promise<DjSetComment[]> {
   try {
-    const res = await fetch(`${API_URL}/sets/${encodeURIComponent(setId)}/comments`, { cache: "no-store" });
+    const res = await apiFetch(`${API_URL}/sets/${encodeURIComponent(setId)}/comments`, { cache: "no-store" });
     if (!res.ok) return [];
     const json = await res.json();
     return (json?.data?.items as DjSetComment[]) ?? [];
