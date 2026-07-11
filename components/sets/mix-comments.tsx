@@ -147,7 +147,7 @@ export function MixComments({ setId, currentUserId }: { setId: string; currentUs
                   <MeatballMenu
                     label={t("더보기")}
                     items={[
-                      { label: t("수정"), onSelect: () => startEdit(c) },
+                      { label: t("수정하기"), onSelect: () => startEdit(c) },
                       { label: t("삭제"), onSelect: () => remove(c.id), danger: true },
                     ]}
                   />

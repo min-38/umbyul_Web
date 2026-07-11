@@ -2,14 +2,36 @@
 // ko 로케일은 키(한국어)를 그대로 반환 → ko 사전 불필요. en/ja/es는 아래 사전 매핑.
 export type Locale = "ko" | "en" | "ja" | "es";
 
-// {name} 형태 파라미터 치환 지원.
+// {name} 형태 파라미터 치환 + 복수형("단수형|복수형") + 로케일 소수점 표기 지원(QA10-1).
 export function translate(locale: Locale, ko: string, params?: Record<string, string | number>): string {
   const dict = locale === "ko" ? null : DICTS[locale];
   let s = dict ? (dict[ko] ?? ko) : ko;
   if (params) {
-    for (const [k, v] of Object.entries(params)) s = s.replaceAll(`{${k}}`, String(v));
+    // 복수형: 사전 값이 "단수형|복수형"이면 count(없으면 score, 없으면 첫 숫자)로 선택.
+    // ko/ja는 파이프를 쓰지 않으므로(조수사 체계) 그대로 통과.
+    if (s.includes("|")) {
+      const [one, many = one] = s.split("|");
+      s = pluralCount(params) === 1 ? one : many;
+    }
+    for (const [k, v] of Object.entries(params)) {
+      const val = typeof v === "number" ? formatNumber(v, locale) : String(v);
+      s = s.replaceAll(`{${k}}`, val);
+    }
   }
   return s;
+}
+
+// 복수형 선택 기준 수: count 우선, 없으면 score, 없으면 첫 숫자 파라미터.
+function pluralCount(params: Record<string, string | number>): number | undefined {
+  if (typeof params.count === "number") return params.count;
+  if (typeof params.score === "number") return params.score;
+  for (const v of Object.values(params)) if (typeof v === "number") return v;
+  return undefined;
+}
+
+// 정수는 그대로 두어(연도·ID 그룹핑 방지) 소수만 로케일 소수점으로 — ES는 "3,5"(es), 그 외는 "3.5".
+function formatNumber(v: number, locale: Locale): string {
+  return Number.isInteger(v) ? String(v) : v.toLocaleString(locale);
 }
 
 // 한국어 → 영어 매핑. 문구를 i18n 대상으로 옮길 때 여기에 추가.
@@ -61,7 +83,7 @@ export const EN: Record<string, string> = {
   "등록된 패치노트가 없습니다.": "No patch notes yet.",
   "등록된 공지가 없습니다.": "No announcements yet.",
   운영자: "Operator",
-  "조회 {count}": "{count} views",
+  "조회 {count}": "{count} view|{count} views",
   이전: "Prev",
   다음: "Next",
   "별점을 매길수록 별이 쌓여 반짝입니다 — 그래서 Glitter.":
@@ -110,8 +132,8 @@ export const EN: Record<string, string> = {
   팔로우: "Follow",
   "프로필 편집": "Edit profile",
   "작성한 리뷰": "Reviews",
-  "받은 좋아요 {count}": "{count} likes received",
-  "리뷰 {count}": "{count} reviews",
+  "받은 좋아요 {count}": "{count} like received|{count} likes received",
+  "리뷰 {count}": "{count} review|{count} reviews",
   "다음 레벨까지 {xp} XP": "{xp} XP to next level",
   "아직 작성한 리뷰가 없습니다.": "No reviews yet.",
   "(알 수 없는 항목)": "(Unknown item)",
@@ -215,12 +237,12 @@ export const EN: Record<string, string> = {
   곡: "Track",
   앨범: "Album",
   리뷰: "Reviews",
-  "{count}개 평가": "{count} ratings",
+  "{count}개 평가": "{count} rating|{count} ratings",
   "Spotify에서 듣기": "Listen on Spotify",
   "YouTube에서 보기": "Watch on YouTube",
   트랙리스트: "Tracklist",
   정보: "Info",
-  "{count}곡": "{count} tracks",
+  "{count}곡": "{count} track|{count} tracks",
   발매일: "Release date",
   "트랙 수": "Tracks",
   저작권: "Copyright",
@@ -266,6 +288,7 @@ export const EN: Record<string, string> = {
   취소: "Cancel",
   "저장 중…": "Saving…",
   수정: "Update",
+  수정하기: "Edit", // 메뉴 액션(편집 진입). 제출 버튼 '수정'(Update)과 구분(QA10-1)
   등록: "Submit",
 
   // ── 신고 ──
@@ -428,16 +451,16 @@ export const EN: Record<string, string> = {
   "준비 중입니다.": "Coming soon.",
 
   // ── 별점 입력(접근성) ──
-  "{score}점": "{score} stars",
+  "{score}점": "{score} star|{score} stars",
 
   // ── 리뷰 댓글 & 공유 (NON-36) ──
   댓글: "Comments",
-  "댓글 {count}": "{count} comments",
+  "댓글 {count}": "{count} comment|{count} comments",
   "첫 댓글을 남겨보세요.": "Be the first to comment.",
   "댓글 달기…": "Add a comment…",
   "로그인하고 댓글 달기": "Log in to comment",
   답글: "Reply",
-  "답글 {count}개 보기": "View {count} replies",
+  "답글 {count}개 보기": "View {count} reply|View {count} replies",
   간략히: "Show less",
   "평가 없음": "No rating",
   "삭제된 댓글입니다.": "This comment was deleted.",
@@ -745,6 +768,7 @@ const JA: Record<string, string> = {
   취소: "キャンセル",
   "저장 중…": "保存中…",
   수정: "更新",
+  수정하기: "編集",
   등록: "投稿",
 
   "음악과 무관한 내용": "音楽と無関係な内容",
@@ -1011,7 +1035,7 @@ const ES: Record<string, string> = {
   "등록된 패치노트가 없습니다.": "Aún no hay notas de versión.",
   "등록된 공지가 없습니다.": "Aún no hay anuncios.",
   운영자: "Operador",
-  "조회 {count}": "{count} vistas",
+  "조회 {count}": "{count} vista|{count} vistas",
   이전: "Anterior",
   다음: "Siguiente",
   "별점을 매길수록 별이 쌓여 반짝입니다 — 그래서 Glitter.":
@@ -1057,8 +1081,8 @@ const ES: Record<string, string> = {
   팔로우: "Seguir",
   "프로필 편집": "Editar perfil",
   "작성한 리뷰": "Reseñas",
-  "받은 좋아요 {count}": "{count} me gusta recibidos",
-  "리뷰 {count}": "{count} reseñas",
+  "받은 좋아요 {count}": "{count} me gusta recibido|{count} me gusta recibidos",
+  "리뷰 {count}": "{count} reseña|{count} reseñas",
   "다음 레벨까지 {xp} XP": "{xp} XP para el siguiente nivel",
   "아직 작성한 리뷰가 없습니다.": "Aún no hay reseñas.",
   "(알 수 없는 항목)": "(Elemento desconocido)",
@@ -1161,12 +1185,12 @@ const ES: Record<string, string> = {
   곡: "Canción",
   앨범: "Álbum",
   리뷰: "Reseñas",
-  "{count}개 평가": "{count} calificaciones",
+  "{count}개 평가": "{count} calificación|{count} calificaciones",
   "Spotify에서 듣기": "Escuchar en Spotify",
   "YouTube에서 보기": "Ver en YouTube",
   트랙리스트: "Lista de canciones",
   정보: "Información",
-  "{count}곡": "{count} canciones",
+  "{count}곡": "{count} canción|{count} canciones",
   발매일: "Fecha de lanzamiento",
   "트랙 수": "Canciones",
   저작권: "Derechos de autor",
@@ -1210,6 +1234,7 @@ const ES: Record<string, string> = {
   취소: "Cancelar",
   "저장 중…": "Guardando…",
   수정: "Actualizar",
+  수정하기: "Editar",
   등록: "Publicar",
 
   "음악과 무관한 내용": "No trata de música",
@@ -1360,15 +1385,15 @@ const ES: Record<string, string> = {
 
   "준비 중입니다.": "Próximamente.",
 
-  "{score}점": "{score} estrellas",
+  "{score}점": "{score} estrella|{score} estrellas",
 
   댓글: "Comentarios",
-  "댓글 {count}": "{count} comentarios",
+  "댓글 {count}": "{count} comentario|{count} comentarios",
   "첫 댓글을 남겨보세요.": "Sé el primero en comentar.",
   "댓글 달기…": "Añadir un comentario…",
   "로그인하고 댓글 달기": "Inicia sesión para comentar",
   답글: "Responder",
-  "답글 {count}개 보기": "Ver {count} respuestas",
+  "답글 {count}개 보기": "Ver {count} respuesta|Ver {count} respuestas",
   간략히: "Mostrar menos",
   "평가 없음": "Sin calificación",
   "삭제된 댓글입니다.": "Este comentario fue eliminado.",

@@ -244,7 +244,7 @@ export function ReviewComments({
             {currentUserId && c.userId === currentUserId && (
               <>
                 <button type="button" onClick={() => startEdit(c)} className="hover:text-zinc-600 dark:hover:text-zinc-300">
-                  {t("수정")}
+                  {t("수정하기")}
                 </button>
                 <button type="button" onClick={() => remove(c.id)} className="hover:text-red-500">
                   {t("삭제")}

@@ -13,4 +13,26 @@ describe("translate", () => {
     expect(translate("ko", "{x}-{x}", { x: "z" })).toBe("z-z"));
   it("number param", () =>
     expect(translate("ko", "조회 {count}", { count: 5 })).toBe("조회 5"));
+
+  // QA10-1: 복수형("단수형|복수형") — count=1은 단수, 그 외 복수. ko/ja는 파이프 없어 무관.
+  it("en plural: count=1 → singular", () =>
+    expect(translate("en", "{count}개 평가", { count: 1 })).toBe("1 rating"));
+  it("en plural: count>1 → plural", () =>
+    expect(translate("en", "{count}개 평가", { count: 3 })).toBe("3 ratings"));
+  it("es plural: count=1 → singular", () =>
+    expect(translate("es", "리뷰 {count}", { count: 1 })).toBe("1 reseña"));
+  it("es plural: count=0 → plural", () =>
+    expect(translate("es", "리뷰 {count}", { count: 0 })).toBe("0 reseñas"));
+  it("plural by score: score=1 → singular", () =>
+    expect(translate("en", "{score}점", { score: 1 })).toBe("1 star"));
+  it("plural by score: score=0.5 → plural", () =>
+    expect(translate("en", "{score}점", { score: 0.5 })).toBe("0.5 stars"));
+
+  // QA10-1: 소수점 로케일 — 소수만 로케일 소수점(es 쉼표), 정수는 그룹핑 없이 그대로.
+  it("es decimal uses comma", () =>
+    expect(translate("es", "{score}점", { score: 3.5 })).toBe("3,5 estrellas"));
+  it("en decimal uses period", () =>
+    expect(translate("en", "{score}점", { score: 3.5 })).toBe("3.5 stars"));
+  it("integer keeps plain form (no grouping)", () =>
+    expect(translate("en", "조회 {count}", { count: 2000 })).toBe("2000 views"));
 });

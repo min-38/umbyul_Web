@@ -114,7 +114,7 @@ export function SetView({
             <MeatballMenu
               label={t("더보기")}
               items={[
-                { label: t("수정"), onSelect: () => router.push(`/mixes/${set.id}/edit`) },
+                { label: t("수정하기"), onSelect: () => router.push(`/mixes/${set.id}/edit`) },
                 { label: t("삭제"), onSelect: removeSet, danger: true },
               ]}
             />

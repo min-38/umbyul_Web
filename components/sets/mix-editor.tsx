@@ -164,7 +164,7 @@ export function MixEditor({ detail }: { detail: DjSetDetail }) {
               <MeatballMenu
                 label={t("더보기")}
                 items={[
-                  { label: t("수정"), onSelect: () => setEditFor(tr) },
+                  { label: t("수정하기"), onSelect: () => setEditFor(tr) },
                   { label: t("삭제"), onSelect: () => removeTrack(tr.spotifyId), danger: true },
                 ]}
               />
