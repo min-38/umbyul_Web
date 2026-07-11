@@ -14,8 +14,54 @@ const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const SCAN_DIRS = ["app", "components"];
 const EXT = /\.(tsx?|jsx?)$/;
 
-// 의도적으로 EN 매핑 없이 t()에 넣는 키(예외). 필요 시 여기에 추가.
-const ALLOW = new Set([]);
+// 예외 키: 동적 사용(t(변수) — 매핑 객체·배열 라벨)이라 정적 스캔에 안 잡히는 것들(QA7-5).
+// 새 동적 키 추가 시 여기에 등재(진짜 dead 키는 삭제). 정적 스캔이 못 보는 매핑 소스:
+//   about 피처(title/desc), THEME_LABELS, 정렬 라벨(SORTS/feed/mix/review), 차트 기간, 신고 사유,
+//   설정 탭, PROVIDER_LABELS, notificationSuffix, footer 링크, 검색 카테고리 등.
+const ALLOW = new Set([
+  "0.5점 단위 별점",
+  "6자리 코드를 입력하세요.",
+  "검색 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.",
+  "검색어를 입력하세요.",
+  "곡·앨범 평점이 시간에 따라 어떻게 움직이는지 그래프로 봐요.",
+  "곡·앨범을 세밀하게 평가하고 나만의 기록을 남기세요.",
+  "곡을 골라 '이거 들어봐' 믹스를 만들면, 유튜브·스포티파이로 듣고 평가해요.",
+  "국가·성별",
+  "님이 댓글에서 회원님을 언급했습니다",
+  "님이 회원님을 팔로우했습니다",
+  "님이 회원님의 리뷰를 좋아합니다",
+  "다크",
+  "더 보기",
+  "라이트",
+  "리뷰 & 댓글",
+  "리뷰를 쓰고 댓글로 이야기 나누세요. 좋은 리뷰엔 좋아요.",
+  "문의",
+  "발견 & 차트",
+  "부적절한 이름·프로필 사진",
+  "비공개",
+  "시스템",
+  "신규·급상승 음악을 발견하고, 랭킹으로 흐름을 봐요.",
+  "악플·욕설",
+  "업적",
+  "연동",
+  "오늘의 음악",
+  "유저",
+  "유튜브 링크",
+  "음악과 무관한 내용",
+  "이 카테고리엔 결과가 없습니다.",
+  "정보",
+  "좋아요순",
+  "주",
+  "최근",
+  "추이",
+  "취향 팔로우",
+  "취향이 맞는 유저를 팔로우하고 새 평가를 받아보세요.",
+  "코드가 올바르지 않거나 만료되었습니다.",
+  "트랙리스트",
+  "평점순",
+  "화면",
+  "화제의 릴리스",
+]);
 
 // ── 1) 사전 키 추출 (lib/i18n.ts 의 EN/JA/ES 객체 블록) ──────────
 const I18N_SRC = readFileSync(join(root, "lib/i18n.ts"), "utf8");
@@ -81,12 +127,13 @@ const missingEs = [...enKeys].filter((k) => !esKeys.has(k)).sort();
 
 console.log(`i18n-check · 파일 ${files.length}개 · t() 리터럴 ${used.size}개 · 키 EN ${enKeys.size} · JA ${jaKeys.size} · ES ${esKeys.size}`);
 
-if (unused.length) {
-  console.log(`\n⚠️  미사용(dead) EN 키 ${unused.length}개 (동적 사용이면 무시):`);
-  for (const k of unused) console.log(`   · ${k}`);
-}
-
 let failed = false;
+// strict-unused(QA7-5): 미사용 키는 실패로 승격 — 삭제하거나 동적 사용이면 ALLOW에 등재해 재발 차단.
+if (unused.length) {
+  console.log(`\n❌ 미사용(dead) EN 키 ${unused.length}개 — 삭제하거나, 동적 사용이면 ALLOW에 등재하세요:`);
+  for (const k of unused) console.log(`   · ${k}`);
+  failed = true;
+}
 if (missing.length) {
   console.log(`\n❌ EN 매핑 누락 ${missing.length}개 (t()로 쓰였으나 EN 없음):`);
   for (const k of missing) console.log(`   · ${k}`);

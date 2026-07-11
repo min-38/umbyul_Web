@@ -26,7 +26,6 @@ export const EN: Record<string, string> = {
   "당신이 좋아하는 장르들": "Genres you like",
   "오늘의 음악": "Today's Pick",
   "리뷰하기": "Write a review",
-  "아직 평가가 없어요 · 첫 리뷰를 남겨보세요": "No ratings yet · be the first",
   "선호 장르": "Favorite genres",
   "내 선호 장르": "My genres",
   "추천에 반영돼요. 언제든 바꿀 수 있어요.": "Used for recommendations. Change anytime.",
@@ -38,7 +37,6 @@ export const EN: Record<string, string> = {
 
   // ── 유저 메뉴 ──
   프로필: "Profile",
-  "포인트 내역": "Points",
   업적: "Achievements",
   설정: "Settings",
   로그아웃: "Log out",
@@ -81,9 +79,6 @@ export const EN: Record<string, string> = {
   "0.5점 단위 별점": "Half-star ratings",
   "곡·앨범을 세밀하게 평가하고 나만의 기록을 남기세요.":
     "Rate tracks and albums precisely and keep your own log.",
-  "리뷰 & 반응": "Reviews & reactions",
-  "리뷰를 쓰고 좋아요로 좋은 리뷰를 띄우세요.":
-    "Write reviews and lift the best ones with likes.",
   "취향 팔로우": "Follow tastes",
   "취향이 맞는 유저를 팔로우하고 새 평가를 받아보세요.":
     "Follow tastemakers and get notified of their new ratings.",
@@ -128,7 +123,6 @@ export const EN: Record<string, string> = {
   "새 공지사항이 등록되었어요.": "A new announcement was posted.",
   "일시 정지되어 평가할 수 없습니다.": "You are suspended and cannot rate.",
   "계정이 정지되어 평가할 수 없습니다.": "Your account is suspended and cannot rate.",
-  "최종 수정일": "Last updated",
   "시행일": "Effective date",
   "문서를 준비 중입니다.": "This document is being prepared.",
   "자주 묻는 질문": "Frequently Asked Questions",
@@ -140,7 +134,6 @@ export const EN: Record<string, string> = {
   "Glitter는 음악 감상을 기록하고 나누는 서비스입니다. 방대한 음악 카탈로그 위에서, 당신의 별점과 리뷰가 쌓여 취향의 지도가 됩니다.":
     "Glitter is a place to log and share what you listen to. On top of a vast music catalog, your ratings and reviews build a map of your taste.",
   "무엇을 할 수 있나요": "What you can do",
-  "곧 제공됩니다.": "Coming soon.",
   "Glitter에서 평가하고 리뷰하세요.": "Rate and review on Glitter.",
   "페이지를 찾을 수 없습니다.": "Page not found.",
   "홈으로": "Go home",
@@ -240,7 +233,6 @@ export const EN: Record<string, string> = {
   장르: "Genre",
   "아직 이 장르의 리뷰가 없어요.": "No reviews in this genre yet.",
   "아직 장르 태그가 없습니다.": "No genre tags yet.",
-  "내 선택 — 2표 이상이면 공개됩니다": "Your pick — shown publicly at 2+ votes",
   길이: "Length",
   "아직 리뷰가 없습니다. 첫 평가를 남겨보세요.": "No reviews yet. Be the first to rate.",
   인기순: "Popular",
@@ -261,7 +253,6 @@ export const EN: Record<string, string> = {
 
   // ── 평가 모달 ──
   "별점을 선택해주세요.": "Please select a rating.",
-  "리뷰를 남겨보세요 (선택)": "Write a review (optional)",
   "리뷰를 남겨주세요 (최소 10자)": "Write a review (min 10 characters)",
   "리뷰는 최소 10자 이상 작성해주세요.": "Reviews must be at least 10 characters.",
   "최소 10자 이상 작성해주세요.": "Write at least 10 characters.",
@@ -392,8 +383,6 @@ export const EN: Record<string, string> = {
   "username 형식(2~30자, 영문/숫자/하이픈)을 확인하세요.":
     "Check the username format (2–30 chars, letters/numbers/hyphens).",
   "설정되었습니다.": "Set.",
-  "정말 탈퇴하시겠어요?\n모든 데이터가 삭제되며 되돌릴 수 없습니다.":
-    "Are you sure you want to delete your account?\nAll data will be removed and cannot be undone.",
   "계정 정보": "Account info",
   가입일: "Joined",
   "연동 계정": "Linked accounts",
@@ -461,22 +450,17 @@ export const EN: Record<string, string> = {
   "믹스 제목": "Mix title",
   "한마디 (선택) — 이거 들어봐": "A note (optional) — check this out",
   "듣기 링크 (선택) — 유튜브·스포티파이 등": "Listen link (optional) — YouTube, Spotify, etc.",
-  "만든 뒤 곡을 검색해서 담을 수 있어요.": "You can search and add tracks after creating.",
   만들기: "Create",
   "만드는 중…": "Creating…",
   듣기: "Listen",
   "이 믹스를 삭제할까요?": "Delete this mix?",
   "아직 담긴 곡이 없습니다.": "No tracks yet.",
   "곡 검색해서 담기…": "Search tracks to add…",
-  담김: "Added",
   "아직 믹스가 없습니다.": "No mixes yet.",
   담기: "Add",
   "최대 {count}곡까지 담을 수 있어요.": "Up to {count} tracks.",
-  "유튜브 링크 (선택)": "YouTube link (optional)",
-  "유튜브 링크 (비우면 제거)": "YouTube link (empty to remove)",
   "유튜브 링크": "YouTube link",
   "유튜브에서 보기": "Watch on YouTube",
-  "유효한 유튜브 링크가 아닙니다.": "Not a valid YouTube link.",
   "http(s) 링크만 넣을 수 있어요.": "Only http(s) links are allowed.",
   설명: "Description",
   "플레이리스트 링크": "Playlist link",
@@ -512,7 +496,6 @@ export const EN: Record<string, string> = {
   "음악 정보를 불러오지 못했습니다. 잠시 후 다시 시도해주세요.":
     "Couldn't load music info. Please try again shortly.",
   "화제의 릴리스": "Trending releases",
-  "팔로우 피드": "From people you follow",
 };
 
 // 한국어 → 일본어.
@@ -527,7 +510,6 @@ const JA: Record<string, string> = {
   "당신이 좋아하는 장르들": "好きなジャンル",
   "오늘의 음악": "今日のピックアップ",
   "리뷰하기": "レビューする",
-  "아직 평가가 없어요 · 첫 리뷰를 남겨보세요": "まだ評価がありません · 最初のレビューを",
   "선호 장르": "好みのジャンル",
   "내 선호 장르": "マイジャンル",
   "추천에 반영돼요. 언제든 바꿀 수 있어요.": "おすすめに反映されます。いつでも変更できます。",
@@ -538,7 +520,6 @@ const JA: Record<string, string> = {
   "앨범, 곡, 아티스트, 유저 검색": "アルバム・曲・アーティスト・ユーザーを検索",
 
   프로필: "プロフィール",
-  "포인트 내역": "ポイント履歴",
   업적: "実績",
   설정: "設定",
   로그아웃: "ログアウト",
@@ -579,9 +560,6 @@ const JA: Record<string, string> = {
   "0.5점 단위 별점": "0.5刻みの星評価",
   "곡·앨범을 세밀하게 평가하고 나만의 기록을 남기세요.":
     "曲やアルバムを細かく評価して、自分だけの記録を残そう。",
-  "리뷰 & 반응": "レビュー & リアクション",
-  "리뷰를 쓰고 좋아요로 좋은 리뷰를 띄우세요.":
-    "レビューを書いて、いいねで良いレビューを押し上げよう。",
   "취향 팔로우": "趣味をフォロー",
   "취향이 맞는 유저를 팔로우하고 새 평가를 받아보세요.":
     "趣味の合うユーザーをフォローして、新しい評価を受け取ろう。",
@@ -624,7 +602,6 @@ const JA: Record<string, string> = {
   "새 공지사항이 등록되었어요.": "新しいお知らせが投稿されました。",
   "일시 정지되어 평가할 수 없습니다.": "一時停止中のため評価できません。",
   "계정이 정지되어 평가할 수 없습니다.": "アカウントが停止中のため評価できません。",
-  "최종 수정일": "最終更新日",
   "시행일": "施行日",
   "문서를 준비 중입니다.": "ドキュメントを準備中です。",
   "자주 묻는 질문": "よくある質問",
@@ -636,7 +613,6 @@ const JA: Record<string, string> = {
   "Glitter는 음악 감상을 기록하고 나누는 서비스입니다. 방대한 음악 카탈로그 위에서, 당신의 별점과 리뷰가 쌓여 취향의 지도가 됩니다.":
     "Glitter は音楽鑑賞を記録して共有するサービスです。膨大な音楽カタログの上に、あなたの評価とレビューが積み重なって趣味の地図になります。",
   "무엇을 할 수 있나요": "できること",
-  "곧 제공됩니다.": "近日公開。",
   "Glitter에서 평가하고 리뷰하세요.": "Glitter で評価してレビューしよう。",
   "페이지를 찾을 수 없습니다.": "ページが見つかりません。",
   "홈으로": "ホームへ",
@@ -735,7 +711,6 @@ const JA: Record<string, string> = {
   장르: "ジャンル",
   "아직 이 장르의 리뷰가 없어요.": "このジャンルのレビューはまだありません。",
   "아직 장르 태그가 없습니다.": "まだジャンルタグがありません。",
-  "내 선택 — 2표 이상이면 공개됩니다": "あなたの選択 — 2票以上で公開されます",
   길이: "長さ",
   "아직 리뷰가 없습니다. 첫 평가를 남겨보세요.": "まだレビューがありません。最初の評価を残そう。",
   인기순: "人気順",
@@ -754,7 +729,6 @@ const JA: Record<string, string> = {
   유저: "ユーザー",
 
   "별점을 선택해주세요.": "評価を選んでください。",
-  "리뷰를 남겨보세요 (선택)": "レビューを書く（任意）",
   "리뷰를 남겨주세요 (최소 10자)": "レビューを書く（10文字以上）",
   "리뷰는 최소 10자 이상 작성해주세요.": "レビューは10文字以上で入力してください。",
   "최소 10자 이상 작성해주세요.": "10文字以上入力してください。",
@@ -877,8 +851,6 @@ const JA: Record<string, string> = {
   "username 형식(2~30자, 영문/숫자/하이픈)을 확인하세요.":
     "ユーザー名の形式（2〜30文字、英数字・ハイフン）を確認してください。",
   "설정되었습니다.": "設定しました。",
-  "정말 탈퇴하시겠어요?\n모든 데이터가 삭제되며 되돌릴 수 없습니다.":
-    "本当に退会しますか？\nすべてのデータが削除され、元に戻せません。",
   "계정 정보": "アカウント情報",
   가입일: "登録日",
   "연동 계정": "連携アカウント",
@@ -941,22 +913,17 @@ const JA: Record<string, string> = {
   "믹스 제목": "ミックスのタイトル",
   "한마디 (선택) — 이거 들어봐": "ひとこと（任意）— 聴いてみて",
   "듣기 링크 (선택) — 유튜브·스포티파이 등": "再生リンク（任意）— YouTube・Spotifyなど",
-  "만든 뒤 곡을 검색해서 담을 수 있어요.": "作成後に曲を検索して追加できます。",
   만들기: "作成",
   "만드는 중…": "作成中…",
   듣기: "再生",
   "이 믹스를 삭제할까요?": "このミックスを削除しますか？",
   "아직 담긴 곡이 없습니다.": "まだ曲がありません。",
   "곡 검색해서 담기…": "曲を検索して追加…",
-  담김: "追加済み",
   "아직 믹스가 없습니다.": "まだミックスがありません。",
   담기: "追加",
   "최대 {count}곡까지 담을 수 있어요.": "最大{count}曲まで。",
-  "유튜브 링크 (선택)": "YouTubeリンク（任意）",
-  "유튜브 링크 (비우면 제거)": "YouTubeリンク（空で削除）",
   "유튜브 링크": "YouTubeリンク",
   "유튜브에서 보기": "YouTubeで見る",
-  "유효한 유튜브 링크가 아닙니다.": "有効なYouTubeリンクではありません。",
   "http(s) 링크만 넣을 수 있어요.": "http(s) のリンクのみ入力できます。",
   설명: "説明",
   "플레이리스트 링크": "プレイリストリンク",
@@ -991,7 +958,6 @@ const JA: Record<string, string> = {
   "음악 정보를 불러오지 못했습니다. 잠시 후 다시 시도해주세요.":
     "音楽情報を読み込めませんでした。しばらくして再試行してください。",
   "화제의 릴리스": "話題のリリース",
-  "팔로우 피드": "フォロー中の人から",
 };
 
 // 한국어 → 스페인어.
@@ -1006,7 +972,6 @@ const ES: Record<string, string> = {
   "당신이 좋아하는 장르들": "Géneros que te gustan",
   "오늘의 음악": "Selección del día",
   "리뷰하기": "Escribir reseña",
-  "아직 평가가 없어요 · 첫 리뷰를 남겨보세요": "Aún sin valoraciones · sé el primero",
   "선호 장르": "Géneros favoritos",
   "내 선호 장르": "Mis géneros",
   "추천에 반영돼요. 언제든 바꿀 수 있어요.": "Se usa para recomendaciones. Cámbialo cuando quieras.",
@@ -1017,7 +982,6 @@ const ES: Record<string, string> = {
   "앨범, 곡, 아티스트, 유저 검색": "Buscar álbumes, canciones, artistas, usuarios",
 
   프로필: "Perfil",
-  "포인트 내역": "Puntos",
   업적: "Logros",
   설정: "Ajustes",
   로그아웃: "Cerrar sesión",
@@ -1058,9 +1022,6 @@ const ES: Record<string, string> = {
   "0.5점 단위 별점": "Calificación de media estrella",
   "곡·앨범을 세밀하게 평가하고 나만의 기록을 남기세요.":
     "Califica canciones y álbumes con precisión y lleva tu propio registro.",
-  "리뷰 & 반응": "Reseñas y reacciones",
-  "리뷰를 쓰고 좋아요로 좋은 리뷰를 띄우세요.":
-    "Escribe reseñas y destaca las mejores con me gusta.",
   "취향 팔로우": "Sigue gustos",
   "취향이 맞는 유저를 팔로우하고 새 평가를 받아보세요.":
     "Sigue a usuarios con tu gusto y entérate de sus nuevas calificaciones.",
@@ -1103,7 +1064,6 @@ const ES: Record<string, string> = {
   "새 공지사항이 등록되었어요.": "Se publicó un nuevo anuncio.",
   "일시 정지되어 평가할 수 없습니다.": "Estás suspendido y no puedes calificar.",
   "계정이 정지되어 평가할 수 없습니다.": "Tu cuenta está suspendida y no puedes calificar.",
-  "최종 수정일": "Última actualización",
   "시행일": "Fecha de entrada en vigor",
   "문서를 준비 중입니다.": "Este documento está en preparación.",
   "자주 묻는 질문": "Preguntas frecuentes",
@@ -1115,7 +1075,6 @@ const ES: Record<string, string> = {
   "Glitter는 음악 감상을 기록하고 나누는 서비스입니다. 방대한 음악 카탈로그 위에서, 당신의 별점과 리뷰가 쌓여 취향의 지도가 됩니다.":
     "Glitter es un lugar para registrar y compartir lo que escuchas. Sobre un enorme catálogo musical, tus calificaciones y reseñas construyen un mapa de tu gusto.",
   "무엇을 할 수 있나요": "Qué puedes hacer",
-  "곧 제공됩니다.": "Próximamente.",
   "Glitter에서 평가하고 리뷰하세요.": "Califica y reseña en Glitter.",
   "페이지를 찾을 수 없습니다.": "Página no encontrada.",
   "홈으로": "Ir al inicio",
@@ -1214,7 +1173,6 @@ const ES: Record<string, string> = {
   장르: "Género",
   "아직 이 장르의 리뷰가 없어요.": "Aún no hay reseñas en este género.",
   "아직 장르 태그가 없습니다.": "Aún no hay etiquetas de género.",
-  "내 선택 — 2표 이상이면 공개됩니다": "Tu elección — visible con 2+ votos",
   길이: "Duración",
   "아직 리뷰가 없습니다. 첫 평가를 남겨보세요.": "Aún no hay reseñas. Sé el primero en calificar.",
   인기순: "Popular",
@@ -1233,7 +1191,6 @@ const ES: Record<string, string> = {
   유저: "Usuario",
 
   "별점을 선택해주세요.": "Selecciona una calificación.",
-  "리뷰를 남겨보세요 (선택)": "Escribe una reseña (opcional)",
   "리뷰를 남겨주세요 (최소 10자)": "Escribe una reseña (mín. 10 caracteres)",
   "리뷰는 최소 10자 이상 작성해주세요.": "Las reseñas deben tener al menos 10 caracteres.",
   "최소 10자 이상 작성해주세요.": "Escribe al menos 10 caracteres.",
@@ -1356,8 +1313,6 @@ const ES: Record<string, string> = {
   "username 형식(2~30자, 영문/숫자/하이픈)을 확인하세요.":
     "Revisa el formato del nombre de usuario (2–30 caracteres, letras/números/guiones).",
   "설정되었습니다.": "Establecido.",
-  "정말 탈퇴하시겠어요?\n모든 데이터가 삭제되며 되돌릴 수 없습니다.":
-    "¿Seguro que quieres eliminar tu cuenta?\nSe borrarán todos los datos y no se puede deshacer.",
   "계정 정보": "Información de la cuenta",
   가입일: "Registro",
   "연동 계정": "Cuentas vinculadas",
@@ -1420,22 +1375,17 @@ const ES: Record<string, string> = {
   "믹스 제목": "Título del mix",
   "한마디 (선택) — 이거 들어봐": "Una nota (opcional) — escucha esto",
   "듣기 링크 (선택) — 유튜브·스포티파이 등": "Enlace para escuchar (opcional) — YouTube, Spotify, etc.",
-  "만든 뒤 곡을 검색해서 담을 수 있어요.": "Puedes buscar y añadir canciones después de crear.",
   만들기: "Crear",
   "만드는 중…": "Creando…",
   듣기: "Escuchar",
   "이 믹스를 삭제할까요?": "¿Eliminar este mix?",
   "아직 담긴 곡이 없습니다.": "Aún no hay pistas.",
   "곡 검색해서 담기…": "Buscar pistas para añadir…",
-  담김: "Añadido",
   "아직 믹스가 없습니다.": "Aún no hay mixes.",
   담기: "Añadir",
   "최대 {count}곡까지 담을 수 있어요.": "Hasta {count} pistas.",
-  "유튜브 링크 (선택)": "Enlace de YouTube (opcional)",
-  "유튜브 링크 (비우면 제거)": "Enlace de YouTube (vacío para quitar)",
   "유튜브 링크": "Enlace de YouTube",
   "유튜브에서 보기": "Ver en YouTube",
-  "유효한 유튜브 링크가 아닙니다.": "No es un enlace de YouTube válido.",
   "http(s) 링크만 넣을 수 있어요.": "Solo se permiten enlaces http(s).",
   설명: "Descripción",
   "플레이리스트 링크": "Enlace de playlist",
@@ -1470,7 +1420,6 @@ const ES: Record<string, string> = {
   "음악 정보를 불러오지 못했습니다. 잠시 후 다시 시도해주세요.":
     "No se pudo cargar la información musical. Inténtalo de nuevo en un momento.",
   "화제의 릴리스": "Lanzamientos en tendencia",
-  "팔로우 피드": "De quienes sigues",
 };
 
 const DICTS: Record<Exclude<Locale, "ko">, Record<string, string>> = { en: EN, ja: JA, es: ES };
