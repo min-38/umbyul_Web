@@ -9,7 +9,7 @@ export function Dialog({
   open,
   onClose,
   labelledBy,
-  panelClassName = "w-full max-w-md rounded-2xl bg-white p-5 shadow-xl outline-none dark:bg-zinc-900",
+  panelClassName = "max-h-[calc(100dvh-2rem)] w-full max-w-md overflow-y-auto rounded-2xl bg-white p-5 shadow-xl outline-none dark:bg-zinc-900",
   children,
 }: {
   open: boolean;

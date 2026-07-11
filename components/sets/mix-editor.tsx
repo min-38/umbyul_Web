@@ -82,7 +82,7 @@ export function MixEditor({ detail }: { detail: DjSetDetail }) {
     return true;
   };
 
-  const iconBtn = "shrink-0 text-zinc-300 hover:text-zinc-600 disabled:opacity-30 dark:text-zinc-600 dark:hover:text-zinc-300";
+  const iconBtn = "shrink-0 p-1.5 text-zinc-300 hover:text-zinc-600 disabled:opacity-30 dark:text-zinc-600 dark:hover:text-zinc-300";
 
   return (
     <div className="mx-auto flex w-full max-w-2xl flex-col gap-6 px-4 py-8">

@@ -83,7 +83,7 @@ export function ReviewModal({
         <p className="mt-0.5 truncate text-sm text-zinc-500">{name}</p>
 
         <div className="mt-5">
-          <StarInput value={score} onChange={setScore} />
+          <StarInput value={score} onChange={setScore} size={40} />
         </div>
 
         <textarea
