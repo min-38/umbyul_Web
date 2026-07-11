@@ -76,6 +76,29 @@ export async function updateGenrePreferences(genreIds: number[]): Promise<Result
   }
 }
 
+// 레벨 공개 옵트아웃 저장(QA9-6). hidden=true면 공개 화면에서 레벨/XP 숨김.
+export async function setLevelVisibility(hidden: boolean): Promise<Result> {
+  const supabase = await createClient();
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+  if (!session) return { ok: false, code: "UNAUTHORIZED" };
+
+  try {
+    const res = await apiFetch(`${API_URL}/me/level-visibility`, {
+      method: "POST",
+      headers: { Authorization: `Bearer ${session.access_token}`, "Content-Type": "application/json" },
+      body: JSON.stringify({ hidden }),
+      cache: "no-store",
+    });
+    const json = await res.json().catch(() => null);
+    if (res.ok) revalidatePath("/", "layout"); // 레벨 뱃지가 여러 화면에 걸쳐 있어 레이아웃 재검증
+    return { ok: res.ok, code: json?.code ?? (res.ok ? "OK" : "UNKNOWN") };
+  } catch {
+    return { ok: false, code: "DB_UNAVAILABLE" };
+  }
+}
+
 // 내 데이터 내보내기 (NON-111) — /me/export JSON. 클라가 파일로 저장.
 export async function exportMyData(): Promise<{ ok: boolean; code: string; data: unknown }> {
   const supabase = await createClient();

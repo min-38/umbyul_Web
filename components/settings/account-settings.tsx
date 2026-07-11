@@ -53,6 +53,7 @@ export function AccountSettings({
   initialBirthDate,
   demographicsCanChangeAt,
   genreSection,
+  privacySection,
 }: {
   initialUsername: string;
   initialEmail: string;
@@ -66,6 +67,8 @@ export function AccountSettings({
   demographicsCanChangeAt: string | null;
   // 선호 장르 섹션 — 기본 정보 바로 아래에 렌더(NON-162).
   genreSection?: React.ReactNode;
+  // 공개 설정 섹션(레벨 숨기기 등, QA9-6).
+  privacySection?: React.ReactNode;
 }) {
   const t = useT();
   const locale = useLocale();
@@ -398,6 +401,9 @@ export function AccountSettings({
 
       {/* 선호 장르 — 기본 정보 바로 아래(NON-162) */}
       {genreSection}
+
+      {/* 공개 설정 — 레벨 숨기기(QA9-6) */}
+      {privacySection && <Section title={t("공개 설정")}>{privacySection}</Section>}
 
       {/* 데이터 내보내기 */}
       <Section title={t("데이터 내보내기")}>

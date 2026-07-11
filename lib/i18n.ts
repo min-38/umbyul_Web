@@ -405,6 +405,9 @@ export const EN: Record<string, string> = {
     "A confirmation email was sent to the new address. Click the link to finish the change.",
   "변경하려면 새 이메일로 온 확인 링크를 눌러야 합니다.":
     "To change it, click the confirmation link sent to your new email.",
+  "공개 설정": "Privacy",
+  "리뷰어 레벨 숨기기": "Hide reviewer level",
+  "켜면 피드·리뷰·차트·프로필에서 내 레벨 뱃지가 표시되지 않습니다.": "When on, your level badge is hidden across feed, reviews, charts, and profile.",
   "데이터 내보내기": "Export data",
   "내 프로필·평가·팔로우·댓글을 JSON 파일로 내려받습니다.":
     "Download your profile, ratings, follows, and comments as a JSON file.",
@@ -872,6 +875,9 @@ const JA: Record<string, string> = {
     "新しいメールに確認メールを送信しました。リンクを押すと変更が完了します。",
   "변경하려면 새 이메일로 온 확인 링크를 눌러야 합니다.":
     "変更するには、新しいメールに届いた確認リンクを押してください。",
+  "공개 설정": "公開設定",
+  "리뷰어 레벨 숨기기": "レビュアーレベルを非表示",
+  "켜면 피드·리뷰·차트·프로필에서 내 레벨 뱃지가 표시되지 않습니다.": "オンにすると、フィード・レビュー・チャート・プロフィールでレベルバッジが表示されません。",
   "데이터 내보내기": "データのエクスポート",
   "내 프로필·평가·팔로우·댓글을 JSON 파일로 내려받습니다.":
     "プロフィール・評価・フォロー・コメントを JSON ファイルでダウンロードします。",
@@ -1334,6 +1340,9 @@ const ES: Record<string, string> = {
     "Se envió un correo de confirmación a la nueva dirección. Haz clic en el enlace para completar el cambio.",
   "변경하려면 새 이메일로 온 확인 링크를 눌러야 합니다.":
     "Para cambiarlo, haz clic en el enlace de confirmación enviado a tu nuevo correo.",
+  "공개 설정": "Privacidad",
+  "리뷰어 레벨 숨기기": "Ocultar nivel de reseñador",
+  "켜면 피드·리뷰·차트·프로필에서 내 레벨 뱃지가 표시되지 않습니다.": "Si se activa, tu insignia de nivel se oculta en el feed, las reseñas, las listas y el perfil.",
   "데이터 내보내기": "Exportar datos",
   "내 프로필·평가·팔로우·댓글을 JSON 파일로 내려받습니다.":
     "Descarga tu perfil, calificaciones, seguidos y comentarios en un archivo JSON.",

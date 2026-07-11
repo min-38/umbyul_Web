@@ -745,6 +745,26 @@ export async function getNotifications(): Promise<NotificationList> {
   }
 }
 
+/** 레벨 공개 옵트아웃 상태(QA9-6). 비로그인·오류·마이그레이션 전이면 false(표시). */
+export async function getLevelVisibility(): Promise<boolean> {
+  const supabase = await createClient();
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+  if (!session) return false;
+  try {
+    const res = await apiFetch(`${API_URL}/me/level-visibility`, {
+      headers: { Authorization: `Bearer ${session.access_token}` },
+      cache: "no-store",
+    });
+    if (!res.ok) return false;
+    const json = await res.json();
+    return Boolean(json?.data?.hidden);
+  } catch {
+    return false;
+  }
+}
+
 // 차단 관리 (NON-119) — 내가 차단한 유저 목록.
 export type BlockedUser = { username: string; avatarUrl: string | null; createdAt: string };
 

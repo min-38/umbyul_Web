@@ -1,6 +1,7 @@
 // 닉네임 옆 리뷰어 레벨 뱃지(NON-163). 담백하게 — 게임 과시 X, 신뢰 신호로.
 // 여러 화면(피드·리뷰·댓글·차트·믹스)에서 공용.
 export function LevelBadge({ level, size = "sm", className = "" }: { level: number; size?: "sm" | "md"; className?: string }) {
+  if (level < 1) return null; // 레벨 공개 옵트아웃(서버가 0 반환) 또는 미집계 시 미표시(QA9-6)
   const sizeCls = size === "md" ? "px-2 py-0.5 text-xs" : "px-1.5 py-0.5 text-[10px]";
   return (
     <span
