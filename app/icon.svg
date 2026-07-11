@@ -15,7 +15,7 @@
       <stop offset="0" stop-color="#7dd3fc"/><stop offset="1" stop-color="#7dd3fc" stop-opacity="0"/>
     </radialGradient>
     <clipPath id="gClip">
-      <text x="16" y="17.5" text-anchor="middle" dominant-baseline="central"
+      <text x="16" y="16" text-anchor="middle" dominant-baseline="central"
             font-family="Geist, ui-sans-serif, system-ui, -apple-system, Segoe UI, Arial, sans-serif"
             font-weight="800" font-size="31">G</text>
     </clipPath>
