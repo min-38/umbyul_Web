@@ -14,12 +14,13 @@ import { useT, useLocale } from "@/components/i18n-provider";
 const inputBase =
   "w-full rounded-lg border px-3 py-2.5 text-sm text-black outline-none focus:ring-1 focus:ring-zinc-300 dark:bg-zinc-900 dark:text-zinc-50";
 
-export function LoginForm() {
+export function LoginForm({ initialError = null }: { initialError?: ErrText }) {
   const t = useT();
   const locale = useLocale();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [err, setErr] = useState<ErrText>(null);
+  // OAuth 콜백이 /login?error=auth 로 되돌려보낸 실패를 표시(예전엔 아무도 안 읽어 조용히 폼으로 복귀, NON-223).
+  const [err, setErr] = useState<ErrText>(initialError);
   const [loading, setLoading] = useState(false);
 
   const router = useRouter();

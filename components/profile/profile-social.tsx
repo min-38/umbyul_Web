@@ -4,7 +4,8 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { followUser, unfollowUser } from "@/app/actions/social";
-import { useT } from "@/components/i18n-provider";
+import { useT, useLocale } from "@/components/i18n-provider";
+import { msg } from "@/lib/messages";
 import { FollowListModal } from "./follow-list-modal";
 
 export function ProfileSocial({
@@ -30,7 +31,9 @@ export function ProfileSocial({
   const [followers, setFollowers] = useState(followerCount);
   const [followingCount, setFollowingCount] = useState(initialFollowingCount);
   const [busy, setBusy] = useState(false);
+  const [err, setErr] = useState<string | null>(null);
   const [modal, setModal] = useState<null | "followers" | "following">(null);
+  const locale = useLocale();
 
   const toggle = async () => {
     if (!loggedIn) {
@@ -38,11 +41,14 @@ export function ProfileSocial({
       return;
     }
     setBusy(true);
+    setErr(null);
     const r = following ? await unfollowUser(username) : await followUser(username);
     setBusy(false);
     if (r.ok) {
       setFollowing(!following);
       setFollowers((c) => c + (following ? -1 : 1));
+    } else {
+      setErr(msg(r.code, locale)); // 조용한 무반응 대신 실패 표시(NON-223)
     }
   };
 
@@ -77,6 +83,12 @@ export function ProfileSocial({
         >
           {following ? t("팔로잉") : t("팔로우")}
         </button>
+      )}
+
+      {err && (
+        <p role="alert" className="text-xs text-red-500">
+          {err}
+        </p>
       )}
 
       {modal && (

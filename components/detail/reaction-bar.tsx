@@ -4,7 +4,8 @@ import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import type { Reaction } from "@/lib/api";
 import { toggleReaction, type ReactionState } from "@/app/actions/social";
-import { useT } from "@/components/i18n-provider";
+import { useT, useLocale } from "@/components/i18n-provider";
+import { msg } from "@/lib/messages";
 
 function ThumbUp({ filled }: { filled: boolean }) {
   return (
@@ -24,8 +25,10 @@ export function ReactionBar({
   initial: ReactionState;
 }) {
   const t = useT();
+  const locale = useLocale();
   const router = useRouter();
   const [state, setState] = useState<ReactionState>(initial);
+  const [err, setErr] = useState<string | null>(null);
   const [pending, start] = useTransition();
 
   const react = (value: Reaction) => {
@@ -35,7 +38,12 @@ export function ReactionBar({
     }
     start(async () => {
       const r = await toggleReaction({ ratingId, value });
-      if (r.ok && r.data) setState(r.data);
+      if (r.ok && r.data) {
+        setState(r.data);
+        setErr(null);
+      } else {
+        setErr(msg(r.code, locale)); // 조용한 무반응 대신 실패 표시(NON-223)
+      }
     });
   };
 
@@ -56,6 +64,11 @@ export function ReactionBar({
         <ThumbUp filled={state.myReaction === "like"} />
         <span className="tabular-nums">{state.likeCount}</span>
       </button>
+      {err && (
+        <span role="alert" className="text-xs text-red-500">
+          {err}
+        </span>
+      )}
     </div>
   );
 }

@@ -27,7 +27,10 @@ export function FollowListModal({
   const t = useT();
 
   useEffect(() => {
-    (kind === "followers" ? loadFollowers : loadFollowing)(username).then(setUsers);
+    // 네트워크 실패 시 reject → 무한 스피너가 되지 않게 빈 목록으로(NON-223).
+    (kind === "followers" ? loadFollowers : loadFollowing)(username)
+      .then(setUsers)
+      .catch(() => setUsers([]));
   }, [username, kind]);
 
   return (

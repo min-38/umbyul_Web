@@ -10,8 +10,11 @@ export function NotificationSettings({ initial }: { initial: NotificationPrefs }
   const [prefs, setPrefs] = useState(initial);
 
   const save = (next: NotificationPrefs) => {
-    setPrefs(next);
-    updateNotificationPrefs(next);
+    const prev = prefs;
+    setPrefs(next); // 낙관 갱신
+    updateNotificationPrefs(next).then((r) => {
+      if (!r.ok) setPrefs(prev); // 저장 실패 시 롤백 — 리로드 때 조용히 되돌아가는 것 대신 즉시 반영(NON-223)
+    });
   };
 
   return (

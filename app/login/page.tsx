@@ -3,12 +3,18 @@ import { signOut } from "@/app/auth/actions";
 import { getT } from "@/lib/i18n-server";
 import { LoginForm } from "./login-form";
 
-export default async function LoginPage() {
+export default async function LoginPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ error?: string }>;
+}) {
   const supabase = await createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
   const t = await getT();
+  // OAuth 콜백 실패(?error=auth)를 로그인 폼에 표시(NON-223).
+  const { error } = await searchParams;
 
   return (
     <div className="flex flex-1 items-center justify-center bg-zinc-50 px-6 dark:bg-black">
@@ -31,7 +37,7 @@ export default async function LoginPage() {
             </form>
           </div>
         ) : (
-          <LoginForm />
+          <LoginForm initialError={error === "auth" ? { code: "AUTH_FAILED" } : null} />
         )}
       </div>
     </div>

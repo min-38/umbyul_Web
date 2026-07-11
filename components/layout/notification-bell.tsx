@@ -57,13 +57,18 @@ export function NotificationBell({ items, unreadCount }: { items: NotificationIt
   useEffect(() => {
     const poll = async () => {
       if (document.hidden) return;
-      const data = await loadNotifications();
-      setList(data.items);
-      setUnread(openRef.current ? 0 : data.unreadCount);
+      try {
+        const data = await loadNotifications();
+        if (!data) return; // 실패 → 기존 뱃지·목록 유지(초기화 방지, NON-223)
+        setList(data.items);
+        setUnread(openRef.current ? 0 : data.unreadCount);
 
-      const fresh = data.items.filter((i) => !knownIds.current.has(i.id));
-      data.items.forEach((i) => knownIds.current.add(i.id));
-      if (fresh.length > 0 && !openRef.current) showToast(fresh[0]);
+        const fresh = data.items.filter((i) => !knownIds.current.has(i.id));
+        data.items.forEach((i) => knownIds.current.add(i.id));
+        if (fresh.length > 0 && !openRef.current) showToast(fresh[0]);
+      } catch {
+        // 액션 자체 실패(오프라인·stale action id 등)도 폴링을 죽이지 않게 흡수(NON-223)
+      }
     };
 
     const t = setInterval(poll, POLL_MS);
@@ -83,23 +88,44 @@ export function NotificationBell({ items, unreadCount }: { items: NotificationIt
     const next = !open;
     setOpen(next);
     if (next && unread > 0) {
+      // 낙관 갱신 후 실패하면 롤백 — 안 그러면 다음 폴에서 서버 상태로 되살아나 혼란(NON-223).
+      const prevUnread = unread;
+      const prevList = list;
       setUnread(0);
       setList((l) => l.map((x) => (x.read ? x : { ...x, read: true }))); // 로컬도 즉시 읽음 처리 — 재오픈 시 unread 스타일 잔상 방지(LOG-W-6)
-      markNotificationsRead();
+      markNotificationsRead().then((r) => {
+        if (!r.ok) {
+          setUnread(prevUnread);
+          setList(prevList);
+        }
+      });
     }
   };
 
   const clearAll = async () => {
     if (!(await confirm({ message: t("알림을 모두 지울까요?"), danger: true }))) return; // 전체 삭제는 확인 후(UX-3)
+    const prevList = list;
+    const prevUnread = unread;
     setList([]);
     setUnread(0);
-    clearNotifications();
+    const r = await clearNotifications();
+    if (!r.ok) {
+      setList(prevList);
+      setUnread(prevUnread); // 실패 시 롤백(NON-223)
+    }
   };
 
   const remove = (n: NotificationItem) => {
+    const prevList = list;
+    const prevUnread = unread;
     setList((l) => l.filter((x) => x.id !== n.id));
     if (!n.read) setUnread((u) => Math.max(0, u - 1));
-    deleteNotification(n.id);
+    deleteNotification(n.id).then((r) => {
+      if (!r.ok) {
+        setList(prevList);
+        setUnread(prevUnread); // 실패 시 롤백(NON-223)
+      }
+    });
   };
 
   return (
