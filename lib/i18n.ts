@@ -93,7 +93,6 @@ export const EN: Record<string, string> = {
   문의: "Contact",
 
   // ── 랜딩 ──
-  "음악을 듣고, 평가하고, 기록하세요.": "Listen. Rate. Remember.",
   "좋아하는 앨범과 곡을 평가하고, 리뷰를 남기고, 취향이 맞는 사람을 팔로우하세요.":
     "Rate albums and tracks, write reviews, and follow people who share your taste.",
   둘러보기: "Explore",
@@ -580,7 +579,6 @@ const JA: Record<string, string> = {
   "개인정보 처리방침": "プライバシーポリシー",
   문의: "お問い合わせ",
 
-  "음악을 듣고, 평가하고, 기록하세요.": "聴いて。評価して。記録する。",
   "좋아하는 앨범과 곡을 평가하고, 리뷰를 남기고, 취향이 맞는 사람을 팔로우하세요.":
     "好きなアルバムや曲を評価し、レビューを書き、趣味の合う人をフォローしよう。",
   둘러보기: "見てみる",
@@ -1048,7 +1046,6 @@ const ES: Record<string, string> = {
   "개인정보 처리방침": "Política de privacidad",
   문의: "Contacto",
 
-  "음악을 듣고, 평가하고, 기록하세요.": "Escucha. Califica. Recuerda.",
   "좋아하는 앨범과 곡을 평가하고, 리뷰를 남기고, 취향이 맞는 사람을 팔로우하세요.":
     "Califica tus álbumes y canciones favoritos, escribe reseñas y sigue a quienes comparten tu gusto.",
   둘러보기: "Explorar",

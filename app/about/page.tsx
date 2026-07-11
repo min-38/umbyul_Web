@@ -26,8 +26,9 @@ export default async function AboutPage() {
       {/* Hero */}
       <section className="mx-auto flex w-full max-w-3xl flex-col items-center gap-6 px-6 pt-24 pb-16 text-center sm:pt-32">
         <span className="glitter-text text-6xl font-bold tracking-tight sm:text-7xl">Glitter</span>
+        {/* 브랜드 고정 카피(전 언어 동일) — 별↔반짝(Glitter) 말장난이라 번역하지 않음. 워드마크처럼 t() 미경유. */}
         <h1 className="text-balance text-3xl font-bold tracking-tight text-white sm:text-4xl">
-          {t("음악을 듣고, 평가하고, 기록하세요.")}
+          당신의 별이 음악을 반짝이게
         </h1>
         <p className="max-w-xl text-balance text-lg text-zinc-300">
           {t("좋아하는 앨범과 곡을 평가하고, 리뷰를 남기고, 취향이 맞는 사람을 팔로우하세요.")}
