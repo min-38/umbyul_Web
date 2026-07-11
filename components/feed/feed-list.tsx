@@ -14,6 +14,7 @@ import { ExplicitBadge } from "@/components/detail/explicit-badge";
 import { LevelBadge } from "@/components/ui/level-badge";
 import { dismissReview, loadMoreFeed } from "@/app/actions/social";
 import { useT } from "@/components/i18n-provider";
+import { ExpandableText } from "@/components/ui/expandable-text";
 import { formatRelativeTime } from "@/lib/format";
 import { coverThumb, onImageError } from "@/lib/image";
 import type { FeedItem, FeedSort, FeedScope } from "@/lib/api";
@@ -337,8 +338,8 @@ export function FeedList({
               </div>
             </div>
 
-            {/* 리뷰 본문 */}
-            <p className="whitespace-pre-wrap break-words text-sm leading-relaxed text-zinc-700 dark:text-zinc-200">{it.body}</p>
+            {/* 리뷰 본문 — 길면 자세히/간략히 토글(NON-261) */}
+            {it.body && <ExpandableText text={it.body} className="text-sm leading-relaxed text-zinc-700 dark:text-zinc-200" />}
 
             {/* 반응 + ⋯메뉴 */}
             {actions(it)}

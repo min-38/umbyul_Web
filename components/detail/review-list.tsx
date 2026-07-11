@@ -10,6 +10,7 @@ import { ReportControl } from "./report-control";
 import { ReviewComments } from "./review-comments";
 import { ShareButton } from "./share-button";
 import { LevelBadge } from "@/components/ui/level-badge";
+import { ExpandableText } from "@/components/ui/expandable-text";
 import { formatRelativeTime } from "@/lib/format";
 import { useT, useLocale } from "@/components/i18n-provider";
 
@@ -111,7 +112,7 @@ export function ReviewList({
                 <span className="text-sm font-semibold text-zinc-700 dark:text-zinc-200">{r.score.toFixed(1)}</span>
               </span>
             </div>
-            {r.body && <p className="whitespace-pre-wrap break-words text-sm leading-relaxed text-zinc-600 dark:text-zinc-300">{r.body}</p>}
+            {r.body && <ExpandableText text={r.body} className="text-sm leading-relaxed text-zinc-600 dark:text-zinc-300" />}
             <div className="flex items-center gap-4 pt-0.5">
               <ReactionBar
                 ratingId={r.id}
