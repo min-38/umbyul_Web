@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getAnnouncements } from "@/lib/api";
+import { totalPagesFor, pageWindow } from "@/lib/pagination";
 import { getLocale, getT } from "@/lib/i18n-server";
 import { dateLocale } from "@/lib/format";
 
@@ -17,15 +18,13 @@ export default async function AnnouncementsPage({ searchParams }: { searchParams
   if (items.length === 0 && total > 0 && page > 1) redirect(`/announcements?page=${Math.max(1, Math.ceil(total / PAGE_SIZE))}`);
   // total이 없을 수도 있는 구버전 API에도 안전하게: 최소한 지금 화면에 보이는 만큼은 보장.
   const shownTotal = Math.max(total, (page - 1) * PAGE_SIZE + items.length);
-  const totalPages = Math.max(1, Math.ceil(shownTotal / PAGE_SIZE));
+  const totalPages = totalPagesFor(shownTotal, PAGE_SIZE);
 
   // 넘버링: 최신글이 가장 큰 번호(총 개수) → 아래로 감소.
   const numberAt = (i: number) => shownTotal - ((page - 1) * PAGE_SIZE + i);
 
-  // 페이지 창(현재 ±2).
-  const from = Math.max(1, page - 2);
-  const to = Math.min(totalPages, from + 4);
-  const pages = Array.from({ length: to - from + 1 }, (_, i) => from + i);
+  // 페이지 창(현재 ±2, 최대 5칸). QA7-3에서 순수 헬퍼로 추출.
+  const pages = pageWindow(page, totalPages);
 
   return (
     <div className="mx-auto w-full max-w-3xl px-6 py-12">

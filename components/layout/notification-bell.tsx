@@ -13,15 +13,9 @@ import { useClickOutside } from "@/lib/use-click-outside";
 import { formatRelativeTime } from "@/lib/format";
 import { useConfirm } from "@/components/ui/confirm-dialog";
 import { useT, useLocale } from "@/components/i18n-provider";
+import { notificationSuffix } from "@/lib/notifications";
 
 const POLL_MS = 5000;
-
-// 이름(span) 뒤에 붙는 문구. ko: "{이름}님이 …", en: "{name} …" 로 자연스럽게.
-function suffix(n: NotificationItem) {
-  if (n.type === "follow") return "님이 회원님을 팔로우했습니다";
-  if (n.type === "mention") return "님이 댓글에서 회원님을 언급했습니다";
-  return "님이 회원님의 리뷰를 좋아합니다";
-}
 
 export function NotificationBell({ items, unreadCount }: { items: NotificationItem[]; unreadCount: number }) {
   const t = useT();
@@ -149,7 +143,7 @@ export function NotificationBell({ items, unreadCount }: { items: NotificationIt
               <span className="font-semibold">{t("새 공지사항이 등록되었어요.")}</span>
             ) : (
               <>
-                <span className="font-semibold">{toast.actorUsername}</span>{t(suffix(toast))}
+                <span className="font-semibold">{toast.actorUsername}</span>{t(notificationSuffix(toast.type))}
               </>
             )}
           </span>
@@ -254,7 +248,7 @@ function NotifRow({
           </>
         ) : (
           <>
-            <span className={nameCls}>{n.actorUsername}</span>{t(suffix(n))}
+            <span className={nameCls}>{n.actorUsername}</span>{t(notificationSuffix(n.type))}
             <span className="ml-1 text-xs text-zinc-500">{formatRelativeTime(n.createdAt, locale)}</span>
           </>
         )}
