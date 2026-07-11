@@ -188,7 +188,7 @@ export function NotificationBell({ items, unreadCount }: { items: NotificationIt
       )}
 
       {open && (
-        <div className="absolute right-0 z-20 mt-1 flex w-80 flex-col overflow-hidden rounded-lg border border-zinc-200 bg-white shadow-lg dark:border-zinc-800 dark:bg-zinc-950">
+        <div className="fixed inset-x-4 top-14 z-20 flex w-auto flex-col overflow-hidden rounded-lg border border-zinc-200 bg-white shadow-lg dark:border-zinc-800 dark:bg-zinc-950 sm:absolute sm:inset-x-auto sm:right-0 sm:top-auto sm:mt-1 sm:w-80">
           <div className="max-h-80 overflow-y-auto py-1">
             {list.length === 0 ? (
               <p className="px-4 py-8 text-center text-sm text-zinc-500">{t("알림이 없습니다.")}</p>
