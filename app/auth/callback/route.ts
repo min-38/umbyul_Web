@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import { apiFetch } from "@/lib/api";
 import { safeInternalPath } from "@/lib/validation";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -19,13 +20,14 @@ export async function GET(request: Request) {
       const token = data.session?.access_token;
       if (token) {
         try {
-          const res = await fetch(`${API_URL}/me/profile`, {
+          // apiFetch = 타임아웃 포함 — 원시 fetch면 API 행 시 로그인 콜백이 무한 대기(NON-216 부류, NON-256).
+          const res = await apiFetch(`${API_URL}/me/profile`, {
             headers: { Authorization: `Bearer ${token}` },
             cache: "no-store",
           });
           if (res.ok) {
             const loc = (await res.json())?.data?.locale;
-            if (loc === "ko" || loc === "en") {
+            if (loc === "ko" || loc === "en" || loc === "ja" || loc === "es") {
               response.cookies.set("locale", loc, { path: "/", maxAge: 60 * 60 * 24 * 365 });
             }
           }
