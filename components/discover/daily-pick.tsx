@@ -5,6 +5,7 @@ import { SpotifyLink } from "@/components/detail/detail-bits";
 import { MusicBrainzLink } from "@/components/detail/musicbrainz-link";
 import { YouTubeLink } from "@/components/detail/youtube-link";
 import { coverThumb } from "@/lib/image";
+import { PickCountdown } from "./pick-countdown";
 import type { DailyPick } from "@/lib/api";
 
 type Labels = {
@@ -25,8 +26,11 @@ export function DailyPickCard({ pick, labels }: { pick: DailyPick; labels: Label
     <section className="relative overflow-hidden rounded-2xl border border-zinc-200 bg-zinc-50 p-4 dark:border-zinc-800 dark:bg-zinc-900/50 sm:p-5">
       <div className="pick-stars" aria-hidden="true" />
       <div className="relative">
-        {/* 라벨은 i18n 미적용 — 항상 TODAY'S PICK */}
-        <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-indigo-600 dark:text-indigo-400">TODAY&apos;S PICK</p>
+        {/* 라벨은 i18n 미적용 — 항상 TODAY'S PICK. 우측에 마감 카운트다운(NON-264) */}
+        <div className="mb-3 flex items-center justify-between gap-2">
+          <p className="text-xs font-semibold uppercase tracking-wide text-indigo-600 dark:text-indigo-400">TODAY&apos;S PICK</p>
+          <PickCountdown expiresAt={pick.expiresAt} />
+        </div>
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
           {/* 커버 + 제목/아티스트/외부 링크/장르 */}
           <Link href={href} className="shrink-0 self-start sm:self-center" aria-label={pick.name ?? undefined}>

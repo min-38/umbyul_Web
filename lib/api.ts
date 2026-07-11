@@ -527,6 +527,7 @@ export type DailyPick = {
   isrc: string | null;
   upc: string | null;
   youtubeUrl: string | null;
+  expiresAt: string; // 오늘 픽 마감(KST 자정) ISO — 카운트다운(NON-264)
 };
 export type DiscoverData = { rising: RisingWindows; new: DiscoverItem[]; myRecent: DiscoverItem[]; recommend: DiscoverItem[]; dailyPick: DailyPick | null; preferredGenreItems: DiscoverItem[] };
 
