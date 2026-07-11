@@ -32,10 +32,10 @@ export default async function ProfilePage({ params }: { params: Promise<{ userna
             profile.username.charAt(0).toUpperCase()
           )}
         </span>
-        <div className="flex flex-1 flex-col gap-3">
+        <div className="flex min-w-0 flex-1 flex-col gap-3">
           <div className="flex items-start justify-between gap-2">
-            <div className="flex items-center gap-2">
-              <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-50">{profile.username}</h1>
+            <div className="flex min-w-0 items-center gap-2">
+              <h1 className="truncate text-2xl font-bold text-zinc-900 dark:text-zinc-50">{profile.username}</h1>
               {!profile.blocked && <LevelBadge level={profile.level} size="md" />}
             </div>
             {!isSelf && (

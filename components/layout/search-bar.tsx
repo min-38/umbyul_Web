@@ -63,7 +63,7 @@ export function SearchBar() {
     : recent;
 
   return (
-    <div ref={ref} className="relative max-w-xl flex-1">
+    <div ref={ref} className="relative min-w-0 max-w-xl flex-1">
       <form
         onSubmit={(e) => {
           e.preventDefault();
@@ -76,7 +76,7 @@ export function SearchBar() {
           onChange={(e) => setQ(e.target.value)}
           onFocus={() => setOpen(true)}
           placeholder={t("앨범, 곡, 아티스트, 유저 검색")}
-          className="w-full rounded-full border border-zinc-300 bg-white px-4 py-2 text-sm text-black outline-none focus:border-zinc-500 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
+          className="w-full min-w-0 rounded-full border border-zinc-300 bg-white px-4 py-2 text-sm text-black outline-none focus:border-zinc-500 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
         />
       </form>
 

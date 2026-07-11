@@ -41,7 +41,7 @@ export function UserMenu({ username, avatarUrl }: { username: string; avatarUrl:
             username.charAt(0).toUpperCase()
           )}
         </span>
-        <span className="max-w-[10rem] truncate text-sm text-zinc-700 dark:text-zinc-200">{username}</span>
+        <span className="hidden max-w-[10rem] truncate text-sm text-zinc-700 dark:text-zinc-200 sm:inline">{username}</span>
       </button>
 
       {open && (

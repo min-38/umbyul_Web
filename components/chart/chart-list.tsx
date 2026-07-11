@@ -33,11 +33,11 @@ export function ChartList({
               />
             </Link>
             <div className="min-w-0 flex-1">
-              <div className="flex items-center gap-1.5">
+              <div className="flex min-w-0 items-center gap-1.5">
                 <TargetBadge type={x.targetType} label={x.targetType === "track" ? trackLabel : albumLabel} />
                 <Link
                   href={c.href}
-                  className="truncate text-sm font-medium text-zinc-900 hover:underline dark:text-zinc-50"
+                  className="min-w-0 truncate text-sm font-medium text-zinc-900 hover:underline dark:text-zinc-50"
                 >
                   {c.name ?? ""}
                 </Link>

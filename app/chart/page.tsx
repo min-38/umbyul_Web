@@ -115,7 +115,7 @@ export default async function ChartPage({
 
       <div className="grid gap-8 md:grid-cols-2">
         {/* ── 좌: 음악 차트 ── */}
-        <section className="flex flex-col gap-4">
+        <section className="flex min-w-0 flex-col gap-4">
           <ColumnHeader accent="text-indigo-500" title={t("음악 차트")} subtitle={t("곡·앨범·아티스트 랭킹")} icon={<MusicIcon />} />
           <div className="flex flex-col gap-2">
             <Row label={t("대상")}>
@@ -150,7 +150,7 @@ export default async function ChartPage({
         </section>
 
         {/* ── 우: 유저 차트 ── */}
-        <section className="flex flex-col gap-4">
+        <section className="flex min-w-0 flex-col gap-4">
           <ColumnHeader accent="text-rose-500" title={t("유저 차트")} subtitle={t("리뷰어 랭킹")} icon={<UserIcon />} />
           <div className="flex flex-col gap-2">
             <Row label={t("정렬")}>

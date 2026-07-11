@@ -40,7 +40,7 @@ export async function Header() {
         </div>
 
         {/* 중앙: 검색 (정중앙) */}
-        <div className="flex w-[36rem] max-w-full justify-center">
+        <div className="flex w-[36rem] min-w-0 max-w-full justify-center">
           <Suspense fallback={<div className="w-full max-w-xl" />}>
             <SearchBar />
           </Suspense>
