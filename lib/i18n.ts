@@ -36,6 +36,9 @@ function formatNumber(v: number, locale: Locale): string {
 
 // 한국어 → 영어 매핑. 문구를 i18n 대상으로 옮길 때 여기에 추가.
 export const EN: Record<string, string> = {
+  // ── /about 히어로 (NON-273) ──
+  "별을 남길수록 반짝이는 나의 기록": "The more you rate, the brighter your record shines.",
+  "리뷰를 남기고 다른 사람과 취향을 나누며, 새로운 음악을 발견하세요.": "Leave reviews, share your taste with others, and discover new music.",
   // ── /about (NON-272) ──
   "Spotify 카드": "Spotify search",
   "방대한 Spotify 카탈로그에서 원하는 음악을 검색하세요.": "Search for any music in Spotify's vast catalog.",
@@ -524,6 +527,9 @@ export const EN: Record<string, string> = {
 
 // 한국어 → 일본어.
 const JA: Record<string, string> = {
+  // ── /about 히어로 (NON-273) ──
+  "별을 남길수록 반짝이는 나의 기록": "評価するほど、あなたの記録が輝く。",
+  "리뷰를 남기고 다른 사람과 취향을 나누며, 새로운 음악을 발견하세요.": "レビューを残し、好みを分かち合い、新しい音楽を見つけよう。",
   // ── /about (NON-272) ──
   "Spotify 카드": "Spotify検索",
   "방대한 Spotify 카탈로그에서 원하는 음악을 검색하세요.": "膨大なSpotifyカタログから聴きたい音楽を検索。",
@@ -988,6 +994,9 @@ const JA: Record<string, string> = {
 
 // 한국어 → 스페인어.
 const ES: Record<string, string> = {
+  // ── /about 히어로 (NON-273) ──
+  "별을 남길수록 반짝이는 나의 기록": "Cuantas más estrellas dejes, más brilla tu registro.",
+  "리뷰를 남기고 다른 사람과 취향을 나누며, 새로운 음악을 발견하세요.": "Deja reseñas, comparte tu gusto con otros y descubre música nueva.",
   // ── /about (NON-272) ──
   "Spotify 카드": "Búsqueda en Spotify",
   "방대한 Spotify 카탈로그에서 원하는 음악을 검색하세요.": "Busca cualquier música en el amplio catálogo de Spotify.",

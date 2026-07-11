@@ -28,12 +28,11 @@ export default async function AboutPage() {
       {/* Hero */}
       <section className="mx-auto flex w-full max-w-3xl flex-col items-center gap-6 px-6 pt-24 pb-16 text-center sm:pt-32">
         <span className="glitter-text text-6xl font-bold tracking-tight sm:text-7xl">Glitter</span>
-        {/* 브랜드 고정 카피(전 언어 동일) — 별↔반짝(Glitter) 말장난이라 번역하지 않음. 워드마크처럼 t() 미경유. */}
         <h1 className="text-balance text-3xl font-bold tracking-tight text-white sm:text-4xl">
-          별을 남길수록 반짝이는 나의 기록
+          {t("별을 남길수록 반짝이는 나의 기록")}
         </h1>
         <p className="max-w-xl text-balance text-lg text-zinc-300">
-          리뷰를 남기고 다른 사람과 취향을 나누며, 새로운 음악을 발견하세요.
+          {t("리뷰를 남기고 다른 사람과 취향을 나누며, 새로운 음악을 발견하세요.")}
         </p>
         <div className="mt-2 flex flex-wrap items-center justify-center gap-3">
           <Link
@@ -162,22 +161,21 @@ function FeatureIcon({ name }: { name: string }) {
         <path d="M17 7h4v4" />
       </svg>
     );
-  if (name === "spotify") // 스포티파이 카탈로그 검색 — 원형 + 음파 라인
+  if (name === "spotify") // 공식 Spotify 아이콘(브랜드 그린, 채움) — 브랜드 가이드라인상 원형 그대로
     return (
-      <svg {...common}>
-        <circle cx="12" cy="12" r="9" />
-        <path d="M8 10.4c2.6-.8 5.6-.5 7.7.8" />
-        <path d="M8.6 13.3c2-.6 4.4-.4 6.1.6" />
-        <path d="M9.2 15.9c1.4-.4 3-.3 4.2.4" />
+      <svg width={22} height={22} viewBox="0 0 24 24" fill="#1ED760" aria-hidden="true">
+        <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.42 1.56-.299.421-1.02.599-1.559.3z" />
       </svg>
     );
-  if (name === "chart") // 인기 랭킹 — 막대 그래프
+  if (name === "chart") // 인기 랭킹 — 트로피
     return (
       <svg {...common}>
-        <path d="M3 20h18" />
-        <path d="M6.5 20v-6" />
-        <path d="M12 20V8" />
-        <path d="M17.5 20v-9" />
+        <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6" />
+        <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18" />
+        <path d="M4 21h16" />
+        <path d="M10 15v2.5c0 .6-.5 1-1.1 1.3C7.9 19.2 7 20.4 7 21" />
+        <path d="M14 15v2.5c0 .6.5 1 1.1 1.3C16.1 19.2 17 20.4 17 21" />
+        <path d="M18 3H6v6a6 6 0 0 0 12 0V3Z" />
       </svg>
     );
   return (
