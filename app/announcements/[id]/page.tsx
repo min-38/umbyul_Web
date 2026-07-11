@@ -49,7 +49,7 @@ export default async function AnnouncementPage({ params }: { params: Promise<{ i
         <span aria-hidden="true">·</span>
         <span>{t("조회 {count}", { count: (a.viewCount ?? 0).toLocaleString() })}</span>
       </p>
-      <article className="mt-6">
+      <article className="mt-6 break-words">
         <ReactMarkdown
           remarkPlugins={[remarkGfm]}
           components={{
@@ -59,8 +59,16 @@ export default async function AnnouncementPage({ params }: { params: Promise<{ i
             p: (p) => <p className="mt-3 text-sm leading-relaxed text-zinc-600 dark:text-zinc-300" {...p} />,
             ul: (p) => <ul className="mt-3 list-disc space-y-1 pl-5 text-sm text-zinc-600 dark:text-zinc-300" {...p} />,
             ol: (p) => <ol className="mt-3 list-decimal space-y-1 pl-5 text-sm text-zinc-600 dark:text-zinc-300" {...p} />,
-            a: (p) => <a className="text-indigo-600 hover:underline dark:text-indigo-400" {...p} />,
+            a: (p) => <a className="break-words text-indigo-600 hover:underline dark:text-indigo-400" {...p} />,
             strong: (p) => <strong className="font-semibold text-zinc-800 dark:text-zinc-100" {...p} />,
+            // 긴 무공백 토큰(코드·GFM 테이블)이 375px 가로 오버플로 내지 않게(QA11-3).
+            pre: (p) => <pre className="mt-3 overflow-x-auto rounded-lg bg-zinc-100 p-3 text-xs dark:bg-zinc-900" {...p} />,
+            code: (p) => <code className="break-words rounded bg-zinc-100 px-1 py-0.5 text-xs dark:bg-zinc-800" {...p} />,
+            table: (p) => (
+              <div className="mt-3 overflow-x-auto">
+                <table className="w-full text-sm" {...p} />
+              </div>
+            ),
             hr: () => <hr className="my-6 border-zinc-200 dark:border-zinc-800" />,
             // 공지 이미지(NON-168) — 반응형. admin 업로드(R2 프록시) 마크다운 이미지.
             // eslint-disable-next-line @next/next/no-img-element, jsx-a11y/alt-text

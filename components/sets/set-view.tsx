@@ -76,7 +76,7 @@ export function SetView({
         {t("목록으로")}
       </Link>
       <header className="flex flex-col gap-3 border-b border-zinc-200 pb-5 dark:border-zinc-800">
-        <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-50">{set.title}</h1>
+        <h1 className="break-words text-2xl font-bold text-zinc-900 dark:text-zinc-50">{set.title}</h1>
         <div className="flex items-center justify-between gap-3 text-xs text-zinc-500">
           <Link href={`/u/${set.ownerUsername}`} className="flex items-center gap-1.5 hover:underline">
             <span className="flex h-5 w-5 items-center justify-center overflow-hidden rounded-full bg-zinc-200 text-[9px] font-medium text-zinc-500 dark:bg-zinc-800 dark:text-zinc-300">
@@ -92,7 +92,7 @@ export function SetView({
           </Link>
           <span suppressHydrationWarning>{formatRelativeTime(set.updatedAt, locale)}</span>
         </div>
-        {set.note && <p className="whitespace-pre-wrap text-sm leading-relaxed text-zinc-600 dark:text-zinc-300">{set.note}</p>}
+        {set.note && <p className="whitespace-pre-wrap break-words text-sm leading-relaxed text-zinc-600 dark:text-zinc-300">{set.note}</p>}
         <div className="flex items-center justify-between gap-2">
           <button
             type="button"

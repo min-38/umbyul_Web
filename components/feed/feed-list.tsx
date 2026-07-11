@@ -266,7 +266,7 @@ export function FeedList({
                     ))}
                   </div>
                 )}
-                <p className="mt-0.5 line-clamp-2 whitespace-pre-wrap text-sm leading-snug text-zinc-600 dark:text-zinc-300">{it.body}</p>
+                <p className="mt-0.5 line-clamp-2 whitespace-pre-wrap break-words text-sm leading-snug text-zinc-600 dark:text-zinc-300">{it.body}</p>
                 <div className="mt-1">{actions(it)}</div>
               </div>
             </li>
@@ -287,7 +287,7 @@ export function FeedList({
           <article key={it.id} className="flex flex-col gap-3 rounded-2xl border border-zinc-200 p-4 dark:border-zinc-800">
             {/* 헤더: 유저 + 시간 */}
             <div className="flex items-center gap-2">
-              <Link href={`/u/${it.username}`} className="flex items-center gap-2">
+              <Link href={`/u/${it.username}`} className="flex min-w-0 items-center gap-2">
                 <span className="flex h-6 w-6 items-center justify-center overflow-hidden rounded-full bg-zinc-200 text-[10px] font-medium text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300">
                   {it.avatarUrl ? (
                     // eslint-disable-next-line @next/next/no-img-element
@@ -296,7 +296,7 @@ export function FeedList({
                     it.username.charAt(0).toUpperCase()
                   )}
                 </span>
-                <span className="text-sm font-medium text-zinc-800 hover:underline dark:text-zinc-100">{it.username}</span>
+                <span className="min-w-0 truncate text-sm font-medium text-zinc-800 hover:underline dark:text-zinc-100">{it.username}</span>
               </Link>
               <LevelBadge level={it.level} />
               <span className="text-xs text-zinc-500">· <span suppressHydrationWarning>{formatRelativeTime(it.createdAt, locale)}</span></span>
@@ -338,7 +338,7 @@ export function FeedList({
             </div>
 
             {/* 리뷰 본문 */}
-            <p className="whitespace-pre-wrap text-sm leading-relaxed text-zinc-700 dark:text-zinc-200">{it.body}</p>
+            <p className="whitespace-pre-wrap break-words text-sm leading-relaxed text-zinc-700 dark:text-zinc-200">{it.body}</p>
 
             {/* 반응 + ⋯메뉴 */}
             {actions(it)}

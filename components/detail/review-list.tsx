@@ -101,7 +101,7 @@ export function ReviewList({
                   r.username.charAt(0).toUpperCase()
                 )}
               </span>
-              <Link href={`/u/${r.username}`} className="text-sm font-medium text-zinc-800 hover:underline dark:text-zinc-100">
+              <Link href={`/u/${r.username}`} className="min-w-0 truncate text-sm font-medium text-zinc-800 hover:underline dark:text-zinc-100">
                 {r.username}
               </Link>
               <LevelBadge level={r.level} />
@@ -111,7 +111,7 @@ export function ReviewList({
                 <span className="text-sm font-semibold text-zinc-700 dark:text-zinc-200">{r.score.toFixed(1)}</span>
               </span>
             </div>
-            {r.body && <p className="whitespace-pre-wrap text-sm leading-relaxed text-zinc-600 dark:text-zinc-300">{r.body}</p>}
+            {r.body && <p className="whitespace-pre-wrap break-words text-sm leading-relaxed text-zinc-600 dark:text-zinc-300">{r.body}</p>}
             <div className="flex items-center gap-4 pt-0.5">
               <ReactionBar
                 ratingId={r.id}

@@ -218,7 +218,7 @@ export function ReviewComments({
             </button>
           </div>
         ) : (
-          <p className="whitespace-pre-wrap text-sm text-zinc-700 dark:text-zinc-200">
+          <p className="whitespace-pre-wrap break-words text-sm text-zinc-700 dark:text-zinc-200">
             {renderBody(c.body ?? "")}
             {c.edited && <span className="ml-1 text-xs text-zinc-500">{t("(수정됨)")}</span>}
           </p>
