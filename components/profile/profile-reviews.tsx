@@ -1,4 +1,5 @@
 "use client";
+import { onImageError } from "@/lib/image";
 
 import { useState } from "react";
 import Link from "next/link";
@@ -83,11 +84,11 @@ export function ProfileReviews({ reviews }: { reviews: ProfileReview[] }) {
                 {href ? (
                   <Link href={href} className="shrink-0">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={r.imageUrl ?? "/placeholder.svg"} alt="" loading="lazy" className="h-12 w-12 rounded-md bg-zinc-100 object-cover dark:bg-zinc-900" />
+                    <img onError={onImageError} src={r.imageUrl ?? "/placeholder.svg"} alt="" loading="lazy" className="h-12 w-12 rounded-md bg-zinc-100 object-cover dark:bg-zinc-900" />
                   </Link>
                 ) : (
                   // eslint-disable-next-line @next/next/no-img-element
-                  <img src={r.imageUrl ?? "/placeholder.svg"} alt="" loading="lazy" className="h-12 w-12 shrink-0 rounded-md bg-zinc-100 object-cover dark:bg-zinc-900" />
+                  <img onError={onImageError} src={r.imageUrl ?? "/placeholder.svg"} alt="" loading="lazy" className="h-12 w-12 shrink-0 rounded-md bg-zinc-100 object-cover dark:bg-zinc-900" />
                 )}
                 <span
                   className={`flex shrink-0 items-center justify-center whitespace-nowrap rounded-md px-2 py-1 text-xs font-medium ${

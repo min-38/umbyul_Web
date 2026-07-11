@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { createSet, addSetTrack } from "@/app/actions/sets";
 import { TrackPicker, MAX_TRACKS, type PickedTrack } from "@/components/sets/track-picker";
 import { MixGuide } from "@/components/sets/mix-guide";
-import { coverThumb } from "@/lib/image";
+import { coverThumb, onImageError } from "@/lib/image";
 import { safeHttpUrl } from "@/lib/validation";
 import { useT } from "@/components/i18n-provider";
 
@@ -74,7 +74,7 @@ export function NewSetForm() {
             {tracks.map((tr) => (
               <li key={tr.spotifyId} className="flex items-center gap-2 px-3 py-2">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={coverThumb(tr.imageUrl, "sm") ?? "/placeholder.svg"} alt="" className="h-9 w-9 rounded bg-zinc-100 object-cover dark:bg-zinc-800" />
+                <img onError={onImageError} src={coverThumb(tr.imageUrl, "sm") ?? "/placeholder.svg"} alt="" className="h-9 w-9 rounded bg-zinc-100 object-cover dark:bg-zinc-800" />
                 <span className="min-w-0 flex-1">
                   <span className="block truncate text-sm text-zinc-800 dark:text-zinc-100">{tr.name}</span>
                   <span className="block truncate text-xs text-zinc-500">{tr.artist}</span>

@@ -1,4 +1,5 @@
 "use client";
+import { onImageError } from "@/lib/image";
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
@@ -95,7 +96,7 @@ export function ReviewList({
               <span className="flex h-7 w-7 items-center justify-center overflow-hidden rounded-full bg-zinc-200 text-xs font-medium text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300">
                 {r.avatarUrl ? (
                   // eslint-disable-next-line @next/next/no-img-element
-                  <img src={r.avatarUrl} alt="" className="h-full w-full object-cover" />
+                  <img onError={onImageError} src={r.avatarUrl} alt="" className="h-full w-full object-cover" />
                 ) : (
                   r.username.charAt(0).toUpperCase()
                 )}

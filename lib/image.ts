@@ -6,3 +6,13 @@ export function coverThumb(url: string | null | undefined, size: "sm" | "md" = "
   const code = size === "sm" ? "ab67616d00004851" : "ab67616d00001e02";
   return url.replace("ab67616d0000b273", code);
 }
+
+export const PLACEHOLDER = "/placeholder.svg";
+
+// non-null URL 로드 실패(i.scdn.co 장애·API 경유 R2 아바타 404)를 빈 회색 타일 대신 placeholder로(NON-224).
+// 클라이언트 컴포넌트의 <img onError={onImageError}> 로 사용. 무한 루프 방지(이미 placeholder면 재설정 안 함).
+export function onImageError(e: React.SyntheticEvent<HTMLImageElement>) {
+  const img = e.currentTarget;
+  if (img.src.endsWith(PLACEHOLDER)) return;
+  img.src = PLACEHOLDER;
+}

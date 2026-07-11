@@ -2,7 +2,7 @@
 
 import { createClient } from "@/lib/supabase/server";
 import type { Reaction, FeedSort, FeedScope } from "@/lib/api";
-import { getFollowers, getFollowing, getFeed, apiFetch } from "@/lib/api";
+import { getFollowers, getFollowing, getFeedPage, apiFetch } from "@/lib/api";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -87,7 +87,8 @@ export async function toggleGenreTag(input: { targetType: "track" | "album"; spo
 
 // 피드 더 보기 (NON-107) — 클라가 offset 늘려 호출, 다음 페이지 append.
 export async function loadMoreFeed(sort: FeedSort, scope: FeedScope, offset: number, genre?: string | null) {
-  return getFeed(sort, scope, offset, 20, genre ?? undefined);
+  // 실패는 null로 반환 — 더보기 버튼이 "피드 끝"으로 사라지지 않게(NON-224).
+  return getFeedPage(sort, scope, offset, 20, genre ?? undefined);
 }
 
 // 팔로워/팔로잉 목록 (모달에서 클라가 호출)

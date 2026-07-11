@@ -1,4 +1,5 @@
 "use client";
+import { onImageError } from "@/lib/image";
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
@@ -104,7 +105,7 @@ export function MixComments({ setId, currentUserId }: { setId: string; currentUs
               <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center overflow-hidden rounded-full bg-zinc-200 text-[10px] font-medium text-zinc-500 dark:bg-zinc-800 dark:text-zinc-300">
                 {c.avatarUrl ? (
                   // eslint-disable-next-line @next/next/no-img-element
-                  <img src={c.avatarUrl} alt="" className="h-full w-full object-cover" />
+                  <img onError={onImageError} src={c.avatarUrl} alt="" className="h-full w-full object-cover" />
                 ) : (
                   c.username.charAt(0).toUpperCase()
                 )}

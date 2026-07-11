@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { coverThumb } from "@/lib/image";
+import { coverThumb, onImageError } from "@/lib/image";
 import { ExplicitBadge } from "@/components/detail/explicit-badge";
 import type { CoverItem } from "@/lib/discover-cover";
 
@@ -47,7 +47,7 @@ export function CoverRow({ items, empty }: { items: CoverItem[]; empty: string }
           <div key={x.key} className="flex w-36 shrink-0 snap-start flex-col gap-1.5 sm:w-40">
             <Link href={x.href} aria-label={x.name ?? ""}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
+              <img onError={onImageError}
                 src={coverThumb(x.imageUrl, "md") ?? "/placeholder.svg"}
                 alt=""
                 loading="lazy"

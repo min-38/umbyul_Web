@@ -3,7 +3,7 @@
 import { useState } from "react";
 import type { TrackResult } from "@/lib/api";
 import { searchTracks } from "@/app/actions/sets";
-import { coverThumb } from "@/lib/image";
+import { coverThumb, onImageError } from "@/lib/image";
 import { ExplicitBadge } from "@/components/detail/explicit-badge";
 import { useT } from "@/components/i18n-provider";
 
@@ -95,7 +95,7 @@ export function TrackPicker({
       {selected ? (
         <div className="flex items-center gap-2 rounded-lg border border-zinc-300 px-3 py-2 dark:border-zinc-700">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={coverThumb(selected.imageUrl, "sm") ?? "/placeholder.svg"} alt="" className="h-8 w-8 rounded bg-zinc-100 object-cover dark:bg-zinc-800" />
+          <img onError={onImageError} src={coverThumb(selected.imageUrl, "sm") ?? "/placeholder.svg"} alt="" className="h-8 w-8 rounded bg-zinc-100 object-cover dark:bg-zinc-800" />
           <span className="min-w-0 flex-1">
             <span className="flex items-center gap-1.5 text-sm font-medium text-zinc-900 dark:text-zinc-50">
               <span className="truncate">{selected.name}</span>
@@ -126,7 +126,7 @@ export function TrackPicker({
                     className="flex w-full items-center gap-2 px-2 py-1.5 text-left hover:bg-zinc-100 dark:hover:bg-zinc-800"
                   >
                     {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={coverThumb(tr.imageUrl, "sm") ?? "/placeholder.svg"} alt="" className="h-8 w-8 rounded bg-zinc-100 object-cover dark:bg-zinc-800" />
+                    <img onError={onImageError} src={coverThumb(tr.imageUrl, "sm") ?? "/placeholder.svg"} alt="" className="h-8 w-8 rounded bg-zinc-100 object-cover dark:bg-zinc-800" />
                     <span className="min-w-0 flex-1">
                       <span className="flex items-center gap-1.5 text-sm text-zinc-800 dark:text-zinc-100">
                         <span className="truncate">{tr.name}</span>

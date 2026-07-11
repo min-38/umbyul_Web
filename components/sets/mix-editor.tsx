@@ -9,7 +9,7 @@ import { EditTrackModal } from "@/components/sets/edit-track-modal";
 import { MeatballMenu } from "@/components/ui/meatball-menu";
 import { MixGuide } from "@/components/sets/mix-guide";
 import { ExplicitBadge } from "@/components/detail/explicit-badge";
-import { coverThumb } from "@/lib/image";
+import { coverThumb, onImageError } from "@/lib/image";
 import { safeHttpUrl } from "@/lib/validation";
 import { useT } from "@/components/i18n-provider";
 
@@ -149,7 +149,7 @@ export function MixEditor({ detail }: { detail: DjSetDetail }) {
                 </button>
               </span>
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={coverThumb(tr.imageUrl, "sm") ?? "/placeholder.svg"} alt="" className="h-10 w-10 shrink-0 rounded bg-zinc-100 object-cover dark:bg-zinc-800" />
+              <img onError={onImageError} src={coverThumb(tr.imageUrl, "sm") ?? "/placeholder.svg"} alt="" className="h-10 w-10 shrink-0 rounded bg-zinc-100 object-cover dark:bg-zinc-800" />
               <div className="min-w-0 flex-1">
                 <span className="flex items-center gap-1.5 text-sm font-medium text-zinc-900 dark:text-zinc-50">
                   <span className="truncate">{tr.name}</span>

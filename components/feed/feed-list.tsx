@@ -15,7 +15,7 @@ import { LevelBadge } from "@/components/ui/level-badge";
 import { dismissReview, loadMoreFeed } from "@/app/actions/social";
 import { useT } from "@/components/i18n-provider";
 import { formatRelativeTime } from "@/lib/format";
-import { coverThumb } from "@/lib/image";
+import { coverThumb, onImageError } from "@/lib/image";
 import type { FeedItem, FeedSort, FeedScope } from "@/lib/api";
 import type { Locale } from "@/lib/i18n";
 
@@ -64,13 +64,15 @@ export function FeedList({
   const loadMore = async () => {
     setLoadingMore(true);
     const more = await loadMoreFeed(sort, scope, items.length, genre);
+    setLoadingMore(false);
+    // 실패(null)는 "피드 끝"으로 오인하지 않고 버튼을 유지 → 재시도 가능(NON-224).
+    if (!more) return;
     // 라이브 정렬(hot/rising)로 창이 밀려 이미 표시된 항목이 다시 올 수 있음 → id 디듑(중복 키·중복 카드 방지, LOG-W-2)
     setItems((prev) => {
       const seen = new Set(prev.map((x) => x.id));
       return [...prev, ...more.filter((x) => !seen.has(x.id))];
     });
     setHasMore(more.length >= PAGE_SIZE);
-    setLoadingMore(false);
   };
 
   const hide = (id: string) => setDismissed((s) => new Set(s).add(id));
@@ -235,7 +237,7 @@ export function FeedList({
                 aria-label={it.name ?? (it.targetType === "track" ? trackLabel : albumLabel)}
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={coverThumb(it.imageUrl, "md") ?? "/placeholder.svg"} alt="" loading="lazy" className="h-16 w-16 rounded bg-zinc-100 object-cover dark:bg-zinc-800" />
+                <img onError={onImageError} src={coverThumb(it.imageUrl, "md") ?? "/placeholder.svg"} alt="" loading="lazy" className="h-16 w-16 rounded bg-zinc-100 object-cover dark:bg-zinc-800" />
               </Link>
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-1.5">
@@ -289,7 +291,7 @@ export function FeedList({
                 <span className="flex h-6 w-6 items-center justify-center overflow-hidden rounded-full bg-zinc-200 text-[10px] font-medium text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300">
                   {it.avatarUrl ? (
                     // eslint-disable-next-line @next/next/no-img-element
-                    <img src={it.avatarUrl} alt="" className="h-full w-full object-cover" />
+                    <img onError={onImageError} src={it.avatarUrl} alt="" className="h-full w-full object-cover" />
                   ) : (
                     it.username.charAt(0).toUpperCase()
                   )}
@@ -308,7 +310,7 @@ export function FeedList({
                 aria-label={it.name ?? (it.targetType === "track" ? trackLabel : albumLabel)}
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={coverThumb(it.imageUrl, "md") ?? "/placeholder.svg"} alt="" loading="lazy" className="h-28 w-28 rounded-lg bg-zinc-100 object-cover dark:bg-zinc-800" />
+                <img onError={onImageError} src={coverThumb(it.imageUrl, "md") ?? "/placeholder.svg"} alt="" loading="lazy" className="h-28 w-28 rounded-lg bg-zinc-100 object-cover dark:bg-zinc-800" />
               </Link>
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-1.5">

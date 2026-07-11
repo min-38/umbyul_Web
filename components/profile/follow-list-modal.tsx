@@ -1,4 +1,5 @@
 "use client";
+import { onImageError } from "@/lib/image";
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
@@ -92,7 +93,7 @@ function FollowRow({
         <span className="flex h-8 w-8 items-center justify-center overflow-hidden rounded-full bg-zinc-200 text-xs font-medium text-zinc-500 dark:bg-zinc-800 dark:text-zinc-300">
           {user.avatarUrl ? (
             // eslint-disable-next-line @next/next/no-img-element
-            <img src={user.avatarUrl} alt="" className="h-full w-full object-cover" />
+            <img onError={onImageError} src={user.avatarUrl} alt="" className="h-full w-full object-cover" />
           ) : (
             user.username.charAt(0).toUpperCase()
           )}

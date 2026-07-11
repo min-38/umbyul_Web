@@ -487,19 +487,24 @@ export type FeedItem = {
   level: number; // 작성자 리뷰어 레벨(NON-163)
 };
 
-/** 홈 피드 v2 (공개, following은 로그인 필요). 실패 시 빈 목록. */
-export async function getFeed(sort: FeedSort, scope: FeedScope, offset = 0, limit = 20, genre?: string): Promise<FeedItem[]> {
+// 실패(순단·!ok)는 null — 더보기(load-more)가 빈 배열을 "피드 끝"으로 오인해 버튼을 없애지 않게(NON-224).
+export async function getFeedPage(sort: FeedSort, scope: FeedScope, offset = 0, limit = 20, genre?: string): Promise<FeedItem[] | null> {
   try {
     const params: Record<string, string> = { sort, scope, offset: String(offset), limit: String(limit) };
     if (genre) params.genre = genre;
     const res = await apiFetch(`${API_URL}/feed?${new URLSearchParams(params)}`, { headers: await detailHeaders(), cache: "no-store" });
-    if (!res.ok) return [];
+    if (!res.ok) return null;
     const json = await res.json();
     const items = (json?.data?.items ?? []) as FeedItem[];
     return items.map((it) => ({ ...it, genres: it.genres ?? [] })); // 구 Api 스큐 방어(장르 필드 부재)
   } catch {
-    return [];
+    return null;
   }
+}
+
+/** 홈 피드 v2 (공개, following은 로그인 필요). 실패 시 빈 목록(SSR이 죽지 않게). */
+export async function getFeed(sort: FeedSort, scope: FeedScope, offset = 0, limit = 20, genre?: string): Promise<FeedItem[]> {
+  return (await getFeedPage(sort, scope, offset, limit, genre)) ?? [];
 }
 
 // Discover(NON-81/85). 전부 대상 커버(DiscoverItem). artistId 있으면 아티스트 링크(NON-85).
@@ -766,8 +771,9 @@ export async function getBlockedUsers(): Promise<BlockedUser[]> {
 
 export type NotificationPrefs = { master: boolean; follow: boolean; reviewLike: boolean; mention: boolean };
 
-/** 알림 설정 조회 (로그인). 없으면/오류 시 기본 on. */
-export async function getNotificationPrefs(): Promise<NotificationPrefs> {
+/** 알림 설정 조회 (로그인). 비로그인은 기본 on, 실패(순단·!ok)는 null —
+ *  장애 중 실제 설정 대신 기본값을 진짜 설정처럼 보여주지 않게(NON-224). */
+export async function getNotificationPrefs(): Promise<NotificationPrefs | null> {
   const supabase = await createClient();
   const {
     data: { session },
@@ -780,11 +786,11 @@ export async function getNotificationPrefs(): Promise<NotificationPrefs> {
       headers: { Authorization: `Bearer ${session.access_token}` },
       cache: "no-store",
     });
-    if (!res.ok) return defaults;
+    if (!res.ok) return null;
     const json = await res.json();
     return json.data as NotificationPrefs;
   } catch {
-    return defaults;
+    return null;
   }
 }
 

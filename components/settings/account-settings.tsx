@@ -1,4 +1,5 @@
 "use client";
+import { onImageError } from "@/lib/image";
 
 import { useMemo, useRef, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
@@ -252,7 +253,7 @@ export function AccountSettings({
           <span className="flex h-20 w-20 shrink-0 items-center justify-center overflow-hidden rounded-full bg-zinc-200 text-2xl font-semibold text-zinc-500 dark:bg-zinc-800 dark:text-zinc-300">
             {avatarUrl ? (
               // eslint-disable-next-line @next/next/no-img-element
-              <img src={avatarUrl} alt="" className="h-full w-full object-cover" />
+              <img onError={onImageError} src={avatarUrl} alt="" className="h-full w-full object-cover" />
             ) : (
               initialUsername.charAt(0).toUpperCase()
             )}

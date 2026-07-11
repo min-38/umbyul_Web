@@ -1,4 +1,5 @@
 "use client";
+import { onImageError } from "@/lib/image";
 
 import { useState } from "react";
 import Link from "next/link";
@@ -69,7 +70,7 @@ export function ArtistTabs({ ratedTracks, albums }: { ratedTracks: ArtistRatedTr
                 <li key={tr.spotifyId}>
                   <Link href={`/track/${tr.spotifyId}`} className="flex items-center gap-3 py-2.5 hover:bg-zinc-50 dark:hover:bg-zinc-900/50">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={tr.imageUrl ?? "/placeholder.svg"} alt="" className="h-11 w-11 shrink-0 rounded-md bg-zinc-100 object-cover dark:bg-zinc-900" />
+                    <img onError={onImageError} src={tr.imageUrl ?? "/placeholder.svg"} alt="" className="h-11 w-11 shrink-0 rounded-md bg-zinc-100 object-cover dark:bg-zinc-900" />
                     <span className="min-w-0 flex-1 truncate text-sm font-medium text-zinc-900 dark:text-zinc-50">{tr.name}</span>
                     <ScoreBadge rating={tr.rating} />
                   </Link>
@@ -113,7 +114,7 @@ function AlbumCard({ album, typeLabel }: { album: ArtistAlbum; typeLabel: string
   return (
     <Link href={`/album/${album.spotifyId}`} className="flex flex-col gap-1.5">
       {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src={album.imageUrl ?? "/placeholder.svg"} alt="" className="aspect-square w-full rounded-lg bg-zinc-100 object-cover dark:bg-zinc-800" />
+      <img onError={onImageError} src={album.imageUrl ?? "/placeholder.svg"} alt="" className="aspect-square w-full rounded-lg bg-zinc-100 object-cover dark:bg-zinc-800" />
       <div className="min-w-0">
         <p className="truncate text-sm font-medium text-zinc-900 dark:text-zinc-50">{album.name}</p>
         <p className="truncate text-xs text-zinc-500">

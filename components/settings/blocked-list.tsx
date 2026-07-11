@@ -1,4 +1,5 @@
 "use client";
+import { onImageError } from "@/lib/image";
 
 import { useState } from "react";
 import Link from "next/link";
@@ -38,7 +39,7 @@ export function BlockedList({ initial }: { initial: BlockedUser[] }) {
                 <span className="flex h-9 w-9 items-center justify-center overflow-hidden rounded-full bg-zinc-200 text-xs font-medium text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300">
                   {u.avatarUrl ? (
                     // eslint-disable-next-line @next/next/no-img-element
-                    <img src={u.avatarUrl} alt="" className="h-full w-full object-cover" />
+                    <img onError={onImageError} src={u.avatarUrl} alt="" className="h-full w-full object-cover" />
                   ) : (
                     u.username.charAt(0).toUpperCase()
                   )}

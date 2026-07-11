@@ -1,4 +1,5 @@
 "use client";
+import { onImageError } from "@/lib/image";
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
@@ -254,7 +255,7 @@ function NotifRow({
         <span className={`flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-full bg-zinc-200 text-xs font-medium text-zinc-500 dark:bg-zinc-800 dark:text-zinc-300 ${n.read ? "opacity-60" : ""}`}>
           {n.actorAvatarUrl ? (
             // eslint-disable-next-line @next/next/no-img-element
-            <img src={n.actorAvatarUrl} alt="" className="h-full w-full object-cover" />
+            <img onError={onImageError} src={n.actorAvatarUrl} alt="" className="h-full w-full object-cover" />
           ) : (
             n.actorUsername.charAt(0).toUpperCase()
           )}

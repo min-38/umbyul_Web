@@ -1,4 +1,5 @@
 "use client";
+import { onImageError } from "@/lib/image";
 
 import { useRef, useState } from "react";
 import Link from "next/link";
@@ -35,7 +36,7 @@ export function UserMenu({ username, avatarUrl }: { username: string; avatarUrl:
         <span className="flex h-7 w-7 items-center justify-center overflow-hidden rounded-full bg-zinc-200 text-xs font-medium text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300">
           {avatarUrl ? (
             // eslint-disable-next-line @next/next/no-img-element
-            <img src={avatarUrl} alt="" className="h-full w-full object-cover" />
+            <img onError={onImageError} src={avatarUrl} alt="" className="h-full w-full object-cover" />
           ) : (
             username.charAt(0).toUpperCase()
           )}

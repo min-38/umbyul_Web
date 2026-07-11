@@ -1,4 +1,5 @@
 "use client";
+import { onImageError } from "@/lib/image";
 
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { searchUsers, type UserHit } from "@/app/actions/mention";
@@ -132,7 +133,7 @@ export function MentionTextarea({
                 <span className="flex h-6 w-6 shrink-0 items-center justify-center overflow-hidden rounded-full bg-zinc-200 text-[10px] font-medium text-zinc-500 dark:bg-zinc-800 dark:text-zinc-300">
                   {u.avatarUrl ? (
                     // eslint-disable-next-line @next/next/no-img-element
-                    <img src={u.avatarUrl} alt="" className="h-full w-full object-cover" />
+                    <img onError={onImageError} src={u.avatarUrl} alt="" className="h-full w-full object-cover" />
                   ) : (
                     u.username.charAt(0).toUpperCase()
                   )}
