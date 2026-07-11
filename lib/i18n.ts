@@ -36,6 +36,16 @@ function formatNumber(v: number, locale: Locale): string {
 
 // 한국어 → 영어 매핑. 문구를 i18n 대상으로 옮길 때 여기에 추가.
 export const EN: Record<string, string> = {
+  // ── /about (NON-272) ──
+  "Spotify 카드": "Spotify search",
+  "방대한 Spotify 카탈로그에서 원하는 음악을 검색하세요.": "Search for any music in Spotify's vast catalog.",
+  "리뷰를 쓰고 댓글로 이야기 나누세요.\n좋은 리뷰엔 좋아요를 눌러봐요.": "Write reviews and chat in the comments.\nLike the ones you enjoy.",
+  "TODAY'S PICK·신규·추천 등 새로운 음악을 발견해보세요.": "Discover new music through Today's Pick, new releases, and recommendations.",
+  "가장 인기 있는 음악을 랭킹으로 확인하세요.": "See the most popular music in the rankings.",
+  "나만의 플레이리스트를 공유하고, 다른 사람의 믹스도 둘러보세요.": "Share your own playlist and browse others' mixes.",
+  "Glitter는 음악 감상을 기록하고 나누는 서비스입니다.": "Glitter is a service for logging and sharing what you listen to.",
+  "수많은 음악 중에서 남긴 별점과 리뷰가 쌓여, 당신만의 음악 취향이 뚜렷해집니다.": "As your ratings and reviews pile up, your music taste comes into focus.",
+  "지금 여러분이 좋아하는 음악에 별점을 남겨보세요.": "Leave a rating on music you love, right now.",
   // ── 메타 ──
   "음악을 듣고 평가하고 기록하세요.": "Listen, rate, and remember music you love.",
 
@@ -86,15 +96,11 @@ export const EN: Record<string, string> = {
   "조회 {count}": "{count} view|{count} views",
   이전: "Prev",
   다음: "Next",
-  "별점을 매길수록 별이 쌓여 반짝입니다 — 그래서 Glitter.":
-    "The more you rate, the more the stars stack up and shine — that's Glitter.",
   이용약관: "Terms of Service",
   "개인정보 처리방침": "Privacy Policy",
   문의: "Contact",
 
   // ── 랜딩 ──
-  "좋아하는 앨범과 곡을 평가하고, 리뷰를 남기고, 취향이 맞는 사람을 팔로우하세요.":
-    "Rate albums and tracks, write reviews, and follow people who share your taste.",
   둘러보기: "Explore",
   시작하기: "Get started",
   "0.5점 단위 별점": "Half-star ratings",
@@ -103,12 +109,7 @@ export const EN: Record<string, string> = {
   "취향 팔로우": "Follow tastes",
   "취향이 맞는 유저를 팔로우하고 새 평가를 받아보세요.":
     "Follow people who share your taste and catch their new ratings.",
-  "곡을 골라 '이거 들어봐' 믹스를 만들면, 유튜브·스포티파이로 듣고 평가해요.":
-    "Build a 'listen to this' mix — others can play it on YouTube or Spotify and rate the tracks.",
   "리뷰 & 댓글": "Reviews & comments",
-  "리뷰를 쓰고 댓글로 이야기 나누세요. 좋은 리뷰엔 좋아요.": "Write reviews and chat about it in the comments. Like the good ones.",
-  "발견 & 차트": "Discover & charts",
-  "신규·급상승 음악을 발견하고, 랭킹으로 흐름을 봐요.": "Find new and rising music, and follow the rankings.",
   "곡·앨범 평점이 시간에 따라 어떻게 움직이는지 그래프로 봐요.": "See how a track or album's rating moves over time on a graph.",
 
   // ── 설정 탭 ──
@@ -152,8 +153,6 @@ export const EN: Record<string, string> = {
   "검색 결과가 없습니다.": "No results found.",
   "등록된 질문이 없습니다.": "No questions yet.",
   "들은 음악을, 나만의 기록으로.": "Turn what you hear into your own record.",
-  "Glitter는 음악 감상을 기록하고 나누는 서비스입니다. 방대한 음악 카탈로그 위에서, 당신의 별점과 리뷰가 쌓여 취향의 지도가 됩니다.":
-    "Glitter is a place to log and share what you listen to. On top of a vast music catalog, your ratings and reviews build a map of your taste.",
   "무엇을 할 수 있나요": "What you can do",
   "Glitter에서 평가하고 리뷰하세요.": "Rate and review on Glitter.",
   "페이지를 찾을 수 없습니다.": "Page not found.",
@@ -190,8 +189,6 @@ export const EN: Record<string, string> = {
   "정렬 기준": "Sort by",
   "피드가 비어 있습니다.": "Your feed is empty.",
   피드: "Feed",
-  "이름의 의미": "Behind the name",
-  "지금 첫 별점을 남겨보세요.": "Leave your first rating.",
   "문의하기": "Contact us",
   카테고리: "Category",
   제목: "Title",
@@ -527,6 +524,16 @@ export const EN: Record<string, string> = {
 
 // 한국어 → 일본어.
 const JA: Record<string, string> = {
+  // ── /about (NON-272) ──
+  "Spotify 카드": "Spotify検索",
+  "방대한 Spotify 카탈로그에서 원하는 음악을 검색하세요.": "膨大なSpotifyカタログから聴きたい音楽を検索。",
+  "리뷰를 쓰고 댓글로 이야기 나누세요.\n좋은 리뷰엔 좋아요를 눌러봐요.": "レビューを書き、コメントで語り合おう。\n良いレビューにはいいねを。",
+  "TODAY'S PICK·신규·추천 등 새로운 음악을 발견해보세요.": "TODAY'S PICK・新着・おすすめから新しい音楽を発見。",
+  "가장 인기 있는 음악을 랭킹으로 확인하세요.": "最も人気の音楽をランキングでチェック。",
+  "나만의 플레이리스트를 공유하고, 다른 사람의 믹스도 둘러보세요.": "自分のプレイリストを共有し、他の人のミックスも覗いてみよう。",
+  "Glitter는 음악 감상을 기록하고 나누는 서비스입니다.": "Glitterは音楽の記録を残し、共有するサービスです。",
+  "수많은 음악 중에서 남긴 별점과 리뷰가 쌓여, 당신만의 음악 취향이 뚜렷해집니다.": "残した評価とレビューが積み重なり、あなたの音楽の好みがはっきりしていきます。",
+  "지금 여러분이 좋아하는 음악에 별점을 남겨보세요.": "今、好きな音楽に評価を残してみよう。",
   "음악을 듣고 평가하고 기록하세요.": "音楽を聴いて、評価して、記録しよう。",
 
   신규: "新着",
@@ -573,14 +580,10 @@ const JA: Record<string, string> = {
   "조회 {count}": "閲覧 {count}",
   이전: "前へ",
   다음: "次へ",
-  "별점을 매길수록 별이 쌓여 반짝입니다 — 그래서 Glitter.":
-    "評価するほど星が積み重なって輝く — だから Glitter。",
   이용약관: "利用規約",
   "개인정보 처리방침": "プライバシーポリシー",
   문의: "お問い合わせ",
 
-  "좋아하는 앨범과 곡을 평가하고, 리뷰를 남기고, 취향이 맞는 사람을 팔로우하세요.":
-    "好きなアルバムや曲を評価し、レビューを書き、趣味の合う人をフォローしよう。",
   둘러보기: "見てみる",
   시작하기: "はじめる",
   "0.5점 단위 별점": "0.5刻みの星評価",
@@ -589,12 +592,7 @@ const JA: Record<string, string> = {
   "취향 팔로우": "趣味の合う人をフォロー",
   "취향이 맞는 유저를 팔로우하고 새 평가를 받아보세요.":
     "趣味の合うユーザーをフォローして、新しい評価を受け取ろう。",
-  "곡을 골라 '이거 들어봐' 믹스를 만들면, 유튜브·스포티파이로 듣고 평가해요.":
-    "曲を選んで「これ聴いて」ミックスを作れば、YouTubeやSpotifyで聴いて評価できます。",
   "리뷰 & 댓글": "レビューとコメント",
-  "리뷰를 쓰고 댓글로 이야기 나누세요. 좋은 리뷰엔 좋아요.": "レビューを書いてコメントで語り合い、良いレビューにいいねを。",
-  "발견 & 차트": "発見とチャート",
-  "신규·급상승 음악을 발견하고, 랭킹으로 흐름을 봐요.": "新着・急上昇の音楽を見つけ、ランキングで流れをつかみます。",
   "곡·앨범 평점이 시간에 따라 어떻게 움직이는지 그래프로 봐요.": "曲やアルバムの評価が時間とともにどう動くかをグラフで見られます。",
 
   계정: "アカウント",
@@ -636,8 +634,6 @@ const JA: Record<string, string> = {
   "검색 결과가 없습니다.": "検索結果がありません。",
   "등록된 질문이 없습니다.": "質問がまだありません。",
   "들은 음악을, 나만의 기록으로.": "聴いた音楽を、自分だけの記録に。",
-  "Glitter는 음악 감상을 기록하고 나누는 서비스입니다. 방대한 음악 카탈로그 위에서, 당신의 별점과 리뷰가 쌓여 취향의 지도가 됩니다.":
-    "Glitter は音楽鑑賞を記録して共有するサービスです。膨大な音楽カタログの上に、あなたの評価とレビューが積み重なって趣味の地図になります。",
   "무엇을 할 수 있나요": "できること",
   "Glitter에서 평가하고 리뷰하세요.": "Glitter で評価してレビューしよう。",
   "페이지를 찾을 수 없습니다.": "ページが見つかりません。",
@@ -674,8 +670,6 @@ const JA: Record<string, string> = {
   "정렬 기준": "並び替え基準",
   "피드가 비어 있습니다.": "フィードが空です。",
   피드: "フィード",
-  "이름의 의미": "名前の由来",
-  "지금 첫 별점을 남겨보세요.": "最初の評価を残そう。",
   "문의하기": "お問い合わせ",
   카테고리: "カテゴリ",
   제목: "件名",
@@ -994,6 +988,16 @@ const JA: Record<string, string> = {
 
 // 한국어 → 스페인어.
 const ES: Record<string, string> = {
+  // ── /about (NON-272) ──
+  "Spotify 카드": "Búsqueda en Spotify",
+  "방대한 Spotify 카탈로그에서 원하는 음악을 검색하세요.": "Busca cualquier música en el amplio catálogo de Spotify.",
+  "리뷰를 쓰고 댓글로 이야기 나누세요.\n좋은 리뷰엔 좋아요를 눌러봐요.": "Escribe reseñas y comenta.\nDale me gusta a las que te gusten.",
+  "TODAY'S PICK·신규·추천 등 새로운 음악을 발견해보세요.": "Descubre música nueva con Today's Pick, novedades y recomendaciones.",
+  "가장 인기 있는 음악을 랭킹으로 확인하세요.": "Descubre la música más popular en las listas.",
+  "나만의 플레이리스트를 공유하고, 다른 사람의 믹스도 둘러보세요.": "Comparte tu playlist y explora las mezclas de otros.",
+  "Glitter는 음악 감상을 기록하고 나누는 서비스입니다.": "Glitter es un servicio para registrar y compartir lo que escuchas.",
+  "수많은 음악 중에서 남긴 별점과 리뷰가 쌓여, 당신만의 음악 취향이 뚜렷해집니다.": "A medida que se acumulan tus valoraciones y reseñas, tu gusto musical se perfila.",
+  "지금 여러분이 좋아하는 음악에 별점을 남겨보세요.": "Valora ahora la música que te gusta.",
   "음악을 듣고 평가하고 기록하세요.": "Escucha, califica y guarda la música que amas.",
 
   신규: "Nuevo",
@@ -1040,14 +1044,10 @@ const ES: Record<string, string> = {
   "조회 {count}": "{count} vista|{count} vistas",
   이전: "Anterior",
   다음: "Siguiente",
-  "별점을 매길수록 별이 쌓여 반짝입니다 — 그래서 Glitter.":
-    "Cuanto más calificas, más estrellas se acumulan y brillan — por eso, Glitter.",
   이용약관: "Términos del servicio",
   "개인정보 처리방침": "Política de privacidad",
   문의: "Contacto",
 
-  "좋아하는 앨범과 곡을 평가하고, 리뷰를 남기고, 취향이 맞는 사람을 팔로우하세요.":
-    "Califica tus álbumes y canciones favoritos, escribe reseñas y sigue a quienes comparten tu gusto.",
   둘러보기: "Explorar",
   시작하기: "Empezar",
   "0.5점 단위 별점": "Calificaciones en pasos de media estrella",
@@ -1056,12 +1056,7 @@ const ES: Record<string, string> = {
   "취향 팔로우": "Sigue a gente con tu gusto",
   "취향이 맞는 유저를 팔로우하고 새 평가를 받아보세요.":
     "Sigue a usuarios con tu gusto y entérate de sus nuevas calificaciones.",
-  "곡을 골라 '이거 들어봐' 믹스를 만들면, 유튜브·스포티파이로 듣고 평가해요.":
-    "Elige pistas para un mix de 'escucha esto' — otros lo oyen en YouTube o Spotify y lo califican.",
   "리뷰 & 댓글": "Reseñas y comentarios",
-  "리뷰를 쓰고 댓글로 이야기 나누세요. 좋은 리뷰엔 좋아요.": "Escribe reseñas y comenta. Dale me gusta a las buenas.",
-  "발견 & 차트": "Descubrir y rankings",
-  "신규·급상승 음악을 발견하고, 랭킹으로 흐름을 봐요.": "Encuentra música nueva y en auge, y sigue los rankings.",
   "곡·앨범 평점이 시간에 따라 어떻게 움직이는지 그래프로 봐요.": "Mira cómo cambia la calificación de una pista o álbum con el tiempo.",
 
   계정: "Cuenta",
@@ -1103,8 +1098,6 @@ const ES: Record<string, string> = {
   "검색 결과가 없습니다.": "No se encontraron resultados.",
   "등록된 질문이 없습니다.": "Aún no hay preguntas.",
   "들은 음악을, 나만의 기록으로.": "Convierte lo que escuchas en tu propio registro.",
-  "Glitter는 음악 감상을 기록하고 나누는 서비스입니다. 방대한 음악 카탈로그 위에서, 당신의 별점과 리뷰가 쌓여 취향의 지도가 됩니다.":
-    "Glitter es un lugar para registrar y compartir lo que escuchas. Sobre un enorme catálogo musical, tus calificaciones y reseñas construyen un mapa de tu gusto.",
   "무엇을 할 수 있나요": "Qué puedes hacer",
   "Glitter에서 평가하고 리뷰하세요.": "Califica y reseña en Glitter.",
   "페이지를 찾을 수 없습니다.": "Página no encontrada.",
@@ -1141,8 +1134,6 @@ const ES: Record<string, string> = {
   "정렬 기준": "Ordenar por",
   "피드가 비어 있습니다.": "Tu feed está vacío.",
   피드: "Feed",
-  "이름의 의미": "Sobre el nombre",
-  "지금 첫 별점을 남겨보세요.": "Deja tu primera calificación.",
   "문의하기": "Contáctanos",
   카테고리: "Categoría",
   제목: "Asunto",
