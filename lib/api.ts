@@ -632,14 +632,12 @@ export type GenreDiscoverData = { genre: GenreRef; top: DiscoverItem[]; subs: Ge
 
 /** 부모 장르 슬러그의 브라우즈 데이터. 미존재·실패 시 null(404 → notFound). */
 export async function getGenreDiscover(slug: string): Promise<GenreDiscoverData | null> {
-  try {
-    const res = await apiFetch(`${API_URL}/discover/genre/${encodeURIComponent(slug)}`, { cache: "no-store" });
-    if (!res.ok) return null;
-    const json = await res.json();
-    return (json?.data ?? null) as GenreDiscoverData | null;
-  } catch {
-    return null;
-  }
+  const res = await apiFetch(`${API_URL}/discover/genre/${encodeURIComponent(slug)}`, { cache: "no-store" });
+  if (res.status === 404) return null;
+  // 5xx/순단은 "장르 없음"(404)으로 위장하지 않고 throw → error.tsx 재시도(NON-217).
+  if (!res.ok) throw new Error(`genre discover failed: ${res.status}`);
+  const json = await res.json();
+  return (json?.data ?? null) as GenreDiscoverData | null;
 }
 
 // ── 유저 프로필 (NON-24) ──
@@ -832,7 +830,8 @@ export async function getSet(id: string): Promise<DjSetDetail | null> {
     cache: "no-store",
   });
   if (res.status === 404) return null;
-  if (!res.ok) return null;
+  // 5xx/순단은 404(=삭제됨)로 위장하지 않고 throw → error.tsx 재시도(NON-217).
+  if (!res.ok) throw new Error(`set fetch failed: ${res.status}`);
   const json = await res.json();
   return json.data as DjSetDetail;
 }
