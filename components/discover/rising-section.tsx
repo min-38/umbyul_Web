@@ -19,7 +19,7 @@ export function RisingSection({ rising }: { rising: RisingWindows }) {
 
   return (
     <section>
-      <div className="mb-4 flex items-center justify-between">
+      <div className="mb-2.5 flex items-center justify-between">
         <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">{t("급상승")}</h2>
         <div className="flex gap-1 rounded-lg bg-zinc-100 p-0.5 dark:bg-zinc-900">
           {WINDOWS.map((w) => (

@@ -17,7 +17,7 @@ export default async function DiscoverPage() {
   const empty = t("아직 없습니다.");
 
   return (
-    <div className="mx-auto flex w-full max-w-4xl flex-col gap-12 px-6 py-8">
+    <div className="mx-auto flex w-full max-w-4xl flex-col gap-7 px-6 py-8">
       <h1 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">{t("발견")}</h1>
 
       {dailyPick && (
@@ -34,14 +34,14 @@ export default async function DiscoverPage() {
 
       {recommendCovers.length > 0 && (
         <section>
-          <h2 className="mb-4 text-lg font-semibold text-zinc-900 dark:text-zinc-50">{t("추천")}</h2>
+          <h2 className="mb-2.5 text-lg font-semibold text-zinc-900 dark:text-zinc-50">{t("추천")}</h2>
           <CoverRow items={recommendCovers} empty={empty} />
         </section>
       )}
 
       {preferredGenreCovers.length > 0 && (
         <section>
-          <h2 className="mb-4 text-lg font-semibold text-zinc-900 dark:text-zinc-50">{t("당신이 좋아하는 장르들")}</h2>
+          <h2 className="mb-2.5 text-lg font-semibold text-zinc-900 dark:text-zinc-50">{t("당신이 좋아하는 장르들")}</h2>
           <CoverRow items={preferredGenreCovers} empty={empty} />
         </section>
       )}
@@ -49,13 +49,13 @@ export default async function DiscoverPage() {
       <RisingSection rising={rising} />
 
       <section>
-        <h2 className="mb-4 text-lg font-semibold text-zinc-900 dark:text-zinc-50">{t("신규")}</h2>
+        <h2 className="mb-2.5 text-lg font-semibold text-zinc-900 dark:text-zinc-50">{t("신규")}</h2>
         <CoverRow items={newCovers} empty={empty} />
       </section>
 
       {myCovers.length > 0 && (
         <section>
-          <h2 className="mb-4 text-lg font-semibold text-zinc-900 dark:text-zinc-50">{t("내 최근 리뷰")}</h2>
+          <h2 className="mb-2.5 text-lg font-semibold text-zinc-900 dark:text-zinc-50">{t("내 최근 리뷰")}</h2>
           <CoverRow items={myCovers} empty={empty} />
         </section>
       )}
