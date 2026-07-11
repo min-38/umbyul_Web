@@ -29,25 +29,26 @@ export async function Header() {
 
   return (
     <header className="sticky top-0 z-20 border-b border-zinc-200 bg-white/80 backdrop-blur dark:border-zinc-800 dark:bg-black/80">
-      {/* 좌/우를 같은 폭(flex-1)으로 두어 가운데 검색란이 페이지 정중앙에 오게 함 */}
-      <div className="mx-auto flex w-full max-w-6xl items-center gap-4 px-4 py-2.5">
+      {/* 좌·우를 minmax(0,1fr)로 강제 균등 → 언어별 네비 폭이 달라도 가운데 검색란이 항상 페이지 정중앙(NON-274).
+          검색란 폭은 언어 무관(뷰포트 반응형). 넓은 네비는 xl 미만에서 햄버거로 접어 검색란 잘림 방지. */}
+      <div className="mx-auto grid w-full max-w-6xl grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-4 px-4 py-2.5">
         {/* 좌: 브랜드 + 네비 */}
-        <div className="flex flex-1 items-center gap-1">
+        <div className="flex min-w-0 items-center gap-1">
           <Link href="/" className="shrink-0">
             <span className="glitter-text text-lg font-bold tracking-tight">Glitter</span>
           </Link>
           <HeaderNav />
         </div>
 
-        {/* 중앙: 검색 (정중앙) */}
-        <div className="flex w-[36rem] min-w-0 max-w-full justify-center">
+        {/* 중앙: 검색 (정중앙·고정폭) */}
+        <div className="flex w-[20rem] min-w-0 max-w-full justify-center justify-self-center sm:w-[24rem]">
           <Suspense fallback={<div className="w-full max-w-xl" />}>
             <SearchBar />
           </Suspense>
         </div>
 
         {/* 우: 테마 + 프로필 */}
-        <div className="flex flex-1 items-center justify-end gap-1">
+        <div className="flex min-w-0 items-center justify-end gap-1">
           <ThemeToggle />
           {user && <NotificationBell items={notifs.items} unreadCount={notifs.unreadCount} />}
           {user ? (
