@@ -18,7 +18,7 @@ export function FeedCommentsModal({
 }) {
   const t = useT();
   return (
-    <Dialog open onClose={onClose} labelledBy="feed-comments-title" panelClassName="flex max-h-[80vh] w-full max-w-lg flex-col rounded-2xl bg-white p-5 shadow-xl outline-none dark:bg-zinc-950">
+    <Dialog open onClose={onClose} labelledBy="feed-comments-title" panelClassName="flex max-h-[80dvh] w-full max-w-lg flex-col rounded-2xl bg-white p-5 shadow-xl outline-none dark:bg-zinc-950">
       <div className="mb-3 flex items-center justify-between">
         <h2 id="feed-comments-title" className="text-base font-semibold text-zinc-900 dark:text-zinc-50">{t("댓글")}</h2>
         <button

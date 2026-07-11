@@ -42,7 +42,7 @@ export default async function AnnouncementsPage({ searchParams }: { searchParams
                 >
                   <span className="w-8 shrink-0 text-right text-sm tabular-nums text-zinc-500">{numberAt(i)}</span>
                   <span className="min-w-0 flex-1 truncate text-sm font-medium text-zinc-900 dark:text-zinc-50">{a.title}</span>
-                  <span className="shrink-0 text-xs text-zinc-500">{t("조회 {count}", { count: (a.viewCount ?? 0).toLocaleString() })}</span>
+                  <span className="hidden shrink-0 text-xs text-zinc-500 sm:inline">{t("조회 {count}", { count: (a.viewCount ?? 0).toLocaleString() })}</span>
                   {a.publishedAt && (
                     <span className="w-24 shrink-0 text-right text-xs text-zinc-500">
                       {new Date(a.publishedAt).toLocaleDateString(dateLocale(locale))}

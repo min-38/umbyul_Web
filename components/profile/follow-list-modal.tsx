@@ -35,7 +35,7 @@ export function FollowListModal({
   }, [username, kind]);
 
   return (
-    <Dialog open onClose={onClose} labelledBy="follow-list-title" panelClassName="flex max-h-[70vh] w-full max-w-sm flex-col rounded-2xl bg-white p-5 shadow-xl outline-none dark:bg-zinc-950">
+    <Dialog open onClose={onClose} labelledBy="follow-list-title" panelClassName="flex max-h-[70dvh] w-full max-w-sm flex-col rounded-2xl bg-white p-5 shadow-xl outline-none dark:bg-zinc-950">
       <h2 id="follow-list-title" className="mb-3 text-base font-semibold text-zinc-900 dark:text-zinc-50">
         {kind === "followers" ? t("팔로워") : t("팔로잉")}
       </h2>

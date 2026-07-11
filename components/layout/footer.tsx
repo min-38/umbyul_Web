@@ -41,7 +41,7 @@ export async function Footer() {
             <LocaleSwitcher />
           </div>
         </div>
-        <div className="flex gap-12">
+        <div className="flex flex-wrap gap-8 sm:gap-12">
           <FooterCol title={t("정책")} links={tr(POLICY)} />
           <FooterCol title={t("소식")} links={tr(NEWS)} />
           <FooterCol title={t("고객지원")} links={tr(INFO)} />
