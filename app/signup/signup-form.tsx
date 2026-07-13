@@ -1,12 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { Spinner } from "@/components/ui/spinner";
 import { BrandMark } from "@/components/ui/brand-mark";
 import { PasswordInput } from "@/components/ui/password-input";
+import { Turnstile, captchaEnabled, type TurnstileHandle } from "@/components/auth/turnstile";
 import { isEmail, passwordChecks, borderClass, type FieldStatus } from "@/lib/validation";
 import { errText, type ErrText } from "@/lib/messages";
 import { useT, useLocale } from "@/components/i18n-provider";
@@ -39,6 +40,8 @@ export function SignupForm() {
   const [code, setCode] = useState("");
   const [err, setErr] = useState<ErrText>(null);
   const [loading, setLoading] = useState(false);
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
+  const captchaRef = useRef<TurnstileHandle>(null);
 
   const router = useRouter();
   const supabase = createClient();
@@ -54,8 +57,9 @@ export function SignupForm() {
   const confirmStatus: FieldStatus =
     confirm === "" ? "idle" : confirm === password ? "valid" : "invalid";
   const agreed = agreedTerms && agreedPrivacy;
+  const captchaOk = !captchaEnabled || !!captchaToken;
   const canSubmit =
-    emailState === "available" && pw.all && confirm === password && agreed && !loading;
+    emailState === "available" && pw.all && confirm === password && agreed && captchaOk && !loading;
   // "{link}에 동의합니다." → 링크(약관/방침)를 문장 중간에 넣기 위해 앞/뒤로 분리(어순은 로케일별로 다름)
   const [agreeBefore, agreeAfter] = t("{link}에 동의합니다.").split("{link}");
 
@@ -94,12 +98,13 @@ export function SignupForm() {
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
-      options: { data: { terms_accepted: true } },
+      options: { data: { terms_accepted: true }, captchaToken: captchaToken ?? undefined },
     });
     setLoading(false);
 
     if (error) {
       setErr({ code: error.code ?? "" });
+      captchaRef.current?.reset(); // 토큰 1회용 — 재시도 위해 새 챌린지
       return;
     }
     // 제출 시 재확인: 이미 가입된 이메일이면 identities 가 빈 배열(열거 방지)
@@ -256,6 +261,8 @@ export function SignupForm() {
             </span>
           </label>
         </div>
+
+        <Turnstile ref={captchaRef} onToken={setCaptchaToken} />
 
         <button
           type="submit"

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
@@ -8,6 +8,7 @@ import { OAuthButtons } from "@/components/auth/oauth-buttons";
 import { Spinner } from "@/components/ui/spinner";
 import { BrandMark } from "@/components/ui/brand-mark";
 import { PasswordInput } from "@/components/ui/password-input";
+import { Turnstile, captchaEnabled, type TurnstileHandle } from "@/components/auth/turnstile";
 import { errText, type ErrText } from "@/lib/messages";
 import { useT, useLocale } from "@/components/i18n-provider";
 
@@ -22,18 +23,26 @@ export function LoginForm({ initialError = null }: { initialError?: ErrText }) {
   // OAuth 콜백이 /login?error=auth 로 되돌려보낸 실패를 표시(예전엔 아무도 안 읽어 조용히 폼으로 복귀, NON-223).
   const [err, setErr] = useState<ErrText>(initialError);
   const [loading, setLoading] = useState(false);
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
+  const captchaRef = useRef<TurnstileHandle>(null);
 
   const router = useRouter();
   const supabase = createClient();
+  const captchaOk = !captchaEnabled || !!captchaToken;
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErr(null);
     setLoading(true);
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+      options: { captchaToken: captchaToken ?? undefined },
+    });
     setLoading(false);
     if (error) {
       setErr({ code: error.code ?? "" });
+      captchaRef.current?.reset(); // 토큰 1회용 — 재시도 위해 새 챌린지
       return;
     }
     router.push("/");
@@ -74,9 +83,10 @@ export function LoginForm({ initialError = null }: { initialError?: ErrText }) {
           placeholder={t("비밀번호")}
           className={`${inputBase} ${border}`}
         />
+        <Turnstile ref={captchaRef} onToken={setCaptchaToken} />
         <button
           type="submit"
-          disabled={loading}
+          disabled={loading || !captchaOk}
           className="mt-1 flex h-10 w-full items-center justify-center rounded-lg bg-indigo-600 text-sm font-medium text-white hover:bg-indigo-500 disabled:opacity-60"
         >
           {loading ? <><Spinner /><span className="sr-only">{t("로그인")}</span></> : t("로그인")}

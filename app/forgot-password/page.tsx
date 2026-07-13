@@ -1,10 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import { BrandMark } from "@/components/ui/brand-mark";
 import { Spinner } from "@/components/ui/spinner";
+import { Turnstile, captchaEnabled, type TurnstileHandle } from "@/components/auth/turnstile";
 import { errText, type ErrText } from "@/lib/messages";
 import { useT, useLocale } from "@/components/i18n-provider";
 
@@ -18,6 +19,9 @@ export default function ForgotPasswordPage() {
   const [loading, setLoading] = useState(false);
   const [sent, setSent] = useState(false);
   const [err, setErr] = useState<ErrText>(null);
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
+  const captchaRef = useRef<TurnstileHandle>(null);
+  const captchaOk = !captchaEnabled || !!captchaToken;
   const errorText = errText(err, locale, t);
 
   const onSubmit = async (e: React.FormEvent) => {
@@ -26,10 +30,13 @@ export default function ForgotPasswordPage() {
     setLoading(true);
     const { error } = await createClient().auth.resetPasswordForEmail(email, {
       redirectTo: `${window.location.origin}/auth/callback?next=/reset-password`,
+      captchaToken: captchaToken ?? undefined,
     });
     setLoading(false);
-    if (error) setErr({ code: error.code ?? "" });
-    else setSent(true);
+    if (error) {
+      setErr({ code: error.code ?? "" });
+      captchaRef.current?.reset(); // 토큰 1회용 — 재시도 위해 새 챌린지
+    } else setSent(true);
   };
 
   return (
@@ -74,9 +81,10 @@ export default function ForgotPasswordPage() {
                 placeholder={t("이메일")}
                 className={inputBase}
               />
+              <Turnstile ref={captchaRef} onToken={setCaptchaToken} />
               <button
                 type="submit"
-                disabled={loading || !email}
+                disabled={loading || !email || !captchaOk}
                 className="mt-1 flex h-10 w-full items-center justify-center rounded-lg bg-indigo-600 text-sm font-medium text-white hover:bg-indigo-500 disabled:opacity-60"
               >
                 {loading ? <><Spinner /><span className="sr-only">{t("재설정 링크 보내기")}</span></> : t("재설정 링크 보내기")}
