@@ -98,7 +98,8 @@ export function SignupForm() {
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
-      options: { data: { terms_accepted: true }, captchaToken: captchaToken ?? undefined },
+      // locale은 인증 이메일 언어 분기용(Supabase 템플릿의 {{ .Data.locale }})
+      options: { data: { terms_accepted: true, locale }, captchaToken: captchaToken ?? undefined },
     });
     setLoading(false);
 
