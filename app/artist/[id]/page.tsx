@@ -16,10 +16,10 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   const { id } = await params;
   const [artist, t] = await Promise.all([getArtist(id), getT()]);
   if (!artist) return {};
-  const title = `${artist.name} | Glitter`;
+  const title = `${artist.name} | UmByul`;
   return {
     title,
-    description: `${artist.name} — ${t("Glitter에서 평가하고 리뷰하세요.")}`,
+    description: `${artist.name} — ${t("음별에서 평가하고 리뷰하세요.")}`,
     openGraph: { title, images: artist.imageUrl ? [artist.imageUrl] : [] },
   };
 }

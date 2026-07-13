@@ -27,7 +27,7 @@ export default async function AboutPage() {
 
       {/* Hero */}
       <section className="mx-auto flex w-full max-w-3xl flex-col items-center gap-6 px-6 pt-24 pb-16 text-center sm:pt-32">
-        <span className="glitter-text text-6xl font-bold tracking-tight sm:text-7xl">Glitter</span>
+        <span className="glitter-text text-6xl font-bold tracking-tight sm:text-7xl">UmByul</span>
         <h1 className="text-balance text-3xl font-bold tracking-tight text-white sm:text-4xl">
           {t("별을 남길수록 반짝이는 나의 기록")}
         </h1>
@@ -52,7 +52,7 @@ export default async function AboutPage() {
         </div>
       </section>
 
-      {/* What is Glitter */}
+      {/* What is UmByul */}
       <section className="mx-auto w-full max-w-2xl px-6 py-16 text-center">
         <p className="text-xs font-medium uppercase tracking-[0.2em] text-indigo-300/80">{t("서비스 소개")}</p>
         <h2 className="mt-3 text-balance text-2xl font-semibold text-white sm:text-3xl">
@@ -60,7 +60,7 @@ export default async function AboutPage() {
         </h2>
         <p className="mt-4 text-balance text-base leading-relaxed text-zinc-300">
           {t(
-            "Glitter는 음악 감상을 기록하고 나누는 서비스입니다.",
+            "음별은 음악 감상을 기록하고 나누는 서비스입니다.",
           )}
         </p>
         <p className="text-balance text-base leading-relaxed text-zinc-300">

@@ -17,7 +17,7 @@
     <clipPath id="gClip">
       <text x="16" y="16" text-anchor="middle" dominant-baseline="central"
             font-family="Geist, ui-sans-serif, system-ui, -apple-system, Segoe UI, Arial, sans-serif"
-            font-weight="800" font-size="31">G</text>
+            font-weight="800" font-size="31">U</text>
     </clipPath>
   </defs>
   <g clip-path="url(#gClip)">

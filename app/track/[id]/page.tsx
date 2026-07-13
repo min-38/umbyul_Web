@@ -13,11 +13,11 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   const [track, t] = await Promise.all([getTrack(id), getT()]);
   if (!track) return {};
   const artists = track.artists.map((a) => a.name).join(", ");
-  const title = `${track.name} · ${artists} | Glitter`;
+  const title = `${track.name} · ${artists} | UmByul`;
   const image = track.album?.imageUrl ?? null;
   return {
     title,
-    description: `${track.name} — ${artists}. ${t("Glitter에서 평가하고 리뷰하세요.")}`,
+    description: `${track.name} — ${artists}. ${t("음별에서 평가하고 리뷰하세요.")}`,
     openGraph: { title, images: image ? [image] : [] },
   };
 }

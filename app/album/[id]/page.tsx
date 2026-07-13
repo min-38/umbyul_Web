@@ -13,10 +13,10 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   const [album, t] = await Promise.all([getAlbum(id), getT()]);
   if (!album) return {};
   const artists = album.artists.map((a) => a.name).join(", ");
-  const title = `${album.name} · ${artists} | Glitter`;
+  const title = `${album.name} · ${artists} | UmByul`;
   return {
     title,
-    description: `${album.name} — ${artists}. ${t("Glitter에서 평가하고 리뷰하세요.")}`,
+    description: `${album.name} — ${artists}. ${t("음별에서 평가하고 리뷰하세요.")}`,
     openGraph: { title, images: album.imageUrl ? [album.imageUrl] : [] },
   };
 }

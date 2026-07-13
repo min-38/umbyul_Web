@@ -17,7 +17,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   const locale = await getLocale();
   const a = await getCachedAnnouncement(id, locale);
   if (!a) return {};
-  const title = `${a.title} | Glitter`;
+  const title = `${a.title} | UmByul`;
   return { title, openGraph: { title } };
 }
 

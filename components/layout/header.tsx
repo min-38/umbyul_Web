@@ -35,7 +35,7 @@ export async function Header() {
         {/* 좌: 브랜드 + 네비 */}
         <div className="flex min-w-0 items-center gap-1">
           <Link href="/" className="shrink-0">
-            <span className="glitter-text text-lg font-bold tracking-tight">Glitter</span>
+            <span className="glitter-text text-lg font-bold tracking-tight">UmByul</span>
           </Link>
           <HeaderNav />
         </div>

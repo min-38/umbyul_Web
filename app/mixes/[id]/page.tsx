@@ -9,7 +9,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   const { id } = await params;
   const detail = await getSet(id);
   if (!detail) return {};
-  return { title: `${detail.set.title} · ${detail.set.ownerUsername} | Glitter` };
+  return { title: `${detail.set.title} · ${detail.set.ownerUsername} | UmByul` };
 }
 
 export default async function SetPage({ params }: { params: Promise<{ id: string }> }) {

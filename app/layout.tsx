@@ -28,7 +28,7 @@ const geistMono = Geist_Mono({
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getT();
   return {
-    title: "Glitter",
+    title: "UmByul",
     description: t("음악을 듣고 평가하고 기록하세요."),
   };
 }
