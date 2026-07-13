@@ -81,6 +81,9 @@ export default function ForgotPasswordPage() {
                 placeholder={t("이메일")}
                 className={inputBase}
               />
+              <p className="text-xs leading-relaxed text-zinc-500 dark:text-zinc-400">
+                {t("가입된 주소로만 재설정 메일이 발송됩니다. 메일이 안 보이면 스팸함도 확인해 주세요.")}
+              </p>
               <Turnstile ref={captchaRef} onToken={setCaptchaToken} />
               <button
                 type="submit"

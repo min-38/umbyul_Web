@@ -387,6 +387,8 @@ export const EN: Record<string, string> = {
   로그인으로: "Back to login",
   "비밀번호 재설정": "Reset password",
   "가입한 이메일로 재설정 링크를 보내드립니다.": "We'll send a reset link to your email.",
+  "가입된 주소로만 재설정 메일이 발송됩니다. 메일이 안 보이면 스팸함도 확인해 주세요.":
+    "Reset emails are only sent to registered addresses. If you don't see it, check your spam folder.",
   "재설정 링크 보내기": "Send reset link",
   "로그인으로 돌아가기": "Back to login",
   "비밀번호는 8자 이상이어야 합니다.": "Password must be at least 8 characters.",
@@ -861,6 +863,8 @@ const JA: Record<string, string> = {
   로그인으로: "ログインへ",
   "비밀번호 재설정": "パスワード再設定",
   "가입한 이메일로 재설정 링크를 보내드립니다.": "登録済みのメールに再設定リンクを送ります。",
+  "가입된 주소로만 재설정 메일이 발송됩니다. 메일이 안 보이면 스팸함도 확인해 주세요.":
+    "再設定メールは登録済みのアドレスにのみ送信されます。届かない場合は迷惑メールフォルダもご確認ください。",
   "재설정 링크 보내기": "再設定リンクを送る",
   "로그인으로 돌아가기": "ログインに戻る",
   "비밀번호는 8자 이상이어야 합니다.": "パスワードは8文字以上にしてください。",
@@ -1328,6 +1332,8 @@ const ES: Record<string, string> = {
   로그인으로: "Iniciar sesión",
   "비밀번호 재설정": "Restablecer contraseña",
   "가입한 이메일로 재설정 링크를 보내드립니다.": "Enviaremos un enlace de restablecimiento a tu correo.",
+  "가입된 주소로만 재설정 메일이 발송됩니다. 메일이 안 보이면 스팸함도 확인해 주세요.":
+    "Los correos de restablecimiento solo se envían a direcciones registradas. Si no lo ves, revisa tu carpeta de spam.",
   "재설정 링크 보내기": "Enviar enlace",
   "로그인으로 돌아가기": "Volver a iniciar sesión",
   "비밀번호는 8자 이상이어야 합니다.": "La contraseña debe tener al menos 8 caracteres.",
