@@ -10,7 +10,7 @@ export default async function SupportPage() {
     <div className="mx-auto w-full max-w-2xl px-6 py-16">
       <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-50">{t("후원하기")}</h1>
       <p className="mt-4 text-sm leading-relaxed text-zinc-600 dark:text-zinc-300">
-        {t("음별은 한 사람이 운영하는 서비스입니다. 서버비(호스팅·스토리지)에 커피 한 잔이 큰 힘이 됩니다.")}
+        {t("음별은 한 사람이 운영하는 서비스입니다. 서버 운영 비용(호스팅·스토리지)에 커피 한 잔이 큰 힘이 됩니다.")}
       </p>
       <p className="mt-2 text-sm leading-relaxed text-zinc-500">
         {t("순수 후원이라 어떤 대가나 혜택도 없어요. 부담 갖지 마시고, 마음이 있으실 때만.")}
