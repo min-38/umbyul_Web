@@ -8,7 +8,7 @@ import { useLocale } from "@/components/i18n-provider";
 const SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
 export const captchaEnabled = !!SITE_KEY;
 
-const SCRIPT_SRC = "https://challenge.cloudflare.com/turnstile/v0/api.js?render=explicit";
+const SCRIPT_SRC = "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";
 
 type TurnstileApi = {
   render: (el: HTMLElement, opts: Record<string, unknown>) => string;
