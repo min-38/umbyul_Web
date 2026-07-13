@@ -27,7 +27,7 @@ export default async function AboutPage() {
 
       {/* Hero */}
       <section className="mx-auto flex w-full max-w-3xl flex-col items-center gap-6 px-6 pt-24 pb-16 text-center sm:pt-32">
-        <span className="glitter-text text-6xl font-bold tracking-tight sm:text-7xl">UmByul</span>
+        <span className="glitter-text pb-[0.12em] text-6xl font-bold leading-tight tracking-tight sm:text-7xl">UmByul</span>
         <h1 className="whitespace-pre-line text-balance text-3xl font-bold tracking-tight text-white sm:text-4xl">
           {t("별을 남길수록 반짝이는 나의 기록")}
         </h1>
