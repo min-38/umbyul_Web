@@ -8,6 +8,7 @@ import type { ConsentDoc } from "@/lib/api";
 import { submitConsent } from "@/app/actions/consent";
 import { signOut } from "@/app/auth/actions";
 import { dateLocale } from "@/lib/format";
+import { translate, type Locale } from "@/lib/i18n";
 import { useT } from "@/components/i18n-provider";
 
 const MD_COMPONENTS = {
@@ -62,7 +63,7 @@ export function ReconsentGate({ docs }: { docs: ConsentDoc[] }) {
                   {d.version ? <span className="font-mono">{d.version}</span> : null}
                   {d.version && d.effectiveDate ? " · " : ""}
                   {d.effectiveDate
-                    ? `${t("시행일")}: ${new Date(d.effectiveDate).toLocaleDateString(dateLocale(d.locale ?? "en"), { dateStyle: "long" })}`
+                    ? `${translate((d.locale ?? "en") as Locale, "시행일")}: ${new Date(d.effectiveDate).toLocaleDateString(dateLocale(d.locale ?? "en"), { dateStyle: "long" })}`
                     : ""}
                 </p>
               )}

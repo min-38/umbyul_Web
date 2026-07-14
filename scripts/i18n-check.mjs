@@ -19,6 +19,8 @@ const EXT = /\.(tsx?|jsx?)$/;
 //   about 피처(title/desc), THEME_LABELS, 정렬 라벨(SORTS/feed/mix/review), 차트 기간, 신고 사유,
 //   설정 탭, PROVIDER_LABELS, notificationSuffix, footer 링크, 검색 카테고리 등.
 const ALLOW = new Set([
+  // 약관/개인정보 시행일 라벨 — t()가 아니라 translate(문서로케일, "시행일")로 사용(문서 언어 일치).
+  "시행일",
   // /about feature 카드(동적 t(f.title)/t(f.desc), NON-272)
   "Spotify 카드",
   "방대한 Spotify 카탈로그에서 원하는 음악을 검색하세요.",

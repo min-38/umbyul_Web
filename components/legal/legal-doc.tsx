@@ -2,6 +2,7 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { getLegalDoc } from "@/lib/api";
 import { getLocale, getT } from "@/lib/i18n-server";
+import { translate, type Locale } from "@/lib/i18n";
 import { LegalLangSelect } from "@/components/legal/legal-lang-select";
 import { dateLocale } from "@/lib/format";
 
@@ -15,7 +16,8 @@ export async function LegalDoc({ type, langParam }: { type: "terms" | "privacy";
   const locale = langParam && DOC_LOCALES.includes(langParam) ? langParam : uiLocale;
   const t = await getT();
   const doc = await getLegalDoc(type, locale);
-  const title = type === "terms" ? t("이용약관") : t("개인정보 처리방침");
+  // 제목·시행일 라벨은 UI 로케일(t)이 아니라 "문서 언어(locale)"로 — 본문·날짜와 일치시킴(?lang= 전환 대응).
+  const title = translate(locale as Locale, type === "terms" ? "이용약관" : "개인정보 처리방침");
 
   return (
     <div className="mx-auto w-full max-w-3xl px-6 py-12">
@@ -28,7 +30,7 @@ export async function LegalDoc({ type, langParam }: { type: "terms" | "privacy";
           <p className="mt-1 text-xs text-zinc-500">
             {doc.version ? <span className="font-mono">{doc.version}</span> : null}
             {doc.version ? " · " : ""}
-            {t("시행일")}: {new Date(doc.effectiveDate ?? doc.updatedAt).toLocaleDateString(dateLocale(locale), { dateStyle: "long" })}
+            {translate(locale as Locale, "시행일")}: {new Date(doc.effectiveDate ?? doc.updatedAt).toLocaleDateString(dateLocale(locale), { dateStyle: "long" })}
           </p>
           <article className="mt-6">
             <ReactMarkdown
