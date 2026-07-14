@@ -36,6 +36,8 @@ export async function generateMetadata(): Promise<Metadata> {
     description,
     openGraph: { siteName: "UmByul", type: "website", description },
     twitter: { card: "summary_large_image" },
+    // 네이버 서치어드바이저 소유확인(공개 메타값).
+    verification: { other: { "naver-site-verification": "50da5bc8249570fbd61adf5d0514dd139f51e780" } },
   };
 }
 
