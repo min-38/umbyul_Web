@@ -17,6 +17,10 @@ const nextConfig: NextConfig = {
   turbopack: {
     root: __dirname,
   },
+  // OG 이미지 라우트가 fs로 읽는 폰트 파일을 프로덕션 번들(Vercel/standalone)에 포함.
+  outputFileTracingIncludes: {
+    "/opengraph-image": ["./app/_fonts/**"],
+  },
   async headers() {
     return [{ source: "/:path*", headers: securityHeaders }];
   },

@@ -9,6 +9,7 @@ import { ConfirmProvider } from "@/components/ui/confirm-dialog";
 import { ReconsentGate } from "@/components/legal/reconsent-gate";
 import { getConsentStatus } from "@/lib/api";
 import { getLocale, getT } from "@/lib/i18n-server";
+import { SITE_URL } from "@/lib/site";
 
 // 첫 페인트 전에 테마(.dark)·color-scheme 적용 — 깜빡임(FOUC) 방지.
 // raw <script>로 body 최상단에 인라인 → HTML 파싱 중 동기 실행. (next/script beforeInteractive는 App Router에서
@@ -27,9 +28,14 @@ const geistMono = Geist_Mono({
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getT();
+  const description = t("음악을 듣고 평가하고 기록하세요.");
   return {
+    // 상대 OG 경로·canonical을 절대 URL로 해석하는 기준(sitemap/robots와 동일 오리진).
+    metadataBase: new URL(SITE_URL),
     title: "UmByul",
-    description: t("음악을 듣고 평가하고 기록하세요."),
+    description,
+    openGraph: { siteName: "UmByul", type: "website", description },
+    twitter: { card: "summary_large_image" },
   };
 }
 

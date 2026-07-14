@@ -5,6 +5,7 @@ import Link from "next/link";
 import { getTrackDetail, getMySanction, getRatingHistory, getGenresFor, getGenres } from "@/lib/api";
 import { getMentionMute } from "@/app/actions/mention";
 import { getT } from "@/lib/i18n-server";
+import { SITE_URL } from "@/lib/site";
 
 const getTrack = cache(getTrackDetail);
 
@@ -18,6 +19,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   return {
     title,
     description: `${track.name} — ${artists}. ${t("음별에서 평가하고 리뷰하세요.")}`,
+    alternates: { canonical: `/track/${id}` },
     openGraph: { title, images: image ? [image] : [] },
   };
 }
@@ -59,8 +61,23 @@ export default async function TrackPage({ params }: { params: Promise<{ id: stri
   const mine = user ? track.reviews.find((r) => r.userId === user.id) : undefined;
   const rateSanction = sanction?.banned ? "banned" : sanction?.suspendedUntil ? "suspended" : null;
 
+  // 검색 리치 결과용 구조화 데이터(MusicRecording). 평점은 있을 때만 aggregateRating으로.
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "MusicRecording",
+    name: track.name,
+    url: `${SITE_URL}/track/${track.spotifyId}`,
+    byArtist: track.artists.map((a) => ({ "@type": "MusicGroup", name: a.name })),
+    ...(track.album ? { inAlbum: { "@type": "MusicAlbum", name: track.album.name } } : {}),
+    ...(track.album?.imageUrl ? { image: track.album.imageUrl } : {}),
+    ...(track.rating.average != null && track.rating.count > 0
+      ? { aggregateRating: { "@type": "AggregateRating", ratingValue: track.rating.average, ratingCount: track.rating.count, bestRating: 5, worstRating: 1 } }
+      : {}),
+  };
+
   return (
     <div className="mx-auto w-full max-w-4xl px-6 py-8">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <div className="flex flex-col gap-6 sm:flex-row">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img

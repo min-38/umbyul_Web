@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getAlbumDetail, getMySanction, getRatingHistory, getGenresFor, getGenres } from "@/lib/api";
 import { getMentionMute } from "@/app/actions/mention";
+import { SITE_URL } from "@/lib/site";
 import { getT } from "@/lib/i18n-server";
 
 // generateMetadata 와 페이지가 같은 요청에서 한 번만 fetch 하도록 dedupe.
@@ -17,6 +18,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   return {
     title,
     description: `${album.name} — ${artists}. ${t("음별에서 평가하고 리뷰하세요.")}`,
+    alternates: { canonical: `/album/${id}` },
     openGraph: { title, images: album.imageUrl ? [album.imageUrl] : [] },
   };
 }
@@ -55,8 +57,23 @@ export default async function AlbumPage({ params }: { params: Promise<{ id: stri
   const mine = user ? album.reviews.find((r) => r.userId === user.id) : undefined;
   const rateSanction = sanction?.banned ? "banned" : sanction?.suspendedUntil ? "suspended" : null;
 
+  // 검색 리치 결과용 구조화 데이터(MusicAlbum). 평점은 있을 때만 aggregateRating으로.
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "MusicAlbum",
+    name: album.name,
+    url: `${SITE_URL}/album/${album.spotifyId}`,
+    byArtist: album.artists.map((a) => ({ "@type": "MusicGroup", name: a.name })),
+    numTracks: album.totalTracks,
+    ...(album.imageUrl ? { image: album.imageUrl } : {}),
+    ...(album.rating.average != null && album.rating.count > 0
+      ? { aggregateRating: { "@type": "AggregateRating", ratingValue: album.rating.average, ratingCount: album.rating.count, bestRating: 5, worstRating: 1 } }
+      : {}),
+  };
+
   return (
     <div className="mx-auto w-full max-w-4xl px-6 py-8">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <div className="flex flex-col gap-6 sm:flex-row">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
