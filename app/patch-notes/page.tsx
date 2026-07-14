@@ -34,18 +34,38 @@ export default async function PatchNotesPage() {
   const inProgress = items.filter((x) => x.status === "in_progress");
   const released = items.filter((x) => x.status === "released");
 
-  const Note = (note: PatchNoteItem) => (
-    <article key={note.id} className="border-l-2 border-zinc-200 pl-4 dark:border-zinc-800">
+  // 현재 운영 버전(최신 릴리스=released[0])은 초록으로 강조, 이전 릴리스는 회색 흐림, 작업 중은 amber+점선.
+  const Note = (note: PatchNoteItem, variant: "current" | "past" | "wip") => (
+    <article
+      key={note.id}
+      className={`border-l-2 pl-4 ${
+        variant === "current"
+          ? "border-emerald-500"
+          : variant === "wip"
+            ? "border-dashed border-amber-400 dark:border-amber-500"
+            : "border-zinc-200 dark:border-zinc-800"
+      }`}
+    >
       <div className="flex flex-wrap items-baseline gap-2">
-        <h3 className="text-lg font-bold text-zinc-900 dark:text-zinc-50">{note.version || t("작업 중")}</h3>
-        {note.status === "in_progress" ? (
+        <h3
+          className={`text-lg font-bold ${
+            variant === "past" ? "text-zinc-500 dark:text-zinc-400" : "text-zinc-900 dark:text-zinc-50"
+          }`}
+        >
+          {note.version || t("작업 중")}
+        </h3>
+        {variant === "current" && (
+          <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-xs font-medium text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300">
+            {t("현재 버전")}
+          </span>
+        )}
+        {variant === "wip" && (
           <span className="rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-700 dark:bg-amber-950 dark:text-amber-300">
             {t("작업 중")}
           </span>
-        ) : (
-          note.releasedAt && (
-            <span className="text-xs text-zinc-500">{new Date(note.releasedAt).toLocaleDateString(dateLocale(locale))}</span>
-          )
+        )}
+        {variant !== "wip" && note.releasedAt && (
+          <span className="text-xs text-zinc-500">{new Date(note.releasedAt).toLocaleDateString(dateLocale(locale))}</span>
         )}
       </div>
       <div className="mt-1">
@@ -66,13 +86,13 @@ export default async function PatchNotesPage() {
           {inProgress.length > 0 && (
             <section className="flex flex-col gap-6">
               <h2 className="text-sm font-semibold uppercase tracking-wide text-amber-700 dark:text-amber-400">{t("작업 중")}</h2>
-              {inProgress.map(Note)}
+              {inProgress.map((n) => Note(n, "wip"))}
             </section>
           )}
           {released.length > 0 && (
             <section className="flex flex-col gap-8">
               <h2 className="sr-only">{t("릴리스")}</h2>
-              {released.map(Note)}
+              {released.map((n, i) => Note(n, i === 0 ? "current" : "past"))}
             </section>
           )}
         </div>
