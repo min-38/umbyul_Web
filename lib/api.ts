@@ -375,6 +375,21 @@ export async function getGenres(): Promise<Genre[]> {
   }
 }
 
+// sitemap.xml 동적 라우트용 — 상세 페이지가 존재하는 track/album/artist ID 목록(공개).
+export type SitemapTarget = { type: "track" | "album" | "artist"; id: string };
+
+/** sitemap용 target ID 나열(공개). 실패 시 빈 목록 → 정적 라우트만 남음. */
+export async function getSitemapTargets(): Promise<SitemapTarget[]> {
+  try {
+    const res = await apiFetch(`${API_URL}/sitemap/targets`, { next: { revalidate: REVALIDATE.list } });
+    if (!res.ok) return [];
+    const json = await res.json();
+    return (json?.data ?? []) as SitemapTarget[];
+  } catch {
+    return [];
+  }
+}
+
 /** 내 선호 장르 id 목록(NON-150). 미로그인·마이그레이션 미적용 시 빈 목록. */
 export async function getMyGenrePreferences(): Promise<number[]> {
   const supabase = await createClient();
