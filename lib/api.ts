@@ -9,7 +9,7 @@ const API_TIMEOUT_MS = 8000;
 
 // 공개(무-auth) 응답만 짧게 캐시하는 revalidate 윈도(초). 유저별(auth 헤더/‌/me) 응답은 절대 캐시하지 않는다.
 // Spotify Developer Policy: 성능 목적의 단기 캐시는 허용 — revalidate가 최신성 보장, 무기한 저장 아님.
-const REVALIDATE = { list: 3600, dynamic: 300, content: 1800 } as const;
+const REVALIDATE = { list: 3600, dynamic: 300 } as const;
 
 export function apiFetch(url: string, init?: RequestInit): Promise<Response> {
   return fetch(url, { ...init, signal: init?.signal ?? AbortSignal.timeout(API_TIMEOUT_MS) });
@@ -131,7 +131,7 @@ export type LegalDoc = {
 
 export async function getLegalDoc(type: "terms" | "privacy", locale: string): Promise<LegalDoc | null> {
   try {
-    const res = await apiFetch(`${API_URL}/legal/${type}?locale=${encodeURIComponent(locale)}`, { next: { revalidate: REVALIDATE.content } });
+    const res = await apiFetch(`${API_URL}/legal/${type}?locale=${encodeURIComponent(locale)}`, { cache: "no-store" });
     if (!res.ok) return null;
     const json = await res.json();
     return json.data as LegalDoc;
@@ -145,7 +145,7 @@ export type FaqItem = { category: string; question: string; answer: string };
 
 export async function getFaq(locale: string): Promise<FaqItem[]> {
   try {
-    const res = await apiFetch(`${API_URL}/faq?locale=${encodeURIComponent(locale)}`, { next: { revalidate: REVALIDATE.content } });
+    const res = await apiFetch(`${API_URL}/faq?locale=${encodeURIComponent(locale)}`, { cache: "no-store" });
     if (!res.ok) return [];
     const json = await res.json();
     return (json.data?.items ?? []) as FaqItem[];
@@ -161,7 +161,7 @@ export type AnnouncementList = { items: AnnouncementListItem[]; total: number };
 
 export async function getAnnouncements(locale: string, offset = 0, limit = 10): Promise<AnnouncementList> {
   try {
-    const res = await apiFetch(`${API_URL}/announcements?locale=${encodeURIComponent(locale)}&offset=${offset}&limit=${limit}`, { next: { revalidate: REVALIDATE.content } });
+    const res = await apiFetch(`${API_URL}/announcements?locale=${encodeURIComponent(locale)}&offset=${offset}&limit=${limit}`, { cache: "no-store" });
     if (!res.ok) return { items: [], total: 0 };
     const json = await res.json();
     return { items: (json.data?.items ?? []) as AnnouncementListItem[], total: (json.data?.total ?? 0) as number };
@@ -173,7 +173,7 @@ export async function getAnnouncements(locale: string, offset = 0, limit = 10): 
 export async function getAnnouncement(id: string, locale: string): Promise<AnnouncementDetail | null> {
   try {
     // 조회수 집계는 상세 fetch가 아니라 브라우저의 /view 핑(AnnouncementViewPing)이 담당 — 여기선 인증 불필요.
-    const res = await apiFetch(`${API_URL}/announcements/${encodeURIComponent(id)}?locale=${encodeURIComponent(locale)}`, { next: { revalidate: REVALIDATE.content } });
+    const res = await apiFetch(`${API_URL}/announcements/${encodeURIComponent(id)}?locale=${encodeURIComponent(locale)}`, { cache: "no-store" });
     if (!res.ok) return null;
     const json = await res.json();
     return json.data as AnnouncementDetail;
@@ -193,7 +193,7 @@ export type PatchNoteItem = {
 
 export async function getPatchNotes(locale: string): Promise<PatchNoteItem[]> {
   try {
-    const res = await apiFetch(`${API_URL}/patch-notes?locale=${encodeURIComponent(locale)}`, { next: { revalidate: REVALIDATE.content } });
+    const res = await apiFetch(`${API_URL}/patch-notes?locale=${encodeURIComponent(locale)}`, { cache: "no-store" });
     if (!res.ok) return [];
     const json = await res.json();
     return (json.data?.items ?? []) as PatchNoteItem[];
