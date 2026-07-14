@@ -29,7 +29,7 @@ export function MixGuide() {
         <div className="absolute left-0 top-full z-30 mt-2 w-64 rounded-lg border border-zinc-200 bg-white p-3 text-xs leading-relaxed text-zinc-600 shadow-lg dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300">
           <ul className="flex flex-col gap-1.5">
             <li>· {t("최대 {count}곡까지 담을 수 있어요.", { count: MAX_TRACKS })}</li>
-            <li>· {t("곡을 검색해 담고, 유튜브 링크를 붙이면 스포티파이 없이도 들을 수 있어요.")}</li>
+            <li>· {t("곡을 검색해 담기만 하면, 유튜브 링크가 있는 곡은 스포티파이 없이도 들을 수 있어요.")}</li>
             <li>· {t("순서는 화살표로 바꿀 수 있어요.")}</li>
           </ul>
         </div>
