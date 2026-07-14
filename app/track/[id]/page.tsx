@@ -38,23 +38,26 @@ import { formatDuration, formatReleaseDate } from "@/lib/format";
 
 export default async function TrackPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const track = await getTrack(id);
-  if (!track) notFound();
-
-  const ratingHistory = await getRatingHistory("track", track.targetId);
-
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  // 독립 데이터는 병렬로(상세·인증·장르목록·번역) — 순차 await 워터폴 제거.
+  const [track, userRes, allGenres, t] = await Promise.all([
+    getTrack(id),
+    supabase.auth.getUser(),
+    getGenres(),
+    getT(),
+  ]);
+  if (!track) notFound();
+  const user = userRes.data.user;
 
+  // 트랙/유저 의존 데이터도 병렬로. 장르·멘션뮤트는 서버에서 미리 받아 시드 — 마운트 후 fetch 깜빡임 방지(NON-161).
+  const [ratingHistory, genresFor, sanction, mentionMuted] = await Promise.all([
+    getRatingHistory("track", track.targetId),
+    getGenresFor("track", track.spotifyId),
+    user ? getMySanction() : Promise.resolve(null),
+    user ? getMentionMute("track", track.spotifyId) : Promise.resolve(null),
+  ]);
   const mine = user ? track.reviews.find((r) => r.userId === user.id) : undefined;
-  const sanction = user ? await getMySanction() : null;
   const rateSanction = sanction?.banned ? "banned" : sanction?.suspendedUntil ? "suspended" : null;
-  // 장르·멘션뮤트를 서버에서 미리 받아 시드 — 마운트 후 fetch로 인한 깜빡임/버튼 튐 방지(NON-161).
-  const [genresFor, allGenres] = await Promise.all([getGenresFor("track", track.spotifyId), getGenres()]);
-  const mentionMuted = user ? await getMentionMute("track", track.spotifyId) : null;
-  const t = await getT();
 
   return (
     <div className="mx-auto w-full max-w-4xl px-6 py-8">

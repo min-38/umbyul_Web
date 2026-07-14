@@ -7,6 +7,10 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL;
 // 루트 레이아웃의 await가 무한 대기 → 전 사이트 백지. 타임아웃을 걸어 기존 catch/폴백 경로로 흘린다.
 const API_TIMEOUT_MS = 8000;
 
+// 공개(무-auth) 응답만 짧게 캐시하는 revalidate 윈도(초). 유저별(auth 헤더/‌/me) 응답은 절대 캐시하지 않는다.
+// Spotify Developer Policy: 성능 목적의 단기 캐시는 허용 — revalidate가 최신성 보장, 무기한 저장 아님.
+const REVALIDATE = { list: 3600, dynamic: 300, content: 1800 } as const;
+
 export function apiFetch(url: string, init?: RequestInit): Promise<Response> {
   return fetch(url, { ...init, signal: init?.signal ?? AbortSignal.timeout(API_TIMEOUT_MS) });
 }
@@ -127,7 +131,7 @@ export type LegalDoc = {
 
 export async function getLegalDoc(type: "terms" | "privacy", locale: string): Promise<LegalDoc | null> {
   try {
-    const res = await apiFetch(`${API_URL}/legal/${type}?locale=${encodeURIComponent(locale)}`, { cache: "no-store" });
+    const res = await apiFetch(`${API_URL}/legal/${type}?locale=${encodeURIComponent(locale)}`, { next: { revalidate: REVALIDATE.content } });
     if (!res.ok) return null;
     const json = await res.json();
     return json.data as LegalDoc;
@@ -141,7 +145,7 @@ export type FaqItem = { category: string; question: string; answer: string };
 
 export async function getFaq(locale: string): Promise<FaqItem[]> {
   try {
-    const res = await apiFetch(`${API_URL}/faq?locale=${encodeURIComponent(locale)}`, { cache: "no-store" });
+    const res = await apiFetch(`${API_URL}/faq?locale=${encodeURIComponent(locale)}`, { next: { revalidate: REVALIDATE.content } });
     if (!res.ok) return [];
     const json = await res.json();
     return (json.data?.items ?? []) as FaqItem[];
@@ -157,7 +161,7 @@ export type AnnouncementList = { items: AnnouncementListItem[]; total: number };
 
 export async function getAnnouncements(locale: string, offset = 0, limit = 10): Promise<AnnouncementList> {
   try {
-    const res = await apiFetch(`${API_URL}/announcements?locale=${encodeURIComponent(locale)}&offset=${offset}&limit=${limit}`, { cache: "no-store" });
+    const res = await apiFetch(`${API_URL}/announcements?locale=${encodeURIComponent(locale)}&offset=${offset}&limit=${limit}`, { next: { revalidate: REVALIDATE.content } });
     if (!res.ok) return { items: [], total: 0 };
     const json = await res.json();
     return { items: (json.data?.items ?? []) as AnnouncementListItem[], total: (json.data?.total ?? 0) as number };
@@ -169,7 +173,7 @@ export async function getAnnouncements(locale: string, offset = 0, limit = 10): 
 export async function getAnnouncement(id: string, locale: string): Promise<AnnouncementDetail | null> {
   try {
     // 조회수 집계는 상세 fetch가 아니라 브라우저의 /view 핑(AnnouncementViewPing)이 담당 — 여기선 인증 불필요.
-    const res = await apiFetch(`${API_URL}/announcements/${encodeURIComponent(id)}?locale=${encodeURIComponent(locale)}`, { cache: "no-store" });
+    const res = await apiFetch(`${API_URL}/announcements/${encodeURIComponent(id)}?locale=${encodeURIComponent(locale)}`, { next: { revalidate: REVALIDATE.content } });
     if (!res.ok) return null;
     const json = await res.json();
     return json.data as AnnouncementDetail;
@@ -189,7 +193,7 @@ export type PatchNoteItem = {
 
 export async function getPatchNotes(locale: string): Promise<PatchNoteItem[]> {
   try {
-    const res = await apiFetch(`${API_URL}/patch-notes?locale=${encodeURIComponent(locale)}`, { cache: "no-store" });
+    const res = await apiFetch(`${API_URL}/patch-notes?locale=${encodeURIComponent(locale)}`, { next: { revalidate: REVALIDATE.content } });
     if (!res.ok) return [];
     const json = await res.json();
     return (json.data?.items ?? []) as PatchNoteItem[];
@@ -345,7 +349,7 @@ export type RatingPoint = { date: string; avg: number; count: number };
 export async function getRatingHistory(type: "track" | "album", targetId: string): Promise<RatingPoint[]> {
   try {
     const qs = new URLSearchParams({ type, id: targetId });
-    const res = await apiFetch(`${API_URL}/detail/rating-history?${qs}`, { cache: "no-store" });
+    const res = await apiFetch(`${API_URL}/detail/rating-history?${qs}`, { next: { revalidate: REVALIDATE.dynamic } });
     if (!res.ok) return [];
     const json = await res.json();
     return (json?.data ?? []) as RatingPoint[];
@@ -362,7 +366,7 @@ export type GenresFor = { top: GenreCount[]; mine: number[] };
 /** 큐레이트 장르 목록(공개). 실패 시 빈 목록. */
 export async function getGenres(): Promise<Genre[]> {
   try {
-    const res = await apiFetch(`${API_URL}/genres`, { cache: "no-store" });
+    const res = await apiFetch(`${API_URL}/genres`, { next: { revalidate: REVALIDATE.list } });
     if (!res.ok) return [];
     const json = await res.json();
     return (json?.data ?? []) as Genre[];
@@ -551,7 +555,7 @@ export async function getArtistChart(
 ): Promise<ArtistRankItem[]> {
   try {
     const qs = new URLSearchParams({ type: "artist", sort, period, gender, age, limit: String(limit) });
-    const res = await apiFetch(`${API_URL}/chart?${qs}`, { cache: "no-store" });
+    const res = await apiFetch(`${API_URL}/chart?${qs}`, { next: { revalidate: REVALIDATE.dynamic } });
     if (!res.ok) return [];
     const json = await res.json();
     return (json?.data?.items ?? []) as ArtistRankItem[];
@@ -568,7 +572,7 @@ export type UserRankItem = { userId: string; username: string; avatarUrl: string
 export async function getUserChart(sort: ChartUserSort, period: ChartPeriod, limit = 50): Promise<UserRankItem[]> {
   try {
     const qs = new URLSearchParams({ sort, period, limit: String(limit) });
-    const res = await apiFetch(`${API_URL}/chart/users?${qs}`, { cache: "no-store" });
+    const res = await apiFetch(`${API_URL}/chart/users?${qs}`, { next: { revalidate: REVALIDATE.dynamic } });
     if (!res.ok) return [];
     const json = await res.json();
     return (json?.data?.items ?? []) as UserRankItem[];
@@ -588,7 +592,7 @@ export async function getChart(
 ): Promise<DiscoverItem[]> {
   try {
     const qs = new URLSearchParams({ type, sort, period, gender, age, limit: String(limit) });
-    const res = await apiFetch(`${API_URL}/chart?${qs}`, { cache: "no-store" });
+    const res = await apiFetch(`${API_URL}/chart?${qs}`, { next: { revalidate: REVALIDATE.dynamic } });
     if (!res.ok) return [];
     const json = await res.json();
     return (json?.data?.items ?? []) as DiscoverItem[];
@@ -638,7 +642,7 @@ export type GenreDiscoverData = { genre: GenreRef; top: DiscoverItem[]; subs: Ge
 
 /** 부모 장르 슬러그의 브라우즈 데이터. 미존재·실패 시 null(404 → notFound). */
 export async function getGenreDiscover(slug: string): Promise<GenreDiscoverData | null> {
-  const res = await apiFetch(`${API_URL}/discover/genre/${encodeURIComponent(slug)}`, { cache: "no-store" });
+  const res = await apiFetch(`${API_URL}/discover/genre/${encodeURIComponent(slug)}`, { next: { revalidate: REVALIDATE.dynamic } });
   if (res.status === 404) return null;
   // 5xx/순단은 "장르 없음"(404)으로 위장하지 않고 throw → error.tsx 재시도(NON-217).
   if (!res.ok) throw new Error(`genre discover failed: ${res.status}`);

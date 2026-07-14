@@ -34,23 +34,26 @@ import { MentionMuteToggle } from "@/components/detail/mention-mute-toggle";
 
 export default async function AlbumPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const album = await getAlbum(id);
-  if (!album) notFound();
-
-  const ratingHistory = await getRatingHistory("album", album.targetId);
-
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  // 독립 데이터는 병렬로(상세·인증·장르목록·번역) — 순차 await 워터폴 제거.
+  const [album, userRes, allGenres, t] = await Promise.all([
+    getAlbum(id),
+    supabase.auth.getUser(),
+    getGenres(),
+    getT(),
+  ]);
+  if (!album) notFound();
+  const user = userRes.data.user;
 
+  // 앨범/유저 의존 데이터도 병렬로. 장르·멘션뮤트는 서버에서 미리 받아 시드 — 마운트 후 fetch 깜빡임 방지(NON-161).
+  const [ratingHistory, genresFor, sanction, mentionMuted] = await Promise.all([
+    getRatingHistory("album", album.targetId),
+    getGenresFor("album", album.spotifyId),
+    user ? getMySanction() : Promise.resolve(null),
+    user ? getMentionMute("album", album.spotifyId) : Promise.resolve(null),
+  ]);
   const mine = user ? album.reviews.find((r) => r.userId === user.id) : undefined;
-  const sanction = user ? await getMySanction() : null;
   const rateSanction = sanction?.banned ? "banned" : sanction?.suspendedUntil ? "suspended" : null;
-  // 장르·멘션뮤트를 서버에서 미리 받아 시드 — 마운트 후 fetch로 인한 깜빡임/버튼 튐 방지(NON-161).
-  const [genresFor, allGenres] = await Promise.all([getGenresFor("album", album.spotifyId), getGenres()]);
-  const mentionMuted = user ? await getMentionMute("album", album.spotifyId) : null;
-  const t = await getT();
 
   return (
     <div className="mx-auto w-full max-w-4xl px-6 py-8">
