@@ -36,12 +36,22 @@ export default async function ProfilePage({ params }: { params: Promise<{ userna
           <div className="flex items-start justify-between gap-2">
             <div className="flex min-w-0 items-center gap-2">
               <h1 className="truncate text-2xl font-bold text-zinc-900 dark:text-zinc-50">{profile.username}</h1>
-              {!profile.blocked && <LevelBadge level={profile.level} size="md" />}
+              {/* 본인은 아래 경험치 카드가 레벨을 크게 보여줘 배지가 중복 → 타인에게만 노출. */}
+              {!profile.blocked && !isSelf && <LevelBadge level={profile.level} size="md" />}
             </div>
             {!isSelf && (
               <ProfileMenu username={profile.username} targetId={profile.id} loggedIn={loggedIn} blocked={profile.blocked} />
             )}
           </div>
+          <ProfileSocial
+            username={profile.username}
+            isSelf={isSelf}
+            loggedIn={loggedIn}
+            myUsername={me?.username ?? null}
+            followerCount={profile.followerCount}
+            followingCount={profile.followingCount}
+            isFollowing={profile.isFollowing}
+          />
           {/* 본인만: 경험치 강조(크게) — Edit Profile 위(req7). 남에겐 XP 숨기고 레벨만(req1). */}
           {isSelf && !profile.blocked && (
             <div className="flex flex-col gap-2 rounded-xl border border-zinc-200 p-3.5 dark:border-zinc-800">
@@ -55,15 +65,6 @@ export default async function ProfilePage({ params }: { params: Promise<{ userna
               <span className="text-xs text-zinc-500">{t("다음 레벨까지 {xp} XP", { xp: xpToNext.toLocaleString() })}</span>
             </div>
           )}
-          <ProfileSocial
-            username={profile.username}
-            isSelf={isSelf}
-            loggedIn={loggedIn}
-            myUsername={me?.username ?? null}
-            followerCount={profile.followerCount}
-            followingCount={profile.followingCount}
-            isFollowing={profile.isFollowing}
-          />
           {/* 공개 이력(모두 볼 수 있음, XP 아님): 리뷰·받은 좋아요·가입 */}
           {!profile.blocked && (
             <p className="text-xs text-zinc-500">
