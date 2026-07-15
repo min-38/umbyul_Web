@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { getT } from "@/lib/i18n-server";
 import { LocaleSwitcher } from "./locale-switcher";
+import { ThemeToggle } from "./theme-toggle";
 
 const POLICY = [
   { label: "이용약관", href: "/terms" },
@@ -37,8 +38,13 @@ export async function Footer() {
             <SpotifyLogo />
             Powered by Spotify
           </a>
-          <div className="mt-1">
+          {/* 테마 토글은 xl 미만에서만 — xl+는 헤더에 있다. 설정(로그인 전용)에도 있지만
+              비로그인 유저에겐 이게 유일한 테마 수단이라 헤더에서 숨기는 대신 여기에 둔다. */}
+          <div className="mt-1 flex items-center gap-1">
             <LocaleSwitcher />
+            <div className="xl:hidden">
+              <ThemeToggle openUp />
+            </div>
           </div>
         </div>
         <div className="flex flex-wrap gap-8 sm:gap-12">

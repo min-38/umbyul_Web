@@ -5,7 +5,8 @@ import { useClickOutside } from "@/lib/use-click-outside";
 import { type Theme, THEME_LABELS, applyTheme, getStoredTheme, setStoredTheme } from "@/lib/theme";
 import { useT } from "@/components/i18n-provider";
 
-export function ThemeToggle() {
+// openUp: 푸터처럼 페이지 하단에 놓일 때 위로 열어 화면 밖으로 나가지 않게 한다.
+export function ThemeToggle({ openUp = false }: { openUp?: boolean } = {}) {
   const t = useT();
   const [theme, setTheme] = useState<Theme>("system");
   const [open, setOpen] = useState(false);
@@ -54,7 +55,11 @@ export function ThemeToggle() {
       </button>
 
       {open && (
-        <div className="absolute right-0 z-20 mt-1 w-28 overflow-hidden rounded-lg border border-zinc-200 bg-white py-1 shadow-lg dark:border-zinc-800 dark:bg-zinc-950">
+        <div
+          className={`absolute right-0 z-20 w-28 overflow-hidden rounded-lg border border-zinc-200 bg-white py-1 shadow-lg dark:border-zinc-800 dark:bg-zinc-950 ${
+            openUp ? "bottom-full mb-1" : "mt-1"
+          }`}
+        >
           {(["light", "dark", "system"] as Theme[]).map((opt) => (
             <button
               key={opt}

@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
+import { BottomNav } from "@/components/layout/bottom-nav";
 import { SanctionBanner } from "@/components/layout/sanction-banner";
 import { I18nProvider } from "@/components/i18n-provider";
 import { ConfirmProvider } from "@/components/ui/confirm-dialog";
@@ -73,6 +74,10 @@ export default async function RootLayout({
                 <SanctionBanner />
                 <main id="main" className="flex flex-1 flex-col">{children}</main>
                 <Footer />
+                {/* 하단 탭바(xl 미만 고정) — 위 spacer가 푸터 마지막 줄을 가리지 않도록 높이를 비워둔다.
+                    h-14(56px) + 아이폰 홈 인디케이터 safe-area. */}
+                <div className="xl:hidden" style={{ height: "calc(3.5rem + env(safe-area-inset-bottom))" }} aria-hidden="true" />
+                <BottomNav />
               </>
             )}
           </ConfirmProvider>

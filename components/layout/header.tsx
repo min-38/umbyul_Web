@@ -30,9 +30,11 @@ export async function Header() {
   return (
     <header className="sticky top-0 z-20 border-b border-zinc-200 bg-white/80 backdrop-blur dark:border-zinc-800 dark:bg-black/80">
       {/* 좌·우를 minmax(0,1fr)로 강제 균등 → 언어별 네비 폭이 달라도 가운데 검색란이 항상 페이지 정중앙(NON-274).
-          검색란 폭은 언어 무관(뷰포트 반응형). 넓은 네비는 xl 미만에서 햄버거로 접어 검색란 잘림 방지. */}
-      {/* 모바일(<md): 2줄 — [로고+네비 | 테마·프로필] 위, 전폭 검색 아래.
-          md+: 기존 3열 그리드(좌 · 정중앙 고정폭 검색 · 우). 검색 고정폭이 좁은 화면을 다 먹어 로고·버튼이 잘리던 문제 해결. */}
+          <lg: 네비는 하단 탭바(BottomNav)가 담당하고 여기선 렌더 안 함. 패드 세로(768)는 좌측 셀이 160px뿐이라
+          검색란을 줄여도 인라인 네비가 물리적으로 안 들어간다(최장 로케일 ja 기준 338.6px 필요).
+          lg~xl: 검색란을 16rem으로 줄여 좌측 셀 352px 확보 → 인라인 네비 노출. xl+는 24rem 복귀. */}
+      {/* 모바일(<md): 2줄 — [로고 | 프로필] 위, 전폭 검색 아래.
+          md+: 3열 그리드(좌 · 정중앙 고정폭 검색 · 우). */}
       <div className="mx-auto grid w-full max-w-6xl grid-cols-2 items-center gap-x-4 gap-y-2 px-4 py-2.5 md:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] md:gap-y-0">
         {/* 좌: 브랜드 + 네비 */}
         <div className="col-start-1 row-start-1 flex min-w-0 items-center gap-1">
@@ -51,7 +53,10 @@ export async function Header() {
 
         {/* 우: 테마 + 프로필 */}
         <div className="col-start-2 row-start-1 flex min-w-0 items-center justify-end gap-1 md:col-start-3">
-          <ThemeToggle />
+          {/* xl 미만: 푸터의 테마 토글이 대신한다(설정은 로그인 전용이라 비로그인 유저의 유일한 수단). */}
+          <div className="hidden xl:block">
+            <ThemeToggle />
+          </div>
           {user && <NotificationBell items={notifs.items} unreadCount={notifs.unreadCount} />}
           {user ? (
             <UserMenu username={profile?.username ?? t("프로필")} avatarUrl={profile?.avatarUrl ?? null} />
