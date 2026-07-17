@@ -509,12 +509,8 @@ export const EN: Record<string, string> = {
 
   // ── 아티스트 상세 (NON-13) ──
   "Spotify에서 열기": "Open on Spotify",
-  "평가 좋은 트랙": "Top-rated tracks",
-  "평가 좋은 앨범": "Top-rated albums",
-  "아직 평가된 곡이 없습니다.": "No rated tracks yet.",
-  "아직 평가된 앨범이 없습니다.": "No rated albums yet.",
   "평가된 릴리스 {rated} · 총 평가 {total}": "{rated} releases rated · {total} ratings",
-  "커뮤니티 최근 리뷰": "Recent community reviews",
+  "최근 리뷰": "Recent reviews",
   "음악 정보를 불러오지 못했습니다. 잠시 후 다시 시도해주세요.":
     "Couldn't load music info. Please try again shortly.",
   "화제의 릴리스": "Trending releases",
@@ -971,12 +967,8 @@ const JA: Record<string, string> = {
   "{username}님의 리뷰": "{username}さんのレビュー",
 
   "Spotify에서 열기": "Spotifyで開く",
-  "평가 좋은 트랙": "高評価の曲",
-  "평가 좋은 앨범": "高評価のアルバム",
-  "아직 평가된 곡이 없습니다.": "まだ評価された曲がありません。",
-  "아직 평가된 앨범이 없습니다.": "まだ評価されたアルバムがありません。",
   "평가된 릴리스 {rated} · 총 평가 {total}": "評価されたリリース {rated}件 · 総評価 {total}件",
-  "커뮤니티 최근 리뷰": "コミュニティの最新レビュー",
+  "최근 리뷰": "最近のレビュー",
   "음악 정보를 불러오지 못했습니다. 잠시 후 다시 시도해주세요.":
     "音楽情報を読み込めませんでした。しばらくして再試行してください。",
   "화제의 릴리스": "話題のリリース",
@@ -1433,12 +1425,8 @@ const ES: Record<string, string> = {
   "{username}님의 리뷰": "Reseña de {username}",
 
   "Spotify에서 열기": "Abrir en Spotify",
-  "평가 좋은 트랙": "Canciones mejor valoradas",
-  "평가 좋은 앨범": "Álbumes mejor valorados",
-  "아직 평가된 곡이 없습니다.": "Aún no hay canciones calificadas.",
-  "아직 평가된 앨범이 없습니다.": "Aún no hay álbumes calificados.",
   "평가된 릴리스 {rated} · 총 평가 {total}": "{rated} lanzamientos calificados · {total} calificaciones",
-  "커뮤니티 최근 리뷰": "Reseñas recientes de la comunidad",
+  "최근 리뷰": "Reseñas recientes",
   "음악 정보를 불러오지 못했습니다. 잠시 후 다시 시도해주세요.":
     "No se pudo cargar la información musical. Inténtalo de nuevo en un momento.",
   "화제의 릴리스": "Lanzamientos en tendencia",

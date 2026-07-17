@@ -3,32 +3,57 @@ import { onImageError } from "@/lib/image";
 
 import { useState } from "react";
 import Link from "next/link";
-import type { ArtistAlbum, ArtistRatedTrack } from "@/lib/api";
-import { useT } from "@/components/i18n-provider";
+import type { ArtistAlbum, ArtistRatedTrack, RatingBadge } from "@/lib/api";
 import { ScoreBadge } from "./score-badge";
 
-type Tab = "tracks" | "albums" | "discography";
+type Tab = "toprated" | "discography";
+type Filter = "all" | "track" | "album";
+
+// 릴리스 포맷은 영어 고정(i18n 제외) — 장르 영어 규칙과 같은 도메인 클러스터.
+const albumTypeLabel = (type: string) =>
+  type === "single" ? "Single" : type === "compilation" ? "Compilation" : "Album";
+
+// Top Rated: 트랙+앨범을 rating.average로 병합한 통합 랭킹 아이템(행 렌더). Discography는 그리드 유지.
+type RatedItem = {
+  kind: "track" | "album";
+  spotifyId: string;
+  name: string;
+  imageUrl: string | null;
+  rating: RatingBadge;
+  typeLabel: string;
+  href: string;
+};
 
 export function ArtistTabs({ ratedTracks, albums }: { ratedTracks: ArtistRatedTrack[]; albums: ArtistAlbum[] }) {
-  const t = useT();
+  const rated: RatedItem[] = [
+    ...ratedTracks.map((tr) => ({
+      kind: "track" as const, spotifyId: tr.spotifyId, name: tr.name, imageUrl: tr.imageUrl,
+      rating: tr.rating, typeLabel: "Track", href: `/track/${tr.spotifyId}`,
+    })),
+    ...albums.filter((a) => a.rating).map((a) => ({
+      kind: "album" as const, spotifyId: a.spotifyId, name: a.name, imageUrl: a.imageUrl,
+      rating: a.rating!, typeLabel: albumTypeLabel(a.albumType), href: `/album/${a.spotifyId}`,
+    })),
+  ].sort((x, y) => y.rating.average - x.rating.average || y.rating.count - x.rating.count);
 
-  const ratedAlbums = albums
-    .filter((a) => a.rating)
-    .sort((a, b) => b.rating!.average - a.rating!.average || b.rating!.count - a.rating!.count);
+  const trackCount = rated.filter((r) => r.kind === "track").length;
+  const albumCount = rated.filter((r) => r.kind === "album").length;
+  const showFilter = trackCount > 0 && albumCount > 0; // 한 종류뿐이면 토글 불필요
 
-  // 비어있지 않은 첫 탭을 기본값으로.
-  const initial: Tab = ratedTracks.length ? "tracks" : ratedAlbums.length ? "albums" : "discography";
-  const [tab, setTab] = useState<Tab>(initial);
+  const [tab, setTab] = useState<Tab>(rated.length ? "toprated" : "discography");
+  const [filter, setFilter] = useState<Filter>("all");
 
-  const TABS: { key: Tab; label: string }[] = [
-    { key: "tracks", label: t("평가 좋은 트랙") },
-    { key: "albums", label: t("평가 좋은 앨범") },
-    { key: "discography", label: "Discography" },
+  const items = showFilter && filter !== "all" ? rated.filter((r) => r.kind === filter) : rated;
+
+  const TABS: { key: Tab; label: string; count: number }[] = [
+    ...(rated.length ? [{ key: "toprated" as const, label: "Top Rated", count: rated.length }] : []),
+    { key: "discography", label: "Discography", count: albums.length },
   ];
-
-  // 릴리스 포맷은 영어 고정(i18n 제외) — 장르 영어 규칙과 같은 도메인 클러스터.
-  const albumTypeLabel = (type: string) =>
-    type === "single" ? "Single" : type === "compilation" ? "Compilation" : "Album";
+  const FILTERS: { key: Filter; label: string; count: number }[] = [
+    { key: "all", label: "All", count: rated.length },
+    { key: "track", label: "Track", count: trackCount },
+    { key: "album", label: "Album", count: albumCount },
+  ];
 
   return (
     <section className="mt-10">
@@ -47,68 +72,64 @@ export function ArtistTabs({ ratedTracks, albums }: { ratedTracks: ArtistRatedTr
             }`}
           >
             {tb.label}
-            {tb.key === "tracks" && ratedTracks.length > 0 && (
-              <span className="ml-1 text-zinc-500">({ratedTracks.length})</span>
-            )}
-            {tb.key === "albums" && ratedAlbums.length > 0 && (
-              <span className="ml-1 text-zinc-500">({ratedAlbums.length})</span>
-            )}
-            {tb.key === "discography" && albums.length > 0 && (
-              <span className="ml-1 text-zinc-500">({albums.length})</span>
-            )}
+            {tb.count > 0 && <span className="ml-1 text-zinc-500">({tb.count})</span>}
           </button>
         ))}
       </div>
 
-      {/* 길어지면 자체 스크롤 */}
-      <div className="max-h-[32rem] overflow-y-auto pr-1">
-        {tab === "tracks" &&
-          (ratedTracks.length === 0 ? (
-            <Empty text={t("아직 평가된 곡이 없습니다.")} />
-          ) : (
+      {tab === "toprated" && (
+        <>
+          {showFilter && (
+            <div className="mb-3 flex gap-1">
+              {FILTERS.map((f) => (
+                <button
+                  key={f.key}
+                  type="button"
+                  onClick={() => setFilter(f.key)}
+                  className={`rounded-lg px-3 py-1.5 text-sm font-medium transition ${
+                    filter === f.key
+                      ? "bg-indigo-600 text-white"
+                      : "bg-zinc-100 text-zinc-600 hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700"
+                  }`}
+                >
+                  {f.label} <span className={filter === f.key ? "text-indigo-200" : "text-zinc-400"}>{f.count}</span>
+                </button>
+              ))}
+            </div>
+          )}
+          <div className="max-h-[32rem] overflow-y-auto pr-1">
             <ul className="flex flex-col divide-y divide-zinc-100 dark:divide-zinc-900">
-              {ratedTracks.map((tr) => (
-                <li key={tr.spotifyId}>
-                  <Link href={`/track/${tr.spotifyId}`} className="flex items-center gap-3 py-2.5 hover:bg-zinc-50 dark:hover:bg-zinc-900/50">
+              {items.map((it) => (
+                <li key={`${it.kind}-${it.spotifyId}`}>
+                  <Link href={it.href} className="flex items-center gap-3 py-2.5 hover:bg-zinc-50 dark:hover:bg-zinc-900/50">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img onError={onImageError} src={tr.imageUrl ?? "/placeholder.svg"} alt="" className="h-11 w-11 shrink-0 rounded-md bg-zinc-100 object-cover dark:bg-zinc-900" />
-                    <span className="min-w-0 flex-1 truncate text-sm font-medium text-zinc-900 dark:text-zinc-50">{tr.name}</span>
-                    <ScoreBadge rating={tr.rating} />
+                    <img onError={onImageError} src={it.imageUrl ?? "/placeholder.svg"} alt="" className="h-11 w-11 shrink-0 rounded-md bg-zinc-100 object-cover dark:bg-zinc-900" />
+                    <span className="min-w-0 flex-1 truncate text-sm font-medium text-zinc-900 dark:text-zinc-50">{it.name}</span>
+                    <span className="shrink-0 rounded bg-zinc-100 px-1.5 py-0.5 text-[10px] font-medium text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400">{it.typeLabel}</span>
+                    <ScoreBadge rating={it.rating} />
                   </Link>
                 </li>
               ))}
             </ul>
-          ))}
+          </div>
+        </>
+      )}
 
-        {tab === "albums" &&
-          (ratedAlbums.length === 0 ? (
-            <Empty text={t("아직 평가된 앨범이 없습니다.")} />
-          ) : (
-            <Grid>
-              {ratedAlbums.map((a) => (
-                <AlbumCard key={a.spotifyId} album={a} typeLabel={albumTypeLabel(a.albumType)} />
-              ))}
-            </Grid>
-          ))}
-
-        {tab === "discography" && (
+      {tab === "discography" && (
+        <div className="max-h-[32rem] overflow-y-auto pr-1">
           <Grid>
             {albums.map((a) => (
               <AlbumCard key={a.spotifyId} album={a} typeLabel={albumTypeLabel(a.albumType)} />
             ))}
           </Grid>
-        )}
-      </div>
+        </div>
+      )}
     </section>
   );
 }
 
 function Grid({ children }: { children: React.ReactNode }) {
   return <div className="grid grid-cols-2 gap-x-4 gap-y-6 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">{children}</div>;
-}
-
-function Empty({ text }: { text: string }) {
-  return <p className="py-10 text-center text-sm text-zinc-500">{text}</p>;
 }
 
 function AlbumCard({ album, typeLabel }: { album: ArtistAlbum; typeLabel: string }) {

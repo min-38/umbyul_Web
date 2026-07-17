@@ -9,6 +9,7 @@ import { Stars } from "@/components/detail/stars";
 import { SpotifyLink } from "@/components/detail/detail-bits";
 import { ShareButton } from "@/components/detail/share-button";
 import { ArtistTabs } from "@/components/detail/artist-tabs";
+import { ExpandableText } from "@/components/ui/expandable-text";
 
 const getArtist = cache(getArtistDetail);
 
@@ -63,15 +64,16 @@ export default async function ArtistPage({ params }: { params: Promise<{ id: str
         <ArtistTabs ratedTracks={artist.ratedTracks} albums={artist.albums} />
       ) : null}
 
-      {/* 커뮤니티 최근 리뷰 */}
+      {/* 최근 리뷰 (이 아티스트 대상) */}
       {artist.recentReviews.length > 0 && (
         <section className="mt-10">
-          <h2 className="mb-4 text-lg font-semibold text-zinc-900 dark:text-zinc-50">{t("커뮤니티 최근 리뷰")}</h2>
+          <h2 className="mb-4 text-lg font-semibold text-zinc-900 dark:text-zinc-50">{t("최근 리뷰")}</h2>
           <ul className="flex flex-col divide-y divide-zinc-200 dark:divide-zinc-800">
             {artist.recentReviews.map((rv, i) => (
               <li key={i} className="flex flex-col gap-1.5 py-4">
+                {/* 1행: 유저 + 시간 */}
                 <div className="flex items-center gap-2">
-                  <span className="flex h-7 w-7 items-center justify-center overflow-hidden rounded-full bg-zinc-200 text-xs font-medium text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300">
+                  <span className="flex h-7 w-7 shrink-0 items-center justify-center overflow-hidden rounded-full bg-zinc-200 text-xs font-medium text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300">
                     {rv.avatarUrl ? (
                       // eslint-disable-next-line @next/next/no-img-element
                       <img src={rv.avatarUrl} alt="" className="h-full w-full object-cover" />
@@ -83,6 +85,10 @@ export default async function ArtistPage({ params }: { params: Promise<{ id: str
                     {rv.username}
                   </Link>
                   <span className="text-xs text-zinc-500">·</span>
+                  <span className="text-xs text-zinc-500">{formatRelativeTime(rv.createdAt, locale)}</span>
+                </div>
+                {/* 2행: 대상(곡/앨범) + 별점 — 유저 아래 별도 행이라 이름이 안 잘린다 */}
+                <div className="flex items-center gap-2">
                   <span
                     className={`shrink-0 rounded px-1.5 py-0.5 text-[10px] font-medium ${
                       rv.targetType === "track"
@@ -94,17 +100,16 @@ export default async function ArtistPage({ params }: { params: Promise<{ id: str
                   </span>
                   <Link
                     href={`/${rv.targetType}/${rv.targetSpotifyId}`}
-                    className="truncate text-xs text-zinc-500 hover:underline"
+                    className="min-w-0 flex-1 truncate text-sm font-medium text-zinc-700 hover:underline dark:text-zinc-200"
                   >
                     {rv.targetName}
                   </Link>
-                  <span className="ml-auto flex items-center gap-1.5">
+                  <span className="flex shrink-0 items-center gap-1.5">
                     <Stars value={rv.score} size={14} />
                     <span className="text-sm font-semibold text-zinc-700 dark:text-zinc-200">{rv.score.toFixed(1)}</span>
                   </span>
                 </div>
-                <p className="whitespace-pre-wrap text-sm leading-relaxed text-zinc-600 dark:text-zinc-300">{rv.body}</p>
-                <span className="text-xs text-zinc-500">{formatRelativeTime(rv.createdAt, locale)}</span>
+                <ExpandableText text={rv.body} className="text-sm leading-relaxed text-zinc-600 dark:text-zinc-300" />
               </li>
             ))}
           </ul>
