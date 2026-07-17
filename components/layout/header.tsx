@@ -53,10 +53,7 @@ export async function Header() {
 
         {/* 우: 테마 + 프로필 */}
         <div className="col-start-2 row-start-1 flex min-w-0 items-center justify-end gap-1 md:col-start-3">
-          {/* xl 미만: 푸터의 테마 토글이 대신한다(설정은 로그인 전용이라 비로그인 유저의 유일한 수단). */}
-          <div className="hidden xl:block">
-            <ThemeToggle />
-          </div>
+          <ThemeToggle />
           {user && <NotificationBell items={notifs.items} unreadCount={notifs.unreadCount} />}
           {user ? (
             <UserMenu

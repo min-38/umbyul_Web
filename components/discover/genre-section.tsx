@@ -36,12 +36,12 @@ export function GenreSection({ genres, label }: { genres: Genre[]; label: string
   return (
     <section>
       <h2 className="mb-4 text-lg font-semibold text-zinc-900 dark:text-zinc-50">{label}</h2>
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4">
+      <div className="grid grid-cols-3 gap-3 md:grid-cols-4">
         {parents.map((g) => (
           <Link
             key={g.id}
             href={`/discover/genre/${g.slug}`}
-            className="flex h-24 items-center justify-center rounded-2xl px-3 text-center text-base font-bold text-white shadow-sm transition hover:-translate-y-0.5 hover:brightness-105 hover:shadow-md"
+            className="flex h-16 items-center justify-center rounded-2xl px-3 text-center text-base font-bold text-white shadow-sm transition hover:-translate-y-0.5 hover:brightness-105 hover:shadow-md md:h-24"
             style={{ backgroundColor: GENRE_COLORS[g.slug] ?? DEFAULT_COLOR }}
           >
             {g.name}

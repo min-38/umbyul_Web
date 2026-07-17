@@ -13,6 +13,7 @@ import { getT } from "@/lib/i18n-server";
 import { ChartList } from "@/components/chart/chart-list";
 import { UserChartList } from "@/components/chart/user-chart-list";
 import { ArtistChartList } from "@/components/chart/artist-chart-list";
+import { ChartColumns } from "@/components/chart/chart-columns";
 
 // 음악 대상(User 는 우측 컬럼 고정 → 토글에서 제외). Artist 는 별도 리스트.
 type MusicType = "all" | "track" | "album" | "artist";
@@ -113,8 +114,11 @@ export default async function ChartPage({
     <div className="mx-auto flex w-full max-w-6xl flex-col gap-5 px-6 py-8">
       <h1 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">{t("차트")}</h1>
 
-      <div className="grid gap-8 md:grid-cols-2">
-        {/* ── 좌: 음악 차트 ── */}
+      <ChartColumns
+        musicLabel={t("음악 차트")}
+        userLabel={t("유저 차트")}
+        music={
+        /* ── 좌: 음악 차트 ── */
         <section className="flex min-w-0 flex-col gap-4">
           <ColumnHeader accent="text-indigo-500" title={t("음악 차트")} subtitle={t("곡·앨범·아티스트 랭킹")} icon={<MusicIcon />} />
           <div className="flex flex-col gap-2">
@@ -148,8 +152,9 @@ export default async function ChartPage({
             <ChartList items={items} trackLabel={t("곡")} albumLabel={t("앨범")} />
           )}
         </section>
-
-        {/* ── 우: 유저 차트 ── */}
+        }
+        user={
+        /* ── 우: 유저 차트 ── */
         <section className="flex min-w-0 flex-col gap-4">
           <ColumnHeader accent="text-rose-500" title={t("유저 차트")} subtitle={t("리뷰어 랭킹")} icon={<UserIcon />} />
           <div className="flex flex-col gap-2">
@@ -162,7 +167,8 @@ export default async function ChartPage({
             <UserChartList items={users} metricLabel={userSortLabel[userSort]} />
           )}
         </section>
-      </div>
+        }
+      />
     </div>
   );
 }

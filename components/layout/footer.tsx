@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { getT } from "@/lib/i18n-server";
 import { LocaleSwitcher } from "./locale-switcher";
-import { ThemeToggle } from "./theme-toggle";
 
 const POLICY = [
   { label: "이용약관", href: "/terms" },
@@ -24,7 +23,7 @@ export async function Footer() {
   const tr = (items: { label: string; href: string }[]) => items.map((i) => ({ ...i, label: t(i.label) }));
   return (
     <footer className="border-t border-zinc-200 dark:border-zinc-800">
-      <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 px-4 py-8 sm:flex-row sm:justify-between">
+      <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 px-4 py-6 sm:flex-row sm:justify-between sm:py-8">
         <div className="flex flex-col gap-2">
           <p className="text-sm text-zinc-500">
             <span className="glitter-text text-lg font-bold tracking-tight">UmByul</span>
@@ -38,16 +37,19 @@ export async function Footer() {
             <SpotifyLogo />
             Powered by Spotify
           </a>
-          {/* 테마 토글은 xl 미만에서만 — xl+는 헤더에 있다. 설정(로그인 전용)에도 있지만
-              비로그인 유저에겐 이게 유일한 테마 수단이라 헤더에서 숨기는 대신 여기에 둔다. */}
-          <div className="mt-1 flex items-center gap-1">
+          <div className="mt-1">
             <LocaleSwitcher />
-            <div className="xl:hidden">
-              <ThemeToggle openUp />
-            </div>
           </div>
         </div>
-        <div className="flex flex-wrap gap-8 sm:gap-12">
+        {/* 모바일: 제목 없이 링크 한 줄 wrap(세로폭 절약, Letterboxd식). sm+: 3컬럼 제목 유지. */}
+        <nav className="flex flex-wrap gap-x-4 gap-y-2 sm:hidden">
+          {tr([...POLICY, ...NEWS, ...INFO]).map((l) => (
+            <Link key={l.href} href={l.href} className="text-sm text-zinc-600 hover:underline dark:text-zinc-400">
+              {l.label}
+            </Link>
+          ))}
+        </nav>
+        <div className="hidden flex-wrap gap-12 sm:flex">
           <FooterCol title={t("정책")} links={tr(POLICY)} />
           <FooterCol title={t("소식")} links={tr(NEWS)} />
           <FooterCol title={t("고객지원")} links={tr(INFO)} />
