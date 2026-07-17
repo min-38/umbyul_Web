@@ -343,6 +343,10 @@ export const EN: Record<string, string> = {
   // ── 회원가입 ──
   "6자리 코드를 입력하세요.": "Enter the 6-digit code.",
   "코드가 올바르지 않거나 만료되었습니다.": "The code is incorrect or has expired.",
+  "이메일 인증이 필요합니다": "You need to verify your email",
+  "코드를 받아 6자리를 입력하면 로그인됩니다.": "Get a code and enter the 6 digits to sign in.",
+  "인증 코드 재전송": "Resend code",
+  "{seconds}초 후 재전송": "Resend in {seconds}s",
   "인증 메일을 보냈습니다": "We sent a verification email",
   "받은 편지함에서 6자리 코드를 입력하세요.": "Enter the 6-digit code from your inbox.",
   "6자리 코드": "6-digit code",
@@ -821,6 +825,10 @@ const JA: Record<string, string> = {
 
   "6자리 코드를 입력하세요.": "6桁のコードを入力してください。",
   "코드가 올바르지 않거나 만료되었습니다.": "コードが正しくないか、期限切れです。",
+  "이메일 인증이 필요합니다": "メール認証が必要です",
+  "코드를 받아 6자리를 입력하면 로그인됩니다.": "コードを受け取り、6桁を入力するとログインできます。",
+  "인증 코드 재전송": "認証コードを再送",
+  "{seconds}초 후 재전송": "{seconds}秒後に再送",
   "인증 메일을 보냈습니다": "確認メールを送信しました",
   "받은 편지함에서 6자리 코드를 입력하세요.": "受信トレイに届いた6桁のコードを入力してください。",
   "6자리 코드": "6桁のコード",
@@ -1290,6 +1298,10 @@ const ES: Record<string, string> = {
 
   "6자리 코드를 입력하세요.": "Introduce el código de 6 dígitos.",
   "코드가 올바르지 않거나 만료되었습니다.": "El código es incorrecto o ha expirado.",
+  "이메일 인증이 필요합니다": "Necesitas verificar tu correo",
+  "코드를 받아 6자리를 입력하면 로그인됩니다.": "Recibe un código e introduce los 6 dígitos para iniciar sesión.",
+  "인증 코드 재전송": "Reenviar código",
+  "{seconds}초 후 재전송": "Reenviar en {seconds}s",
   "인증 메일을 보냈습니다": "Enviamos un correo de verificación",
   "받은 편지함에서 6자리 코드를 입력하세요.": "Introduce el código de 6 dígitos de tu bandeja de entrada.",
   "6자리 코드": "Código de 6 dígitos",
