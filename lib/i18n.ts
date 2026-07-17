@@ -252,7 +252,6 @@ export const EN: Record<string, string> = {
   인기순: "Popular",
   최신순: "Newest",
   평가하기: "Rate",
-  "내 평가 수정": "Edit my rating",
 
   // ── 검색 ──
   "검색어를 입력하세요.": "Enter a search term.",
@@ -279,7 +278,7 @@ export const EN: Record<string, string> = {
   삭제: "Delete",
   취소: "Cancel",
   "저장 중…": "Saving…",
-  수정: "Update",
+  수정: "Edit",
   수정하기: "Edit", // 메뉴 액션(편집 진입). 제출 버튼 '수정'(Update)과 구분(QA10-1)
   등록: "Submit",
 
@@ -726,7 +725,6 @@ const JA: Record<string, string> = {
   인기순: "人気順",
   최신순: "新着順",
   평가하기: "評価する",
-  "내 평가 수정": "評価を編集",
 
   "검색어를 입력하세요.": "検索ワードを入力してください。",
   "검색 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.":
@@ -751,7 +749,7 @@ const JA: Record<string, string> = {
   삭제: "削除",
   취소: "キャンセル",
   "저장 중…": "保存中…",
-  수정: "更新",
+  수정: "編集",
   수정하기: "編集",
   등록: "投稿",
 
@@ -1184,7 +1182,6 @@ const ES: Record<string, string> = {
   인기순: "Popular",
   최신순: "Recientes",
   평가하기: "Calificar",
-  "내 평가 수정": "Editar mi calificación",
 
   "검색어를 입력하세요.": "Introduce un término de búsqueda.",
   "검색 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.":
@@ -1209,7 +1206,7 @@ const ES: Record<string, string> = {
   삭제: "Eliminar",
   취소: "Cancelar",
   "저장 중…": "Guardando…",
-  수정: "Actualizar",
+  수정: "Editar",
   수정하기: "Editar",
   등록: "Publicar",
 

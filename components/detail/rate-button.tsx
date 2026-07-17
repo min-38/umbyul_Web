@@ -74,7 +74,7 @@ export function RateButton({
   return (
     <>
       <button type="button" className={cls} onClick={() => setOpen(true)}>
-        {editing ? t("내 평가 수정") : t("평가하기")}
+        {editing ? t("수정") : t("평가하기")}
       </button>
       {open && (
         <ReviewModal

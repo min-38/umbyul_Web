@@ -134,7 +134,7 @@ export function ReviewModal({
             disabled={busy}
             className="rounded-lg bg-gradient-to-r from-violet-600 via-indigo-600 to-blue-600 px-4 py-2 text-sm font-medium text-white transition hover:brightness-110 disabled:opacity-50"
           >
-            {busy ? t("저장 중…") : editing ? t("수정") : t("등록")}
+            {busy ? t("저장 중…") : editing ? t("저장") : t("등록")}
           </button>
         </div>
     </Dialog>

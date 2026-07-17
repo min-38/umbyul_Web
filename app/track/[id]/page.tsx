@@ -88,7 +88,7 @@ export default async function TrackPage({ params }: { params: Promise<{ id: stri
         />
         <div className="flex flex-1 flex-col gap-3">
           <span className="self-start rounded px-2 py-0.5 text-xs font-medium bg-indigo-100 text-indigo-700 dark:bg-indigo-950 dark:text-indigo-300">{t("곡")}</span>
-          <h1 className="text-3xl font-bold text-zinc-900 dark:text-zinc-50">
+          <h1 className="text-2xl font-bold text-zinc-900 sm:text-3xl dark:text-zinc-50">
             {track.name}
             {track.explicit && <> <ExplicitBadge size="lg" /></>}
           </h1>
