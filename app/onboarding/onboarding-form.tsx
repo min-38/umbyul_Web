@@ -43,7 +43,7 @@ function ageOf(birth: string): number {
 
 type Availability = "idle" | "checking" | "available" | "taken" | "invalid";
 
-export function OnboardingForm({ needsConsent, genres }: { needsConsent: boolean; genres: Genre[] }) {
+export function OnboardingForm({ needsConsent, genres, returnUrl }: { needsConsent: boolean; genres: Genre[]; returnUrl: string }) {
   const t = useT();
   const locale = useLocale();
   const countries = useMemo(() => {
@@ -140,7 +140,7 @@ export function OnboardingForm({ needsConsent, genres }: { needsConsent: boolean
     setLoading(false);
 
     if (res.ok) {
-      router.push("/");
+      router.push(returnUrl);
       router.refresh();
       return;
     }

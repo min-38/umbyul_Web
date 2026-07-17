@@ -12,14 +12,15 @@ import { useT } from "@/components/i18n-provider";
 // 포인트·업적은 출시 보류(게이미피케이션 미도입) — 메뉴에서 숨김 (NON-129).
 const STATIC_ITEMS = [{ label: "설정", href: "/settings" }];
 
-export function UserMenu({ username, avatarUrl }: { username: string; avatarUrl: string | null }) {
+export function UserMenu({ username, avatarUrl, profileHref }: { username: string; avatarUrl: string | null; profileHref: string }) {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
   const ref = useRef<HTMLDivElement>(null);
   const t = useT();
   const confirm = useConfirm();
   useClickOutside(ref, () => setOpen(false), open);
-  const items = [{ label: "프로필", href: `/u/${username}` }, ...STATIC_ITEMS];
+  // 온보딩 미완료면 username 이 없어 /u/<fallback> 은 404 → 온보딩으로(header 에서 결정해 넘김).
+  const items = [{ label: "프로필", href: profileHref }, ...STATIC_ITEMS];
 
   const onSignOut = async () => {
     if (!(await confirm({ message: t("로그아웃 하시겠어요?") }))) return;

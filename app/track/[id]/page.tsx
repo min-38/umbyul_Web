@@ -2,7 +2,7 @@ import { cache } from "react";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { getTrackDetail, getMySanction, getRatingHistory, getGenresFor, getGenres } from "@/lib/api";
+import { getTrackDetail, getMySanction, getRatingHistory, getGenresFor, getGenres, getProfile } from "@/lib/api";
 import { getMentionMute } from "@/app/actions/mention";
 import { getT } from "@/lib/i18n-server";
 import { SITE_URL } from "@/lib/site";
@@ -52,11 +52,12 @@ export default async function TrackPage({ params }: { params: Promise<{ id: stri
   const user = userRes.data.user;
 
   // 트랙/유저 의존 데이터도 병렬로. 장르·멘션뮤트는 서버에서 미리 받아 시드 — 마운트 후 fetch 깜빡임 방지(NON-161).
-  const [ratingHistory, genresFor, sanction, mentionMuted] = await Promise.all([
+  const [ratingHistory, genresFor, sanction, mentionMuted, profile] = await Promise.all([
     getRatingHistory("track", track.targetId),
     getGenresFor("track", track.spotifyId),
     user ? getMySanction() : Promise.resolve(null),
     user ? getMentionMute("track", track.spotifyId) : Promise.resolve(null),
+    user ? getProfile() : Promise.resolve(null),
   ]);
   const mine = user ? track.reviews.find((r) => r.userId === user.id) : undefined;
   const rateSanction = sanction?.banned ? "banned" : sanction?.suspendedUntil ? "suspended" : null;
@@ -113,6 +114,7 @@ export default async function TrackPage({ params }: { params: Promise<{ id: stri
             <span className="ml-auto">
               <RateButton
                 loggedIn={!!user}
+                hasProfile={!!profile}
                 targetType="track"
                 targetId={track.targetId}
                 spotifyId={track.spotifyId}

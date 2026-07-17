@@ -59,7 +59,11 @@ export async function Header() {
           </div>
           {user && <NotificationBell items={notifs.items} unreadCount={notifs.unreadCount} />}
           {user ? (
-            <UserMenu username={profile?.username ?? t("프로필")} avatarUrl={profile?.avatarUrl ?? null} />
+            <UserMenu
+              username={profile?.username ?? t("프로필")}
+              avatarUrl={profile?.avatarUrl ?? null}
+              profileHref={profile ? `/u/${profile.username}` : "/onboarding"}
+            />
           ) : (
             <Link
               href="/login"

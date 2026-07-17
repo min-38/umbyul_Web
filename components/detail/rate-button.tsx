@@ -8,6 +8,7 @@ import { useT } from "@/components/i18n-provider";
 // 비로그인 → 로그인 유도. 로그인 → 작성/수정 모달.
 export function RateButton({
   loggedIn,
+  hasProfile,
   targetType,
   targetId,
   spotifyId,
@@ -22,6 +23,7 @@ export function RateButton({
   sanction = null,
 }: {
   loggedIn: boolean;
+  hasProfile: boolean;
   targetType: "track" | "album";
   targetId: string;
   spotifyId: string;
@@ -43,6 +45,16 @@ export function RateButton({
   if (!loggedIn) {
     return (
       <Link href="/login" className={cls}>
+        {t("평가하기")}
+      </Link>
+    );
+  }
+
+  // 로그인했지만 온보딩(프로필) 미완료 → 모달 열지 말고 온보딩으로. 복귀는 returnUrl.
+  // (모달 열기 전에 막아 작성 draft 유실 없음 — 비로그인 시 /login 보내는 것과 같은 패턴.)
+  if (!hasProfile) {
+    return (
+      <Link href={`/onboarding?returnUrl=${encodeURIComponent(path)}`} className={cls}>
         {t("평가하기")}
       </Link>
     );
