@@ -23,11 +23,12 @@ export function ArtistTabs({ ratedTracks, albums }: { ratedTracks: ArtistRatedTr
   const TABS: { key: Tab; label: string }[] = [
     { key: "tracks", label: t("평가 좋은 트랙") },
     { key: "albums", label: t("평가 좋은 앨범") },
-    { key: "discography", label: t("디스코그래피") },
+    { key: "discography", label: "Discography" },
   ];
 
+  // 릴리스 포맷은 영어 고정(i18n 제외) — 장르 영어 규칙과 같은 도메인 클러스터.
   const albumTypeLabel = (type: string) =>
-    type === "single" ? t("싱글") : type === "compilation" ? t("컴필레이션") : t("앨범");
+    type === "single" ? "Single" : type === "compilation" ? "Compilation" : "Album";
 
   return (
     <section className="mt-10">

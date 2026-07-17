@@ -1,7 +1,6 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useT } from "@/components/i18n-provider";
 import { SortDropdown } from "./sort-dropdown";
 
 const SORTS = ["hot", "newest", "likes", "ratio", "rising"] as const;
@@ -24,7 +23,6 @@ export function FeedControls({
   hasPreferredGenres: boolean;
   loggedIn: boolean;
 }) {
-  const t = useT();
   const router = useRouter();
 
   const go = (patch: Partial<{ sort: string; scope: string; view: string; genre: string | null }>) => {
@@ -35,24 +33,25 @@ export function FeedControls({
     router.push(`/?${new URLSearchParams(clean)}`);
   };
 
+  // 피드 컨트롤은 영어 UI chrome로 고정(i18n 제외) — 정렬은 Reddit 관습(Hot/New/Top/Best/Rising)에 맞춤.
   const sortLabel: Record<string, string> = {
-    hot: t("화제순"),
-    newest: t("최신순"),
-    likes: t("좋아요 많은 순"),
-    ratio: t("좋아요 비율 높은 순"),
-    rising: t("급상승"),
+    hot: "Hot",
+    newest: "New",
+    likes: "Top",
+    ratio: "Best",
+    rising: "Rising",
   };
 
   const scopeOptions = [
-    { value: "all", label: t("전체") },
-    ...(loggedIn ? [{ value: "following", label: t("팔로잉") }] : []),
+    { value: "all", label: "All" },
+    ...(loggedIn ? [{ value: "following", label: "Following" }] : []),
   ];
 
   return (
     <div className="flex flex-wrap items-center justify-between gap-2">
       <SortDropdown
         current={scope}
-        title={t("피드")}
+        title="Feed"
         options={scopeOptions}
         onSelect={(s) => go({ scope: s })}
         align="left"
@@ -69,21 +68,21 @@ export function FeedControls({
                 : "bg-zinc-100 text-zinc-700 hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-200 dark:hover:bg-zinc-700"
             }`}
           >
-            {t("내 선호 장르")}
+            My genres
           </button>
         )}
         <SortDropdown
           current={sort}
-          title={t("정렬 기준")}
+          title="Sort"
           options={SORTS.map((s) => ({ value: s, label: sortLabel[s] }))}
           onSelect={(s) => go({ sort: s })}
         />
         <SortDropdown
           current={view}
-          title={t("보기")}
+          title="View"
           options={[
-            { value: "card", label: t("카드형") },
-            { value: "compact", label: t("축약형") },
+            { value: "card", label: "Card" },
+            { value: "compact", label: "Compact" },
           ]}
           onSelect={(v) => go({ view: v })}
         />

@@ -21,8 +21,8 @@ export function DetailInfoTabs({
   const enough = points.length >= 2 && (points[points.length - 1]?.count ?? 0) >= 5;
 
   const TABS: { key: "info" | "chart"; label: string }[] = [
-    { key: "info", label: "정보" },
-    { key: "chart", label: "추이" },
+    { key: "info", label: "Info" },
+    { key: "chart", label: "Trend" },
   ];
 
   return (

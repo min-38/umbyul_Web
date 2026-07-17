@@ -13,10 +13,11 @@ import { ExplicitBadge } from "./explicit-badge";
 // 리뷰는 탭에서 빼서 페이지 하단 별도 섹션으로(트랙 페이지와 일관). 추이 탭 추가(BUG-8/16).
 type Tab = "tracklist" | "info" | "chart";
 
+// 상세 탭은 영어 고정(i18n 제외).
 const TABS: { key: Tab; label: string }[] = [
-  { key: "tracklist", label: "트랙리스트" },
-  { key: "info", label: "정보" },
-  { key: "chart", label: "추이" },
+  { key: "tracklist", label: "Tracklist" },
+  { key: "info", label: "Info" },
+  { key: "chart", label: "Trend" },
 ];
 
 export function AlbumTabs({ album, loggedIn, points, genresData, allGenres }: { album: AlbumDetail; loggedIn: boolean; points: RatingPoint[]; genresData: GenresFor; allGenres: Genre[] }) {
