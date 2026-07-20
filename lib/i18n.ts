@@ -36,6 +36,8 @@ function formatNumber(v: number, locale: Locale): string {
 
 // 한국어 → 영어 매핑. 문구를 i18n 대상으로 옮길 때 여기에 추가.
 export const EN: Record<string, string> = {
+  // 헤더 네비 '피드' — t(n.label) 동적 호출이라 정적 스캔에 안 잡혀 매핑이 누락돼 있었다(발견·차트·믹스는 이미 매핑됨).
+  "피드": "Feed",
   // ── /about 히어로 (NON-273) ──
   "별을 남길수록 반짝이는 나의 기록": "The more you rate,\nthe brighter your record shines.",
   "리뷰를 남기고 다른 사람과 취향을 나누며, 새로운 음악을 발견하세요.": "Leave reviews, share your taste with others, and discover new music.",
@@ -517,6 +519,7 @@ export const EN: Record<string, string> = {
 
 // 한국어 → 일본어.
 const JA: Record<string, string> = {
+  "피드": "フィード",
   // ── /about 히어로 (NON-273) ──
   "별을 남길수록 반짝이는 나의 기록": "評価するほど、\nあなたの記録が輝く。",
   "리뷰를 남기고 다른 사람과 취향을 나누며, 새로운 음악을 발견하세요.": "レビューを残し、好みを分かち合い、新しい音楽を見つけよう。",
@@ -974,6 +977,7 @@ const JA: Record<string, string> = {
 
 // 한국어 → 스페인어.
 const ES: Record<string, string> = {
+  "피드": "Feed",
   // ── /about 히어로 (NON-273) ──
   "별을 남길수록 반짝이는 나의 기록": "Cuantas más estrellas dejes,\nmás brilla tu registro.",
   "리뷰를 남기고 다른 사람과 취향을 나누며, 새로운 음악을 발견하세요.": "Deja reseñas, comparte tu gusto con otros y descubre música nueva.",

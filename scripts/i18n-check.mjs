@@ -21,6 +21,8 @@ const EXT = /\.(tsx?|jsx?)$/;
 const ALLOW = new Set([
   // 약관/개인정보 시행일 라벨 — t()가 아니라 translate(문서로케일, "시행일")로 사용(문서 언어 일치).
   "시행일",
+  // 헤더 네비 '피드' — t(n.label) 동적 호출이라 정적 스캔에 안 잡힘(발견·차트·믹스는 페이지 h1의 static t()로 이미 수집됨).
+  "피드",
   // /about feature 카드(동적 t(f.title)/t(f.desc), NON-272)
   "Spotify 카드",
   "방대한 Spotify 카탈로그에서 원하는 음악을 검색하세요.",
